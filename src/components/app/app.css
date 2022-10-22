@@ -1,0 +1,15 @@
+:root {
+  --logo-width: 290px;
+  --logo-height: 50px;
+  --offset-base-size: 4px;
+  --scroll-bar-width: 8px;
+}
+
+.app {
+  text-align: center;
+}
+
+.main {
+  padding: 0 calc(100% / 6) 0 calc(100% / 6);
+  display: flex;
+}
