@@ -53,22 +53,34 @@ function getTitle(arr) {
   }
 }
 
+const ingredientsArr = [];
+
 class Item extends React.Component {
   state = {
     display: false,
     count: 0,
   };
 
-  handleCounter = () => {
-    this.setState({
-      display: true,
-      count: this.state.count + 1,
-    });
-  };
+/*   handleCounter = (value) => {
+    if (this.props.type === "bun") {
+      this.setState({
+        display: true,
+        count: 1,
+      });
+    } else {
+      this.setState({
+        display: true,
+        count: this.state.count + 1,
+      });
+    }
+
+    ingredientsArr.push(this.props);
+    console.log(value)
+  }; */
 
   render() {
     return (
-      <li className={burgerIngredients.item} onClick={this.handleCounter}>
+      <li className={burgerIngredients.item} >
         <div
           className={
             this.state.display
@@ -92,16 +104,22 @@ class Item extends React.Component {
 }
 
 const Subcontainer = ({ arr }) => {
+  const [current, setCurrent] = React.useState(false);
+  function toggle() {
+    setCurrent(current === true ? false : true);
+  };
+
   return (
-    <ul className={`pl-4 pr-2 ${burgerIngredients.subcontainer}`}>
+    <ul className={`pl-4 pr-2 ${burgerIngredients.subcontainer}`} >
       {arr.map((item) => (
-        <Item {...item} key={item._id} />
+        <Item {...item} key={item._id} onItemClick={toggle} />
       ))}
     </ul>
   );
 };
 
 const Container = ({ arr }) => {
+
   return (
     <>
       {arr.map((sortedArr, index) => (

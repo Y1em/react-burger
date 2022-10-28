@@ -72,6 +72,9 @@ const ConstructorContainer = ({ arr }) => {
 };
 
 class Item extends React.Component {
+
+
+
   state = {
     name: this.props.name,
     price: this.props.price,
@@ -137,7 +140,7 @@ class BurgerConstructor extends React.Component {
           <div className={`mr-10 ${burgerConstructor.icon}`}>
             <CurrencyIcon />
           </div>
-          <Button type="primary" size="large">
+          <Button htmlType ="button" type="primary" size="large">
             Оформить заказ
           </Button>
         </div>
