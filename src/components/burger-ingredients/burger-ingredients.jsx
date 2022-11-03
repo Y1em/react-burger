@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { itemPropTypes } from "../utils/types";
 import burgerIngredients from "./burger-ingredients.module.css";
 import {
   Tab,
@@ -6,120 +8,97 @@ import {
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import ingredients from "../utils/data";
+import {
+  isBun,
+  extractBun,
+  sortByTypes,
+  isBunInArr,
+  getTitle,
+} from "../utils/utils";
 
 // Данные функции разбивают исходный массив по типам (data.type), создавая отдельные массивы с одним типом.
 // Теперь если в меню появится новый тип, он автоматически появится в разделе "Новинки" :D
 
-function getTypes(data) {
-  const types = Array.from(data, (item) => item.type).sort();
-  for (let i = 0; i < types.length; i = i + 1) {
-    while (types[i] === types[i + 1]) {
-      types.splice(i, 1);
-    }
-  }
-  return types;
-}
-
-function getOneTypeArr(data, type) {
-  const arr = [];
-  data.forEach((item) => {
-    if (item.type === type) {
-      arr.push(item);
-    }
-  });
-  return arr;
-}
-
-function sortByTypes(data) {
-  const arr = [];
-  const types = getTypes(data);
-  types.forEach((type) => {
-    arr.push(getOneTypeArr(data, type));
-  });
-  return arr;
-}
-
 const newData = sortByTypes(ingredients);
 
-function getTitle(arr) {
-  if (arr[0].type === "bun") {
-    return "Булки";
-  } else if (arr[0].type === "main") {
-    return "Начинки";
-  } else if (arr[0].type === "sauce") {
-    return "Соусы";
-  } else {
-    return "Новинки";
-  }
-}
+const ingredientsArr = []; // В дальнейшей этот массив будет передаваться в конструктор
 
-const ingredientsArr = [];
-
-class Item extends React.Component {
-  state = {
+const Item = ({ obj, onCardClick, value }) => {
+  const [state, setState] = React.useState({
     display: false,
     count: 0,
-  };
+  });
 
-/*   handleCounter = (value) => {
-    if (this.props.type === "bun") {
-      this.setState({
-        display: true,
-        count: 1,
-      });
-    } else {
-      this.setState({
-        display: true,
-        count: this.state.count + 1,
-      });
+  React.useEffect(() => {
+    if (isBun(obj)) {
+      setState({ display: obj._id === value.current ? true : false, count: 1 });
     }
+  }, [value.current, state.display]);
 
-    ingredientsArr.push(this.props);
-    console.log(value)
-  }; */
-
-  render() {
-    return (
-      <li className={burgerIngredients.item} >
-        <div
-          className={
-            this.state.display
-              ? `${burgerIngredients.counter} ${burgerIngredients.counter_active}`
-              : `${burgerIngredients.counter}`
-          }
-        >
-          <Counter count={this.state.count} size="default" />
-        </div>
-        <img src={this.props.image} className={`ml-4 mr-4`} />
-        <div className={`mt-1 mb-1 ${burgerIngredients.price}`}>
-          <p className={`mr-1 text text_type_digits-default`}>
-            {this.props.price}
-          </p>
-          <CurrencyIcon />
-        </div>
-        <p className={`${burgerIngredients.name}`}>{this.props.name}</p>
-      </li>
-    );
-  }
-}
-
-const Subcontainer = ({ arr }) => {
-  const [current, setCurrent] = React.useState(false);
-  function toggle() {
-    setCurrent(current === true ? false : true);
+  const onItemClick = () => {
+    onCardClick(obj);
+    if (!isBun(obj)) {
+      setState({ display: true, count: state.count + 1 });
+      ingredientsArr.push(obj);
+    } else {
+      if (isBunInArr(ingredientsArr)) {
+        ingredientsArr.splice(
+          ingredientsArr.indexOf(extractBun(ingredientsArr)),
+          1
+        );
+        ingredientsArr.push(obj);
+      } else {
+        ingredientsArr.push(obj);
+      }
+    }
   };
 
   return (
-    <ul className={`pl-4 pr-2 ${burgerIngredients.subcontainer}`} >
+    <li className={burgerIngredients.item} onClick={onItemClick}>
+      <div
+        className={
+          state.display
+            ? `${burgerIngredients.counter} ${burgerIngredients.counter_active}`
+            : `${burgerIngredients.counter}`
+        }
+      >
+        <Counter count={state.count} size="default" />
+      </div>
+      <img src={obj.image} className={`ml-4 mr-4`} />
+      <div className={`mt-1 mb-1 ${burgerIngredients.price}`}>
+        <p className={`mr-1 text text_type_digits-default`}>{obj.price}</p>
+        <CurrencyIcon />
+      </div>
+      <p className={`${burgerIngredients.name}`}>{obj.name}</p>
+    </li>
+  );
+};
+
+const Subcontainer = ({ arr }) => {
+  const [current, setCurrent] = React.useState({});
+
+  const handleListItemClick = React.useCallback(
+    (obj) => {
+      setCurrent({ current: obj._id });
+    },
+    [current]
+  );
+
+  return (
+    <ul className={`pl-4 pr-2 ${burgerIngredients.subcontainer}`}>
       {arr.map((item) => (
-        <Item {...item} key={item._id} onItemClick={toggle} />
+        <Item
+          obj={item}
+          value={current}
+          key={item._id}
+          onCardClick={handleListItemClick}
+        />
       ))}
     </ul>
   );
 };
 
 const Container = ({ arr }) => {
-
   return (
     <>
       {arr.map((sortedArr, index) => (
@@ -153,32 +132,36 @@ const Tabs = () => {
   );
 };
 
-class BurgerIngredients extends React.Component {
-  state = {
-    active: false,
-  };
+const BurgerIngredients = () => {
+  return (
+    <section className={`mr-10 ${burgerIngredients.section}`}>
+      <nav className={`${burgerIngredients.header}`}>
+        <h2
+          className={`pt-10 pb-5 text text_type_main-large ${burgerIngredients.title}`}
+        >
+          Соберите бургер
+        </h2>
+        <Tabs />
+      </nav>
+      <div className={`${burgerIngredients.menu}`}>
+        <Container arr={newData} />
+      </div>
+    </section>
+  );
+};
 
-  handleTab = (value) => {
-    this.setState({ active: value });
-  };
+export { BurgerIngredients };
 
-  render() {
-    return (
-      <section className={`mr-10 ${burgerIngredients.section}`}>
-        <nav className={`${burgerIngredients.header}`}>
-          <h2
-            className={`pt-10 pb-5 text text_type_main-large ${burgerIngredients.title}`}
-          >
-            Соберите бургер
-          </h2>
-          <Tabs />
-        </nav>
-        <div className={`${burgerIngredients.menu}`}>
-          <Container arr={newData} />
-        </div>
-      </section>
-    );
-  }
-}
+Container.propTypes = {
+  arr: PropTypes.arrayOf(PropTypes.array).isRequired,
+};
 
-export default BurgerIngredients;
+Subcontainer.propTypes = {
+  arr: PropTypes.arrayOf(itemPropTypes).isRequired,
+};
+
+Item.propTypes = {
+  obj: itemPropTypes.isRequired,
+  onCardClick: PropTypes.func,
+  value: PropTypes.object,
+};
