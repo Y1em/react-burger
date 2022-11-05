@@ -1,0 +1,38 @@
+.container {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+
+}
+
+.header {
+  position: relative;
+  background-color: #1C1C21;
+  padding: 0 calc(100% / 6) 0 calc(100% / 6);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.item:last-of-type {
+  margin-left: auto;
+}
+
+.item:first-of-type {
+  margin-right: 8px;
+}
+
+.title {
+  margin: 0;
+}
+
+.logo {
+  width: var(--logo-width);
+  height: var(--logo-height);
+  position: absolute;
+  top: calc((100% - var(--logo-height))/2);
+  left: calc((100% - var(--logo-width))/2);
+}
