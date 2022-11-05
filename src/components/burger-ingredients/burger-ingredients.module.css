@@ -40,13 +40,13 @@
 }
 
 .menu::-webkit-scrollbar-thumb {
-  background-color: #8585AD;
+  background-color: var(--secondary-text);
 }
 
 .menu::-webkit-scrollbar {
 
   width: var(--scroll-bar-width);
-  background-color: #1C1C21;
+  background-color: var(--modal-bg);
 }
 
 .section {
@@ -83,8 +83,7 @@
 
 .header {
   position: fixed;
-  z-index: 2;
-  background-color: #131316;
+  background-color: var(--bg);
 }
 
 .title {

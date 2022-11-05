@@ -7,7 +7,6 @@ import {
   CurrencyIcon,
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import ingredients from "../utils/data";
 import {
   isBun,
   extractBun,
@@ -15,11 +14,7 @@ import {
   isBunInArr,
   getTitle,
 } from "../utils/utils";
-
-// Данные функции разбивают исходный массив по типам (data.type), создавая отдельные массивы с одним типом.
-// Теперь если в меню появится новый тип, он автоматически появится в разделе "Новинки" :D
-
-const newData = sortByTypes(ingredients);
+import { getData } from "../utils/api";
 
 const ingredientsArr = []; // В дальнейшей этот массив будет передаваться в конструктор
 
@@ -133,21 +128,31 @@ const Tabs = () => {
 };
 
 const BurgerIngredients = () => {
-  return (
-    <section className={`mr-10 ${burgerIngredients.section}`}>
-      <nav className={`${burgerIngredients.header}`}>
-        <h2
-          className={`pt-10 pb-5 text text_type_main-large ${burgerIngredients.title}`}
-        >
-          Соберите бургер
-        </h2>
-        <Tabs />
-      </nav>
-      <div className={`${burgerIngredients.menu}`}>
-        <Container arr={newData} />
-      </div>
-    </section>
-  );
+  const [data, setData] = React.useState(null);
+
+  React.useEffect(() => {
+    getData(setData, sortByTypes);
+  }, []);
+
+  if (data === null) {
+    return <section className={`mr-10 ${burgerIngredients.section}`}></section>;
+  } else {
+    return (
+      <section className={`mr-10 ${burgerIngredients.section}`}>
+        <nav className={`${burgerIngredients.header}`}>
+          <h2
+            className={`pt-10 pb-5 text text_type_main-large ${burgerIngredients.title}`}
+          >
+            Соберите бургер
+          </h2>
+          <Tabs />
+        </nav>
+        <div className={`${burgerIngredients.menu}`}>
+          <Container arr={data} />
+        </div>
+      </section>
+    );
+  }
 };
 
 export { BurgerIngredients };
@@ -162,6 +167,6 @@ Subcontainer.propTypes = {
 
 Item.propTypes = {
   obj: itemPropTypes.isRequired,
-  onCardClick: PropTypes.func,
-  value: PropTypes.object,
+  onCardClick: PropTypes.func.isRequired,
+  value: PropTypes.object.isRequired,
 };

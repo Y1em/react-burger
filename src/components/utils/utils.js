@@ -4,25 +4,25 @@ function isBun(obj) {
   } else {
     return false;
   }
-}
+};
 
 function extractBun(arr) {
   return arr.find((el) => isBun(el));
-}
+};
 
 function deleteBun(arr) {
   const newArr = JSON.parse(JSON.stringify(arr));
   const bun = newArr.find((el) => isBun(el));
   newArr.splice(newArr.indexOf(bun), 1);
   return newArr;
-}
+};
 
 function getConstructorList(arr) {
   const newArr = JSON.parse(JSON.stringify(arr));
   const bun = extractBun(newArr);
   const arrWithoutBun = newArr.filter((item) => !isBun(item));
   return arrWithoutBun.concat(bun);
-}
+};
 
 function getTotal(arr) {
   const doubledPriceBunArr = Array.from(arr, (el) => {
@@ -35,7 +35,7 @@ function getTotal(arr) {
   return doubledPriceBunArr.reduce((prev, res) => {
     return prev + res;
   }, 0);
-}
+};
 
 function getTitle(arr) {
   if (arr[0].type === "bun") {
@@ -47,11 +47,11 @@ function getTitle(arr) {
   } else {
     return "Новинки";
   }
-}
+};
 
 function isBunInArr(arr) {
   return arr.some((item) => isBun(item));
-}
+};
 
 function getTypes(data) {
   const types = Array.from(data, (item) => item.type).sort();
@@ -61,7 +61,7 @@ function getTypes(data) {
     }
   }
   return types;
-}
+};
 
 function getOneTypeArr(data, type) {
   const arr = [];
@@ -71,7 +71,7 @@ function getOneTypeArr(data, type) {
     }
   });
   return arr;
-}
+};
 
 function sortByTypes(data) {
   const arr = [];
@@ -80,7 +80,10 @@ function sortByTypes(data) {
     arr.push(getOneTypeArr(data, type));
   });
   return arr;
-}
+};
+
+const modalRoot = document.getElementById("react-modals");
+
 
 export {
   extractBun,
@@ -93,4 +96,5 @@ export {
   getOneTypeArr,
   getTypes,
   getConstructorList,
+  modalRoot,
 };

@@ -15,35 +15,9 @@ import {
   getTotal,
   getConstructorList,
 } from "../utils/utils";
-import ingredients from "../utils/data";
+import { getData } from "../utils/api";
 
-const ConstructorContainer = ({ arr }) => {
-  if (arr.length === 0) {
-    return <ul className={`${burgerConstructor.container}`}></ul>;
-  } else {
-    return (
-      <ul className={`${burgerConstructor.container}`}>
-        <Item
-          obj={extractBun(arr)}
-          position={"first"}
-          key={`${extractBun(arr)._id}-top`}
-        />
-        <ul className={`mb-4 ${burgerConstructor.ingredients__container}`}>
-          {deleteBun(arr).map((obj) => {
-            return <Item obj={obj} key={obj._id} />;
-          })}
-        </ul>
-        <Item
-          obj={extractBun(arr)}
-          position={"last"}
-          key={`${extractBun(arr)._id}-bottom`}
-        />
-      </ul>
-    );
-  }
-};
-
-const Item = ({ obj, position }) => {
+const Item = ({ obj, position, toConstructorContainer }) => {
   const [state, setState] = React.useState({
     name: obj.name,
     price: obj.price,
@@ -51,6 +25,10 @@ const Item = ({ obj, position }) => {
     type: "",
     isLocked: "",
   });
+
+  function handleOpenModal() {
+    toConstructorContainer(obj);
+  }
 
   const setBunState = () => {
     if (position === "first") {
@@ -87,7 +65,10 @@ const Item = ({ obj, position }) => {
   }
 
   return (
-    <li className={`mb-4 mr-4 card ${burgerConstructor.item}`}>
+    <li
+      className={`mb-4 mr-4 card ${burgerConstructor.item}`}
+      onClick={handleOpenModal}
+    >
       {state.type === undefined && <DragIcon />}
       <ConstructorElement
         type={state.type}
@@ -100,33 +81,101 @@ const Item = ({ obj, position }) => {
   );
 };
 
-const BurgerConstructor = () => {
-  return (
-    <section className={`pt-25 pl-4 ${burgerConstructor.section}`}>
-      {/* Использовать весь массив только для верстки первого этапа, для второго
-      этапа нужно прописать функциональность переноса из ингридиентов в конструктор */}
-      <ConstructorContainer arr={getConstructorList(ingredients)} />
-      <div className={`mr-4 mt-10 ${burgerConstructor.bottom}`}>
-        <p className={"text text_type_digits-medium mr-2"}>
-          {getTotal(getConstructorList(ingredients))}
-        </p>
-        <div className={`mr-10 ${burgerConstructor.icon}`}>
-          <CurrencyIcon />
+const ConstructorContainer = ({ arr, toBurgerConstructor }) => {
+  function handleOpenModal(obj) {
+    toBurgerConstructor(obj);
+  }
+
+  if (arr.length === 0) {
+    return <ul className={`${burgerConstructor.container}`}></ul>;
+  } else {
+    return (
+      <ul className={`${burgerConstructor.container}`}>
+        <Item
+          obj={extractBun(arr)}
+          position={"first"}
+          key={`${extractBun(arr)._id}-top`}
+          toConstructorContainer={handleOpenModal}
+        />
+        <ul className={`mb-4 ${burgerConstructor.ingredients__container}`}>
+          {deleteBun(arr).map((obj) => {
+            return (
+              <Item
+                obj={obj}
+                key={obj._id}
+                toConstructorContainer={handleOpenModal}
+              />
+            );
+          })}
+        </ul>
+        <Item
+          obj={extractBun(arr)}
+          position={"last"}
+          key={`${extractBun(arr)._id}-bottom`}
+          toConstructorContainer={handleOpenModal}
+        />
+      </ul>
+    );
+  }
+};
+
+const BurgerConstructor = ({ toAppIng, toAppOrder }) => {
+  const [data, setData] = React.useState(null);
+
+  React.useEffect(() => {
+    getData(setData, getConstructorList);
+  }, []);
+
+  function onItemClick(obj) {
+    toAppIng(obj);
+  }
+
+  function onButtonClick() {
+    toAppOrder();
+  }
+
+  if (data === null) {
+    return (
+      <section className={`pt-25 pl-4 ${burgerConstructor.section}`}></section>
+    );
+  } else {
+    return (
+      <section className={`pt-25 pl-4 ${burgerConstructor.section}`}>
+        <ConstructorContainer arr={data} toBurgerConstructor={onItemClick} />
+        <div className={`mr-4 mt-10 ${burgerConstructor.bottom}`}>
+          <p className={"text text_type_digits-medium mr-2"}>
+            {getTotal(data)}
+          </p>
+          <div className={`mr-10 ${burgerConstructor.icon}`}>
+            <CurrencyIcon />
+          </div>
+          <Button
+            htmlType="button"
+            type="primary"
+            size="large"
+            onClick={onButtonClick}
+          >
+            Оформить заказ
+          </Button>
         </div>
-        <Button htmlType="button" type="primary" size="large">
-          Оформить заказ
-        </Button>
-      </div>
-    </section>
-  );
+      </section>
+    );
+  }
 };
 
 export default BurgerConstructor;
 
+BurgerConstructor.propTypes = {
+  toAppIng: PropTypes.func,
+  toAppOrder: PropTypes.func,
+};
+
 ConstructorContainer.propTypes = {
   arr: PropTypes.arrayOf(itemPropTypes).isRequired,
+  toBurgerConstructor: PropTypes.func,
 };
 Item.propTypes = {
   obj: itemPropTypes.isRequired,
   position: PropTypes.string,
+  toConstructorContainer: PropTypes.func,
 };
