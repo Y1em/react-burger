@@ -18,23 +18,30 @@ function deleteBun(arr) {
 };
 
 function getConstructorList(arr) {
-  const newArr = JSON.parse(JSON.stringify(arr));
+  if (arr.length !== 0) {
+    const newArr = JSON.parse(JSON.stringify(arr));
   const bun = extractBun(newArr);
   const arrWithoutBun = newArr.filter((item) => !isBun(item));
   return arrWithoutBun.concat(bun);
+  } else {
+    return []
+  }
+
 };
 
 function getTotal(arr) {
-  const doubledPriceBunArr = Array.from(arr, (el) => {
-    if (isBun(el)) {
-      return el.price * 2;
-    } else {
-      return el.price;
-    }
-  });
-  return doubledPriceBunArr.reduce((prev, res) => {
-    return prev + res;
-  }, 0);
+  if (arr.length !== 0) {
+    const doubledPriceBunArr = Array.from(arr, (el) => {
+      if (isBun(el)) {
+        return el.price * 2;
+      } else {
+        return el.price;
+      }
+    });
+    return doubledPriceBunArr.reduce((prev, res) => {
+      return prev + res;
+    }, 0);
+  }
 };
 
 function getTitle(arr) {

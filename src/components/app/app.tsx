@@ -5,12 +5,24 @@ import { BurgerIngredients } from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import { IngredientDetails } from "../ingredient-details/ingredient-details";
 import { OrderDetails } from "../order-datails/order-datails";
+import { getData } from "../utils/api";
 
 function App() {
 
   const [visibleIng, setVisibleIng] = React.useState(false);
   const [visibleOrder, setVisibleOrder] = React.useState(false);
   const [currentItem, setCurrentItem] = React.useState(null);
+  const [data, setData] = React.useState([])
+
+
+  React.useEffect(() => {
+    getData()
+    .then((data) => {
+      setData(data.data);
+    })
+    .catch((err) => console.log(err));
+  }, []);
+
 
   const handleOpenIng = React.useCallback(
     (obj:any) => {
@@ -36,19 +48,19 @@ function App() {
   }
 
   const modalIng = (
-    <IngredientDetails obj={currentItem} toModalIng={handleCloseIng} />
+    <IngredientDetails obj={currentItem} closePopup={handleCloseIng} />
   );
 
   const modalOrder = (
-    <OrderDetails toModalOrder={handleCloseOrder} />
+    <OrderDetails closePopup={handleCloseOrder} />
   )
 
   return (
     <div className={Style.app}>
       <AppHeader />
       <main className={Style.main}>
-        <BurgerIngredients />
-        <BurgerConstructor toAppIng={handleOpenIng} toAppOrder={handleOpenOrder} />
+        <BurgerIngredients array={data} toApp={handleOpenIng} />
+        <BurgerConstructor array={data} toApp={handleOpenOrder} />
       </main>
       {visibleIng && modalIng}
       {visibleOrder && modalOrder}

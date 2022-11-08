@@ -14,7 +14,6 @@ import {
   isBunInArr,
   getTitle,
 } from "../utils/utils";
-import { getData } from "../utils/api";
 
 const ingredientsArr = []; // В дальнейшей этот массив будет передаваться в конструктор
 
@@ -69,11 +68,12 @@ const Item = ({ obj, onCardClick, value }) => {
   );
 };
 
-const Subcontainer = ({ arr }) => {
+const Subcontainer = ({ arr, toContainer }) => {
   const [current, setCurrent] = React.useState({});
 
   const handleListItemClick = React.useCallback(
     (obj) => {
+      toContainer(obj)
       setCurrent({ current: obj._id });
     },
     [current]
@@ -93,7 +93,10 @@ const Subcontainer = ({ arr }) => {
   );
 };
 
-const Container = ({ arr }) => {
+const Container = ({ arr, toBurgerIngredients }) => {
+  function handleListItemClick(obj) {
+    toBurgerIngredients(obj)
+  }
   return (
     <>
       {arr.map((sortedArr, index) => (
@@ -103,7 +106,7 @@ const Container = ({ arr }) => {
           >
             {getTitle(sortedArr)}
           </h3>
-          <Subcontainer arr={sortedArr} />
+          <Subcontainer arr={sortedArr} toContainer={handleListItemClick} />
         </div>
       ))}
     </>
@@ -127,12 +130,15 @@ const Tabs = () => {
   );
 };
 
-const BurgerIngredients = () => {
-  const [data, setData] = React.useState(null);
-
+const BurgerIngredients = ({ array, toApp }) => {
+  const [data, setData] = React.useState([]);
   React.useEffect(() => {
-    getData(setData, sortByTypes);
-  }, []);
+    setData(sortByTypes(array))
+  }, [array]);
+
+  function handleListItemClick(obj) {
+    toApp(obj);
+  }
 
   if (data === null) {
     return <section className={`mr-10 ${burgerIngredients.section}`}></section>;
@@ -148,7 +154,7 @@ const BurgerIngredients = () => {
           <Tabs />
         </nav>
         <div className={`${burgerIngredients.menu}`}>
-          <Container arr={data} />
+          <Container arr={data} toBurgerIngredients={handleListItemClick} />
         </div>
       </section>
     );

@@ -15,9 +15,9 @@ import {
   getTotal,
   getConstructorList,
 } from "../utils/utils";
-import { getData } from "../utils/api";
 
-const Item = ({ obj, position, toConstructorContainer }) => {
+
+const Item = ({ obj, position }) => {
   const [state, setState] = React.useState({
     name: obj.name,
     price: obj.price,
@@ -25,10 +25,6 @@ const Item = ({ obj, position, toConstructorContainer }) => {
     type: "",
     isLocked: "",
   });
-
-  function handleOpenModal() {
-    toConstructorContainer(obj);
-  }
 
   const setBunState = () => {
     if (position === "first") {
@@ -67,7 +63,6 @@ const Item = ({ obj, position, toConstructorContainer }) => {
   return (
     <li
       className={`mb-4 mr-4 card ${burgerConstructor.item}`}
-      onClick={handleOpenModal}
     >
       {state.type === undefined && <DragIcon />}
       <ConstructorElement
@@ -81,10 +76,7 @@ const Item = ({ obj, position, toConstructorContainer }) => {
   );
 };
 
-const ConstructorContainer = ({ arr, toBurgerConstructor }) => {
-  function handleOpenModal(obj) {
-    toBurgerConstructor(obj);
-  }
+const ConstructorContainer = ({ arr }) => {
 
   if (arr.length === 0) {
     return <ul className={`${burgerConstructor.container}`}></ul>;
@@ -95,7 +87,7 @@ const ConstructorContainer = ({ arr, toBurgerConstructor }) => {
           obj={extractBun(arr)}
           position={"first"}
           key={`${extractBun(arr)._id}-top`}
-          toConstructorContainer={handleOpenModal}
+
         />
         <ul className={`mb-4 ${burgerConstructor.ingredients__container}`}>
           {deleteBun(arr).map((obj) => {
@@ -103,7 +95,7 @@ const ConstructorContainer = ({ arr, toBurgerConstructor }) => {
               <Item
                 obj={obj}
                 key={obj._id}
-                toConstructorContainer={handleOpenModal}
+
               />
             );
           })}
@@ -112,26 +104,22 @@ const ConstructorContainer = ({ arr, toBurgerConstructor }) => {
           obj={extractBun(arr)}
           position={"last"}
           key={`${extractBun(arr)._id}-bottom`}
-          toConstructorContainer={handleOpenModal}
+
         />
       </ul>
     );
   }
 };
 
-const BurgerConstructor = ({ toAppIng, toAppOrder }) => {
-  const [data, setData] = React.useState(null);
+const BurgerConstructor = ({ array, toApp }) => {
+  const [data, setData] = React.useState([]);
 
   React.useEffect(() => {
-    getData(setData, getConstructorList);
-  }, []);
-
-  function onItemClick(obj) {
-    toAppIng(obj);
-  }
+    setData(getConstructorList(array));
+  }, [array]);
 
   function onButtonClick() {
-    toAppOrder();
+    toApp();
   }
 
   if (data === null) {
@@ -141,7 +129,7 @@ const BurgerConstructor = ({ toAppIng, toAppOrder }) => {
   } else {
     return (
       <section className={`pt-25 pl-4 ${burgerConstructor.section}`}>
-        <ConstructorContainer arr={data} toBurgerConstructor={onItemClick} />
+        <ConstructorContainer arr={data} />
         <div className={`mr-4 mt-10 ${burgerConstructor.bottom}`}>
           <p className={"text text_type_digits-medium mr-2"}>
             {getTotal(data)}

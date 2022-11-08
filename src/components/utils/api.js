@@ -1,8 +1,13 @@
-export const getData = (setter, callback) => {
-  fetch("https://norma.nomoreparties.space/api/ingredients")
-    .then(res => res.json())
-    .then((arr) => {
-      setter(callback(arr.data));
-    })
-    .catch((err) => console.log(err))
+export const getData = () => {
+  return fetch("https://norma.nomoreparties.space/api/ingredients")
+    .then(checkResponse)
 };
+
+
+function checkResponse(res) {
+  if (res.ok) {
+    return res.json();
+  } else {
+    Promise.reject(`Ошибка: ${res.status}`);
+  }
+}

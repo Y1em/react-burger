@@ -1,0 +1,26 @@
+.container {
+  position: relative;
+  background-color: var(--modal-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 40px;
+}
+
+.number {
+  text-shadow: 0 0 16px rgba(51, 51, 255, .25), 0 0 8px rgba(51, 51, 255, .25), 0 0 32px rgba(51, 51, 255, .50)
+}
+
+.text {
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.close {
+  position: absolute;
+  cursor: pointer;
+  top: calc(Var(--offset-base-size) * 15);
+  right: calc(Var(--offset-base-size) * 10);
+}
