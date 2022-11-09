@@ -1,11 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import PortalReactDOM from 'react-dom';
 import modalOverlay from './modal-overlay.module.css';
-import { modalRoot } from "../utils/utils";
-import { Modal } from "../modal/modal";
 
-const ModalOverlay = ({Popup, type, handleClose}) => {
+
+const ModalOverlay = ({children, handleClose}) => {
 
   const ref = React.useRef(null);
 
@@ -15,34 +13,26 @@ const ModalOverlay = ({Popup, type, handleClose}) => {
   }, []);
 
   React.useEffect(()=>{
-    document.addEventListener("mousedown", (e) => {
-      if (e.target === ref.current) {
+    function closeByLayover(e) {
+      if(e.target === ref.current) {
         handleClose();
       }
-    });
-    return () => {
-      document.removeEventListener("mousedown", (e) => {
-        if (e.target === ref.current) {
-          handleClose();
-        }
-      });
     }
-  }, [handleClose])
+    document.addEventListener("mousedown", closeByLayover);
+    return () => {
+      document.removeEventListener("mousedown", closeByLayover);
+    }
+  }, [])
 
-  return PortalReactDOM.createPortal(
-    (
+  return (
       <section className={`${modalOverlay.section}`} tabIndex={0} ref={ref} >
-        <Modal Popup={Popup} type={type} handleClose={handleClose} />
+        {children}
       </section>
-    ),
-    modalRoot
   );
 }
 
 export { ModalOverlay }
 
 ModalOverlay.propTypes = {
-  Popup: PropTypes.element,
-  type: PropTypes.string,
   handleClose: PropTypes.func,
 };

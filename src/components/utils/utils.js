@@ -91,7 +91,6 @@ function sortByTypes(data) {
 
 const modalRoot = document.getElementById("react-modals");
 
-
 export {
   extractBun,
   deleteBun,

@@ -1,9 +1,7 @@
-import PropTypes from "prop-types";
 import modal from './ingredient-details.module.css';
 import { itemPropTypes } from "../utils/types";
-import { ModalOverlay } from "../modal-overlay/modal-overlay";
 
-const Ingredient = ({obj}) => {
+const IngredientDetails = ({ obj }) => {
   return (
     <div className={`${modal.container}`} >
       <img
@@ -57,17 +55,9 @@ const Ingredient = ({obj}) => {
   );
 }
 
-const IngredientDetails = ({ obj, closePopup }) => {
-  const details = Ingredient({obj});
-  return (
-    <ModalOverlay Popup={details} type={'text'} handleClose={closePopup} />
-  );
-}
-
 export { IngredientDetails };
 
 IngredientDetails.propTypes = {
   obj: itemPropTypes,
-  closePopup: PropTypes.func,
 };
 

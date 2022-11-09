@@ -6,6 +6,7 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 import { IngredientDetails } from "../ingredient-details/ingredient-details";
 import { OrderDetails } from "../order-datails/order-datails";
 import { getData } from "../utils/api";
+import { Modal } from "../modal/modal";
 
 function App() {
 
@@ -37,23 +38,27 @@ function App() {
       setVisibleOrder(true);
     },
     []
-  )
+  );
 
   const handleCloseIng = () => {
     setVisibleIng(false);
-  }
+  };
 
   const handleCloseOrder = () => {
     setVisibleOrder(false);
-  }
+  };
 
   const modalIng = (
-    <IngredientDetails obj={currentItem} closePopup={handleCloseIng} />
+    <Modal title={'Детали ингредиента'} handleClose={handleCloseIng}>
+      <IngredientDetails obj={currentItem} />
+    </Modal>
   );
 
   const modalOrder = (
-    <OrderDetails closePopup={handleCloseOrder} />
-  )
+    <Modal title={'1234567'} handleClose={handleCloseOrder}>
+      <OrderDetails />
+    </Modal>
+  );
 
   return (
     <div className={Style.app}>
