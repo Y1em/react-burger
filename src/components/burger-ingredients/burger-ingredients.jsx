@@ -7,7 +7,6 @@ import {
   CurrencyIcon,
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import ingredients from "../utils/data";
 import {
   isBun,
   extractBun,
@@ -15,11 +14,6 @@ import {
   isBunInArr,
   getTitle,
 } from "../utils/utils";
-
-// Данные функции разбивают исходный массив по типам (data.type), создавая отдельные массивы с одним типом.
-// Теперь если в меню появится новый тип, он автоматически появится в разделе "Новинки" :D
-
-const newData = sortByTypes(ingredients);
 
 const ingredientsArr = []; // В дальнейшей этот массив будет передаваться в конструктор
 
@@ -74,11 +68,12 @@ const Item = ({ obj, onCardClick, value }) => {
   );
 };
 
-const Subcontainer = ({ arr }) => {
+const Subcontainer = ({ arr, toContainer }) => {
   const [current, setCurrent] = React.useState({});
 
   const handleListItemClick = React.useCallback(
     (obj) => {
+      toContainer(obj)
       setCurrent({ current: obj._id });
     },
     [current]
@@ -98,7 +93,10 @@ const Subcontainer = ({ arr }) => {
   );
 };
 
-const Container = ({ arr }) => {
+const Container = ({ arr, toBurgerIngredients }) => {
+  function handleListItemClick(obj) {
+    toBurgerIngredients(obj)
+  }
   return (
     <>
       {arr.map((sortedArr, index) => (
@@ -108,7 +106,7 @@ const Container = ({ arr }) => {
           >
             {getTitle(sortedArr)}
           </h3>
-          <Subcontainer arr={sortedArr} />
+          <Subcontainer arr={sortedArr} toContainer={handleListItemClick} />
         </div>
       ))}
     </>
@@ -132,22 +130,35 @@ const Tabs = () => {
   );
 };
 
-const BurgerIngredients = () => {
-  return (
-    <section className={`mr-10 ${burgerIngredients.section}`}>
-      <nav className={`${burgerIngredients.header}`}>
-        <h2
-          className={`pt-10 pb-5 text text_type_main-large ${burgerIngredients.title}`}
-        >
-          Соберите бургер
-        </h2>
-        <Tabs />
-      </nav>
-      <div className={`${burgerIngredients.menu}`}>
-        <Container arr={newData} />
-      </div>
-    </section>
-  );
+const BurgerIngredients = ({ array, toApp }) => {
+  const [data, setData] = React.useState([]);
+  React.useEffect(() => {
+    setData(sortByTypes(array))
+  }, [array]);
+
+  function handleListItemClick(obj) {
+    toApp(obj);
+  }
+
+  if (data === null) {
+    return <section className={`mr-10 ${burgerIngredients.section}`}></section>;
+  } else {
+    return (
+      <section className={`mr-10 ${burgerIngredients.section}`}>
+        <nav className={`${burgerIngredients.header}`}>
+          <h2
+            className={`pt-10 pb-5 text text_type_main-large ${burgerIngredients.title}`}
+          >
+            Соберите бургер
+          </h2>
+          <Tabs />
+        </nav>
+        <div className={`${burgerIngredients.menu}`}>
+          <Container arr={data} toBurgerIngredients={handleListItemClick} />
+        </div>
+      </section>
+    );
+  }
 };
 
 export { BurgerIngredients };
@@ -162,6 +173,6 @@ Subcontainer.propTypes = {
 
 Item.propTypes = {
   obj: itemPropTypes.isRequired,
-  onCardClick: PropTypes.func,
-  value: PropTypes.object,
+  onCardClick: PropTypes.func.isRequired,
+  value: PropTypes.object.isRequired,
 };

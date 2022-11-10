@@ -25,11 +25,11 @@
 
 .ingredients__container::-webkit-scrollbar {
   width: var(--scroll-bar-width);
-  background-color: #1c1c21;
+  background-color: var(--modal-bg);
 }
 
 .ingredients__container::-webkit-scrollbar-thumb {
-  background-color: #8585ad;
+  background-color: var(--secondary-text);
 }
 
 .ingredients__container .item {

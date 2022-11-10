@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image {
+  width: 480px;
+  height: 240px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.nutrients {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  color: var(--secondary-text)
+}
+
+
+.nutrient {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 112px;
+}
+
+.nutrient:first-of-type {
+  margin-left: 0;
+  width: 120px;
+}
