@@ -56,10 +56,6 @@ function getTitle(arr) {
   }
 };
 
-function isBunInArr(arr) {
-  return arr.some((item) => isBun(item));
-};
-
 function getTypes(data) {
   const types = Array.from(data, (item) => item.type).sort();
   for (let i = 0; i < types.length; i = i + 1) {
@@ -91,13 +87,12 @@ function sortByTypes(data) {
 
 function getIds(data) {
   const arr = [];
-  getConstructorList(data).forEach((item) => {
+  const constructorList = getConstructorList(data);
+  [extractBun(constructorList)].concat(constructorList).forEach((item) => {
     arr.push(item._id)
   });
   return arr;
-}
-
-
+};
 
 export {
   extractBun,
@@ -105,7 +100,6 @@ export {
   isBun,
   getTotal,
   getTitle,
-  isBunInArr,
   sortByTypes,
   getOneTypeArr,
   getTypes,

@@ -44,11 +44,11 @@ const Item = ({ obj, position }) => {
 
   React.useEffect(() => {
     setLocked();
-  }, [state.type]);
+  }, [state.type]); // eslint-disable-line
 
   React.useEffect(() => {
     setBunState();
-  }, []);
+  }, []); // eslint-disable-line
 
   function addName() {
     if (state.type === "top") {
@@ -61,9 +61,7 @@ const Item = ({ obj, position }) => {
   }
 
   return (
-    <li
-      className={`mb-4 mr-4 card ${burgerConstructor.item}`}
-    >
+    <li className={`mb-4 mr-4 card ${burgerConstructor.item}`}>
       {state.type === undefined && <DragIcon />}
       <ConstructorElement
         type={state.type}
@@ -77,7 +75,6 @@ const Item = ({ obj, position }) => {
 };
 
 const ConstructorContainer = ({ arr }) => {
-
   if (arr.length === 0) {
     return <ul className={`${burgerConstructor.container}`}></ul>;
   } else {
@@ -87,24 +84,16 @@ const ConstructorContainer = ({ arr }) => {
           obj={extractBun(arr)}
           position={"first"}
           key={`${extractBun(arr)._id}-top`}
-
         />
         <ul className={`mb-4 ${burgerConstructor.ingredients__container}`}>
           {deleteBun(arr).map((obj) => {
-            return (
-              <Item
-                obj={obj}
-                key={obj._id}
-
-              />
-            );
+            return <Item obj={obj} key={obj._id} />;
           })}
         </ul>
         <Item
           obj={extractBun(arr)}
           position={"last"}
           key={`${extractBun(arr)._id}-bottom`}
-
         />
       </ul>
     );
@@ -112,12 +101,15 @@ const ConstructorContainer = ({ arr }) => {
 };
 
 const BurgerConstructor = ({ toApp }) => {
-
   const { data } = React.useContext(dataContext);
-  const { totalPriceDispatcher, totalPriceState } = React.useContext(totalPriceContext);
+  const { totalPriceDispatcher, totalPriceState } =
+    React.useContext(totalPriceContext);
 
   React.useEffect(() => {
-    totalPriceDispatcher({type: 'set', total: getTotal(getConstructorList(data))});
+    totalPriceDispatcher({
+      type: "SET",
+      total: getTotal(getConstructorList(data)),
+    });
   }, [totalPriceDispatcher, data]);
 
   function onButtonClick() {

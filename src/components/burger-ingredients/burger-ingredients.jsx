@@ -9,14 +9,10 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import {
   isBun,
-  extractBun,
   sortByTypes,
-  isBunInArr,
   getTitle,
 } from "../utils/utils";
 import { dataContext } from "../../services/appContext";
-
-const ingredientsArr = [];
 
 const Item = ({ obj, onCardClick, value }) => {
   const [state, setState] = React.useState({
@@ -32,20 +28,6 @@ const Item = ({ obj, onCardClick, value }) => {
 
   const onItemClick = () => {
     onCardClick(obj);
-    if (!isBun(obj)) {
-      setState({ display: true, count: state.count + 1 });
-      ingredientsArr.push(obj);
-    } else {
-      if (isBunInArr(ingredientsArr)) {
-        ingredientsArr.splice(
-          ingredientsArr.indexOf(extractBun(ingredientsArr)),
-          1
-        );
-        ingredientsArr.push(obj);
-      } else {
-        ingredientsArr.push(obj);
-      }
-    }
   };
 
   return (
@@ -74,10 +56,10 @@ const Subcontainer = ({ arr, toContainer }) => {
 
   const handleListItemClick = React.useCallback(
     (obj) => {
-      toContainer(obj)
+      toContainer(obj);
       setCurrent({ current: obj._id });
     },
-    [current]
+    [current] // eslint-disable-line
   );
 
   return (
@@ -96,7 +78,7 @@ const Subcontainer = ({ arr, toContainer }) => {
 
 const Container = ({ arr, toBurgerIngredients }) => {
   function handleListItemClick(obj) {
-    toBurgerIngredients(obj)
+    toBurgerIngredients(obj);
   }
   return (
     <>
@@ -132,12 +114,11 @@ const Tabs = () => {
 };
 
 const BurgerIngredients = ({ toApp }) => {
-
   const { data } = React.useContext(dataContext);
 
   function handleListItemClick(obj) {
     toApp(obj);
-  };
+  }
 
   if (data === null) {
     return <section className={`mr-10 ${burgerIngredients.section}`}></section>;
@@ -153,7 +134,10 @@ const BurgerIngredients = ({ toApp }) => {
           <Tabs />
         </nav>
         <div className={`${burgerIngredients.menu}`}>
-          <Container arr={sortByTypes(data)} toBurgerIngredients={handleListItemClick} />
+          <Container
+            arr={sortByTypes(data)}
+            toBurgerIngredients={handleListItemClick}
+          />
         </div>
       </section>
     );
@@ -164,15 +148,16 @@ export { BurgerIngredients };
 
 BurgerIngredients.propTypes = {
   toApp: PropTypes.func.isRequired,
-}
+};
 
 Container.propTypes = {
-  arr: PropTypes.arrayOf(PropTypes.array).isRequired,
+  arr: PropTypes.arrayOf(PropTypes.arrayOf(itemPropTypes.isRequired).isRequired)
+    .isRequired,
   toBurgerIngredients: PropTypes.func.isRequired,
 };
 
 Subcontainer.propTypes = {
-  arr: PropTypes.arrayOf(itemPropTypes).isRequired,
+  arr: PropTypes.arrayOf(itemPropTypes.isRequired).isRequired,
   toContainer: PropTypes.func.isRequired,
 };
 

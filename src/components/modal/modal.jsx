@@ -1,38 +1,34 @@
 import React from "react";
 import PropTypes from "prop-types";
-import PortalReactDOM from 'react-dom';
-import modal from './modal.module.css';
+import PortalReactDOM from "react-dom";
+import modal from "./modal.module.css";
 import { modalRoot } from "../utils/const";
-import {
-  CloseIcon
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ModalOverlay } from "../modal-overlay/modal-overlay";
 import { ingredientsTitle } from "../utils/const";
 import { orderContext } from "../../services/appContext";
 
-
 const Modal = ({ children, title, handleClose }) => {
-
   const { order } = React.useContext(orderContext);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     function closeByEscape(e) {
-      if(e.key === "Escape") {
+      if (e.key === "Escape") {
         handleClose();
       }
     }
     document.addEventListener("keydown", closeByEscape);
     return () => {
       document.removeEventListener("keydown", closeByEscape);
-    }
+    };
   }, [handleClose]);
 
   function handleCloseByButton() {
-    handleClose()
-  };
+    handleClose();
+  }
 
-  let containerStyle = '';
-  let titleStyle = '';
+  let containerStyle = "";
+  let titleStyle = "";
   const styleTitle = (string) => {
     if (string === ingredientsTitle) {
       containerStyle = `pt-10 pr-10 pb-15 pl-10`;
@@ -41,32 +37,30 @@ const Modal = ({ children, title, handleClose }) => {
       containerStyle = `pt-30 pr-25 pb-30 pl-25`;
       titleStyle = `mb-8 text text_type_digits-large ${modal.number}`;
     }
-  }
+  };
 
   styleTitle(title);
 
   return PortalReactDOM.createPortal(
-    (
-      <ModalOverlay handleClose={handleClose}>
-        <div className={`${containerStyle} ${modal.container}`} >
-          <div className={titleStyle} >
-            {title=== ingredientsTitle ? title : order.number}
-          </div>
-          <div className={`${modal.close}`}>
-            <CloseIcon onClick={handleCloseByButton} />
-          </div>
-          {children}
+    <ModalOverlay handleClose={handleClose}>
+      <div className={`${containerStyle} ${modal.container}`}>
+        <div className={titleStyle}>
+          {title === ingredientsTitle ? title : order.number}
         </div>
-      </ModalOverlay>
-    ),
+        <div className={`${modal.close}`}>
+          <CloseIcon onClick={handleCloseByButton} />
+        </div>
+        {children}
+      </div>
+    </ModalOverlay>,
     modalRoot
-  )
-}
+  );
+};
 
-export { Modal }
+export { Modal };
 
 Modal.propTypes = {
-  children: PropTypes.element,
-  title: PropTypes.string,
-  handleClose: PropTypes.func,
+  children: PropTypes.element.isRequired,
+  title: PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };

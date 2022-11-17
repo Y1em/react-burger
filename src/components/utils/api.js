@@ -17,7 +17,10 @@ export const getOrder = (arr) => {
 }
 
 export const getData = () => {
-  return fetch(`${config.baseUrl}/ingredients`)
+  return fetch(`${config.baseUrl}/ingredients`, {
+    method: "GET",
+    headers: config.headers,
+  })
     .then(checkResponse)
 };
 
