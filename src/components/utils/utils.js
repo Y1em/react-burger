@@ -89,7 +89,15 @@ function sortByTypes(data) {
   return arr;
 };
 
-const modalRoot = document.getElementById("react-modals");
+function getIds(data) {
+  const arr = [];
+  getConstructorList(data).forEach((item) => {
+    arr.push(item._id)
+  });
+  return arr;
+}
+
+
 
 export {
   extractBun,
@@ -102,5 +110,5 @@ export {
   getOneTypeArr,
   getTypes,
   getConstructorList,
-  modalRoot,
+  getIds,
 };

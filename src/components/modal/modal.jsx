@@ -2,14 +2,18 @@ import React from "react";
 import PropTypes from "prop-types";
 import PortalReactDOM from 'react-dom';
 import modal from './modal.module.css';
-import { modalRoot } from "../utils/utils";
+import { modalRoot } from "../utils/const";
 import {
   CloseIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ModalOverlay } from "../modal-overlay/modal-overlay";
+import { ingredientsTitle } from "../utils/const";
+import { orderContext } from "../../services/appContext";
 
 
-const Modal = ({ children, title, handleClose}) => {
+const Modal = ({ children, title, handleClose }) => {
+
+  const { order } = React.useContext(orderContext);
 
   React.useEffect(()=>{
     function closeByEscape(e) {
@@ -21,7 +25,7 @@ const Modal = ({ children, title, handleClose}) => {
     return () => {
       document.removeEventListener("keydown", closeByEscape);
     }
-  }, []);
+  }, [handleClose]);
 
   function handleCloseByButton() {
     handleClose()
@@ -29,24 +33,24 @@ const Modal = ({ children, title, handleClose}) => {
 
   let containerStyle = '';
   let titleStyle = '';
-  const isNan = (string) => {
-    if (!(parseInt(string))) {
-      containerStyle = `pt-10 pr-10 pb-15 pl-10 ${modal.container}`;
+  const styleTitle = (string) => {
+    if (string === ingredientsTitle) {
+      containerStyle = `pt-10 pr-10 pb-15 pl-10`;
       titleStyle = `text text_type_main-large ${modal.text}`;
     } else {
-      containerStyle = `pt-30 pr-25 pb-30 pl-25 ${modal.container}`;
+      containerStyle = `pt-30 pr-25 pb-30 pl-25`;
       titleStyle = `mb-8 text text_type_digits-large ${modal.number}`;
     }
   }
 
-  isNan(title);
+  styleTitle(title);
 
   return PortalReactDOM.createPortal(
     (
       <ModalOverlay handleClose={handleClose}>
-        <div className={containerStyle} >
+        <div className={`${containerStyle} ${modal.container}`} >
           <div className={titleStyle} >
-            {title}
+            {title=== ingredientsTitle ? title : order.number}
           </div>
           <div className={`${modal.close}`}>
             <CloseIcon onClick={handleCloseByButton} />
@@ -62,6 +66,7 @@ const Modal = ({ children, title, handleClose}) => {
 export { Modal }
 
 Modal.propTypes = {
+  children: PropTypes.element,
   title: PropTypes.string,
   handleClose: PropTypes.func,
 };

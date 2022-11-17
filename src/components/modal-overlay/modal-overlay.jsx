@@ -22,10 +22,10 @@ const ModalOverlay = ({children, handleClose}) => {
     return () => {
       document.removeEventListener("mousedown", closeByLayover);
     }
-  }, [])
+  }, [handleClose])
 
   return (
-      <section className={`${modalOverlay.section}`} tabIndex={0} ref={ref} >
+      <section className={`overlay ${modalOverlay.section}`} tabIndex={0} ref={ref} >
         {children}
       </section>
   );
@@ -34,5 +34,6 @@ const ModalOverlay = ({children, handleClose}) => {
 export { ModalOverlay }
 
 ModalOverlay.propTypes = {
+  children: PropTypes.element,
   handleClose: PropTypes.func,
 };

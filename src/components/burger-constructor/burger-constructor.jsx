@@ -15,7 +15,7 @@ import {
   getTotal,
   getConstructorList,
 } from "../utils/utils";
-
+import { dataContext, totalPriceContext } from "../../services/appContext";
 
 const Item = ({ obj, position }) => {
   const [state, setState] = React.useState({
@@ -111,12 +111,14 @@ const ConstructorContainer = ({ arr }) => {
   }
 };
 
-const BurgerConstructor = ({ array, toApp }) => {
-  const [data, setData] = React.useState([]);
+const BurgerConstructor = ({ toApp }) => {
+
+  const { data } = React.useContext(dataContext);
+  const { totalPriceDispatcher, totalPriceState } = React.useContext(totalPriceContext);
 
   React.useEffect(() => {
-    setData(getConstructorList(array));
-  }, [array]);
+    totalPriceDispatcher({type: 'set', total: getTotal(getConstructorList(data))});
+  }, [totalPriceDispatcher, data]);
 
   function onButtonClick() {
     toApp();
@@ -129,10 +131,10 @@ const BurgerConstructor = ({ array, toApp }) => {
   } else {
     return (
       <section className={`pt-25 pl-4 ${burgerConstructor.section}`}>
-        <ConstructorContainer arr={data} />
+        <ConstructorContainer arr={getConstructorList(data)} />
         <div className={`mr-4 mt-10 ${burgerConstructor.bottom}`}>
           <p className={"text text_type_digits-medium mr-2"}>
-            {getTotal(data)}
+            {totalPriceState.totalPrice}
           </p>
           <div className={`mr-10 ${burgerConstructor.icon}`}>
             <CurrencyIcon />
@@ -154,16 +156,13 @@ const BurgerConstructor = ({ array, toApp }) => {
 export default BurgerConstructor;
 
 BurgerConstructor.propTypes = {
-  toAppIng: PropTypes.func,
-  toAppOrder: PropTypes.func,
+  toApp: PropTypes.func.isRequired,
 };
 
 ConstructorContainer.propTypes = {
   arr: PropTypes.arrayOf(itemPropTypes).isRequired,
-  toBurgerConstructor: PropTypes.func,
 };
 Item.propTypes = {
   obj: itemPropTypes.isRequired,
   position: PropTypes.string,
-  toConstructorContainer: PropTypes.func,
 };

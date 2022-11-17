@@ -14,8 +14,9 @@ import {
   isBunInArr,
   getTitle,
 } from "../utils/utils";
+import { dataContext } from "../../services/appContext";
 
-const ingredientsArr = []; // В дальнейшей этот массив будет передаваться в конструктор
+const ingredientsArr = [];
 
 const Item = ({ obj, onCardClick, value }) => {
   const [state, setState] = React.useState({
@@ -27,7 +28,7 @@ const Item = ({ obj, onCardClick, value }) => {
     if (isBun(obj)) {
       setState({ display: obj._id === value.current ? true : false, count: 1 });
     }
-  }, [value.current, state.display]);
+  }, [value, state.display, obj]);
 
   const onItemClick = () => {
     onCardClick(obj);
@@ -58,7 +59,7 @@ const Item = ({ obj, onCardClick, value }) => {
       >
         <Counter count={state.count} size="default" />
       </div>
-      <img src={obj.image} className={`ml-4 mr-4`} />
+      <img src={obj.image} className={`ml-4 mr-4`} alt={obj.name} />
       <div className={`mt-1 mb-1 ${burgerIngredients.price}`}>
         <p className={`mr-1 text text_type_digits-default`}>{obj.price}</p>
         <CurrencyIcon />
@@ -130,15 +131,13 @@ const Tabs = () => {
   );
 };
 
-const BurgerIngredients = ({ array, toApp }) => {
-  const [data, setData] = React.useState([]);
-  React.useEffect(() => {
-    setData(sortByTypes(array))
-  }, [array]);
+const BurgerIngredients = ({ toApp }) => {
+
+  const { data } = React.useContext(dataContext);
 
   function handleListItemClick(obj) {
     toApp(obj);
-  }
+  };
 
   if (data === null) {
     return <section className={`mr-10 ${burgerIngredients.section}`}></section>;
@@ -154,7 +153,7 @@ const BurgerIngredients = ({ array, toApp }) => {
           <Tabs />
         </nav>
         <div className={`${burgerIngredients.menu}`}>
-          <Container arr={data} toBurgerIngredients={handleListItemClick} />
+          <Container arr={sortByTypes(data)} toBurgerIngredients={handleListItemClick} />
         </div>
       </section>
     );
@@ -163,12 +162,18 @@ const BurgerIngredients = ({ array, toApp }) => {
 
 export { BurgerIngredients };
 
+BurgerIngredients.propTypes = {
+  toApp: PropTypes.func.isRequired,
+}
+
 Container.propTypes = {
   arr: PropTypes.arrayOf(PropTypes.array).isRequired,
+  toBurgerIngredients: PropTypes.func.isRequired,
 };
 
 Subcontainer.propTypes = {
   arr: PropTypes.arrayOf(itemPropTypes).isRequired,
+  toContainer: PropTypes.func.isRequired,
 };
 
 Item.propTypes = {
