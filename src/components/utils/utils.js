@@ -4,30 +4,29 @@ function isBun(obj) {
   } else {
     return false;
   }
-};
+}
 
 function extractBun(arr) {
   return arr.find((el) => isBun(el));
-};
+}
 
 function deleteBun(arr) {
   const newArr = JSON.parse(JSON.stringify(arr));
   const bun = newArr.find((el) => isBun(el));
   newArr.splice(newArr.indexOf(bun), 1);
   return newArr;
-};
+}
 
 function getConstructorList(arr) {
   if (arr.length !== 0) {
     const newArr = JSON.parse(JSON.stringify(arr));
-  const bun = extractBun(newArr);
-  const arrWithoutBun = newArr.filter((item) => !isBun(item));
-  return arrWithoutBun.concat(bun);
+    const bun = extractBun(newArr);
+    const arrWithoutBun = newArr.filter((item) => !isBun(item));
+    return arrWithoutBun.concat(bun);
   } else {
-    return []
+    return [];
   }
-
-};
+}
 
 function getTotal(arr) {
   if (arr.length !== 0) {
@@ -41,8 +40,10 @@ function getTotal(arr) {
     return doubledPriceBunArr.reduce((prev, res) => {
       return prev + res;
     }, 0);
+  } else {
+    return 0;
   }
-};
+}
 
 function getTitle(arr) {
   if (arr[0].type === "bun") {
@@ -54,7 +55,7 @@ function getTitle(arr) {
   } else {
     return "Новинки";
   }
-};
+}
 
 function getTypes(data) {
   const types = Array.from(data, (item) => item.type).sort();
@@ -64,7 +65,7 @@ function getTypes(data) {
     }
   }
   return types;
-};
+}
 
 function getOneTypeArr(data, type) {
   const arr = [];
@@ -74,7 +75,7 @@ function getOneTypeArr(data, type) {
     }
   });
   return arr;
-};
+}
 
 function sortByTypes(data) {
   const arr = [];
@@ -83,16 +84,33 @@ function sortByTypes(data) {
     arr.push(getOneTypeArr(data, type));
   });
   return arr;
-};
+}
 
 function getIds(data) {
   const arr = [];
   const constructorList = getConstructorList(data);
   [extractBun(constructorList)].concat(constructorList).forEach((item) => {
-    arr.push(item._id)
+    arr.push(item._id);
   });
   return arr;
-};
+}
+
+function hasBun(arr) {
+  return arr.some((item) => isBun(item));
+}
+
+function deleteItem(arr, actionId) {
+  const deletedItem = arr.find((item) => item._id === actionId);
+  arr.splice(arr.indexOf(deletedItem), 1);
+  return arr;
+}
+
+function moveItem(arr, actionId, targetIndex) {
+  const deletedItem = arr.find((item) => item._id === actionId);
+  arr.splice(arr.indexOf(deletedItem), 1);
+  arr.splice(targetIndex, 0, deletedItem);
+  return arr;
+}
 
 export {
   extractBun,
@@ -105,4 +123,7 @@ export {
   getTypes,
   getConstructorList,
   getIds,
+  hasBun,
+  deleteItem,
+  moveItem,
 };

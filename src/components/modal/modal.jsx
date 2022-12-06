@@ -1,15 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
 import PortalReactDOM from "react-dom";
+import { useDispatch, useSelector } from 'react-redux';
 import modal from "./modal.module.css";
 import { modalRoot } from "../utils/const";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ModalOverlay } from "../modal-overlay/modal-overlay";
 import { ingredientsTitle } from "../utils/const";
-import { orderContext } from "../../services/appContext";
+import { CLOSE_MODAL } from "../../services/actions/ingredients";
 
-const Modal = ({ children, title, handleClose }) => {
-  const { order } = React.useContext(orderContext);
+const Modal = ({ children, title }) => {
+  const dispatch = useDispatch();
+  const order = useSelector(store => store.ingredients.order);
+
+  function handleClose() { //UseCallback!
+    dispatch({
+      type: CLOSE_MODAL
+    });
+  }
 
   React.useEffect(() => {
     function closeByEscape(e) {
@@ -62,5 +70,4 @@ export { Modal };
 Modal.propTypes = {
   children: PropTypes.element.isRequired,
   title: PropTypes.string.isRequired,
-  handleClose: PropTypes.func.isRequired,
 };
