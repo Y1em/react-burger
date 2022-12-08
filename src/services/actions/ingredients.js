@@ -6,39 +6,41 @@ const GET_ITEMS_FAILED = "GET_ITEMS_FAILED";
 const GET_ORDER_REQUEST = "GET_ORDER_REQUEST";
 const GET_ORDER_SUCCESS = "GET_ORDER_SUCCESS";
 const GET_ORDER_FAILED = "GET_ORDER_FAILED";
-const ADD_ITEM = "ADD_ITEM";
-const GET_BUN_MESSAGE = "GET_BUN_MESSAGE";
-const GET_EMPTY_ORDER_MESSAGE = "GET_EMPTY_ORDER_MESSAGE";
 const DELETE_ITEM = "DELETE_ITEM";
-const OPEN_DETAILS = "OPEN_DETAILS";
+const SET_CURRENT_ITEM = "SET_CURRENT_ITEM";
 const CLOSE_MODAL = "CLOSE_MODAL";
-const OPEN_ORDER = "OPEN_ORDER";
 const SET_BUN = "SET_BUN";
 const SET_COUNT = "SET_COUNT";
 const SET_TOTAL_PRICE = "SET_TOTAL_PRICE";
 const INCREASE_COUNTER = "INCREASE_COUNTER";
 const DECREASE_COUNTER = "DECREASE_COUNTER";
-const SET_TAB = "SET_TAB";
-const SET_SCROLL_TOP = "SET_SCROLL_TOP";
 const MOVE_ITEM = "MOVE_ITEM";
+const ADD_BUN = 'ADD_BUN';
+const ADD_MAIN = 'ADD_MAIN'
 
 function getItems() {
   return async (dispatch) => {
     dispatch({
       type: GET_ITEMS_REQUEST,
     });
-    getData().then((res) => {
+    getData()
+    .then((res) => {
       if (res && res.success) {
         dispatch({
           type: GET_ITEMS_SUCCESS,
           items: res.data,
         });
-      } else {
         dispatch({
-          type: GET_ITEMS_FAILED,
+          type: SET_COUNT,
         });
       }
-    });
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ITEMS_FAILED,
+      });
+    })
   };
 }
 
@@ -47,7 +49,8 @@ function getOrderData(ids) {
     dispatch({
       type: GET_ORDER_REQUEST,
     });
-    getOrder(ids).then((res) => {
+    getOrder(ids)
+    .then((res) => {
       if (res && res.success) {
         dispatch({
           type: GET_ORDER_SUCCESS,
@@ -56,12 +59,15 @@ function getOrderData(ids) {
             number: res.order.number,
           },
         });
-      } else {
-        dispatch({
-          type: GET_ORDER_FAILED,
-        });
       }
-    });
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ORDER_FAILED,
+      });
+    })
+
   };
 }
 
@@ -72,21 +78,17 @@ export {
   GET_ORDER_FAILED,
   GET_ORDER_REQUEST,
   GET_ORDER_SUCCESS,
-  ADD_ITEM,
-  GET_BUN_MESSAGE,
-  GET_EMPTY_ORDER_MESSAGE,
   DELETE_ITEM,
-  OPEN_DETAILS,
+  SET_CURRENT_ITEM,
   CLOSE_MODAL,
-  OPEN_ORDER,
   SET_BUN,
   SET_COUNT,
   SET_TOTAL_PRICE,
   INCREASE_COUNTER,
   DECREASE_COUNTER,
-  SET_TAB,
-  SET_SCROLL_TOP,
   MOVE_ITEM,
+  ADD_BUN,
+  ADD_MAIN,
   getItems,
   getOrderData,
 };

@@ -1,0 +1,7 @@
+.container:last-of-type {
+  padding-bottom: calc(var(--offset-base-size) * 5);
+}
+
+.container__title {
+  text-align: start;
+}

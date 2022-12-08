@@ -1,3 +1,5 @@
+import { baseOffset } from './const.js'
+
 function isBun(obj) {
   if (obj.type === "bun") {
     return true;
@@ -28,18 +30,13 @@ function getConstructorList(arr) {
   }
 }
 
-function getTotal(arr) {
-  if (arr.length !== 0) {
-    const doubledPriceBunArr = Array.from(arr, (el) => {
-      if (isBun(el)) {
-        return el.price * 2;
-      } else {
-        return el.price;
-      }
-    });
-    return doubledPriceBunArr.reduce((prev, res) => {
-      return prev + res;
+function getTotal(buns, mains) {
+  if (buns.length !== 0) {
+    const doubledPriceBun = buns[0].price*2;
+    const mainsPrice = mains.reduce((prev, item) => {
+      return prev + item.price;
     }, 0);
+    return doubledPriceBun + mainsPrice
   } else {
     return 0;
   }
@@ -106,10 +103,49 @@ function deleteItem(arr, actionId) {
 }
 
 function moveItem(arr, actionId, targetIndex) {
-  const deletedItem = arr.find((item) => item._id === actionId);
+  const deletedItem = arr.find((item) => (item._id === actionId));
   arr.splice(arr.indexOf(deletedItem), 1);
   arr.splice(targetIndex, 0, deletedItem);
   return arr;
+}
+
+function handleScrollTop (action) {
+  if (action === "one") {
+    return 0;
+  } else if (action === "two") {
+    return 260;
+  } else if (action === "three") {
+    return 1480;
+  }
+}
+
+function getScrollLimits (arr) {
+  const newArr = Array.from(arr, (item) => item);
+  const limits = [];
+  newArr.forEach((item, index) => {
+    limits.push(item.offsetTop - baseOffset*index)
+  })
+  return limits;
+}
+
+function setBunType(position) {
+  if (position === "first") {
+    return "top";
+  } else if (position === "last") {
+    return "bottom";
+  } else {
+    return undefined;
+  }
+};
+
+function addName(type) {
+  if (type === "top") {
+    return "(верх)";
+  } else if (type === "bottom") {
+    return "(низ)";
+  } else {
+    return "";
+  }
 }
 
 export {
@@ -126,4 +162,8 @@ export {
   hasBun,
   deleteItem,
   moveItem,
+  handleScrollTop,
+  getScrollLimits,
+  setBunType,
+  addName,
 };

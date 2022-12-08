@@ -5,33 +5,29 @@ import {
   GET_ORDER_FAILED,
   GET_ORDER_SUCCESS,
   GET_ORDER_REQUEST,
-  ADD_ITEM,
-  GET_BUN_MESSAGE,
-  GET_EMPTY_ORDER_MESSAGE,
   DELETE_ITEM,
-  OPEN_DETAILS,
+  SET_CURRENT_ITEM,
   CLOSE_MODAL,
-  OPEN_ORDER,
   SET_BUN,
   SET_COUNT,
   SET_TOTAL_PRICE,
   INCREASE_COUNTER,
   DECREASE_COUNTER,
-  SET_TAB,
-  SET_SCROLL_TOP,
   MOVE_ITEM,
+  ADD_BUN,
+  ADD_MAIN,
 } from "../actions/ingredients";
 
-import { getTotal, deleteItem, moveItem } from "../../components/utils/utils";
+import { getTotal, deleteItem, moveItem, isBun } from "../../components/utils/utils";
 
 const initialState = {
   items: [],
   itemsRequest: false,
   itemsFailed: false,
   constructorItems: [],
-  message: "Перетащите ингридиенты сюда",
+  constructorBuns: [],
+  constructorMains: [],
   currentItem: undefined,
-  displayCurrentItem: false,
   activeBunId: undefined,
   activeItemId: undefined,
   displayOrder: false,
@@ -42,17 +38,6 @@ const initialState = {
   orderRequest: false,
   orderFailed: false,
   totalPrice: 0,
-  currentTab: "one",
-  scrollTop: 0,
-  setScrollTop: (action) => {
-    if (action.value === "one") {
-      return 0;
-    } else if (action.value === "two") {
-      return 300;
-    } else if (action.value === "three") {
-      return 1400;
-    }
-  },
 };
 
 const ingredienstReducer = (state = initialState, action) => {
@@ -84,6 +69,7 @@ const ingredienstReducer = (state = initialState, action) => {
     case GET_ORDER_SUCCESS: {
       return {
         ...state,
+        ...state.items.forEach((item) => (item.count = 0)),
         orderFailed: false,
         order: action.order,
         name: action.name,
@@ -94,45 +80,41 @@ const ingredienstReducer = (state = initialState, action) => {
       return { ...state, orderFailed: true, orderRequest: false };
     }
 
-    case ADD_ITEM: {
+    case ADD_BUN: {
       return {
         ...state,
-        ...state.constructorItems.push(
+        ...state.constructorBuns.push(
           [...state.items].find((item) =>
-            item._id === action.id ? item : null
+            (item._id === action.id && isBun(item)) ? item : null
           )
         ),
       };
     }
 
-    case GET_BUN_MESSAGE: {
+    case ADD_MAIN: {
       return {
         ...state,
-        message: "Сначала выберите булку",
-      };
-    }
-
-    case GET_EMPTY_ORDER_MESSAGE: {
-      return {
-        ...state,
-        message: `Нельзя оформить пустой заказ. Добавьте\u00A0ингредиенты`,
+        ...state.constructorMains.push(
+          [...state.items].find((item) =>
+            (item._id === action.id && !isBun(item)) ? item : null
+          )
+        ),
       };
     }
 
     case DELETE_ITEM: {
       return {
         ...state,
-        constructorItems: deleteItem([...state.constructorItems], action.id),
+        constructorMains: deleteItem([...state.constructorMains], action.id),
       };
     }
 
-    case OPEN_DETAILS: {
+    case SET_CURRENT_ITEM: {
       return {
         ...state,
         currentItem: [...state.items].find((item) =>
           item._id === action.id ? item : null
         ),
-        displayCurrentItem: true,
       };
     }
 
@@ -145,13 +127,6 @@ const ingredienstReducer = (state = initialState, action) => {
         order: {
           number: "...",
         },
-      };
-    }
-
-    case OPEN_ORDER: {
-      return {
-        ...state,
-        displayOrder: true,
       };
     }
 
@@ -191,29 +166,15 @@ const ingredienstReducer = (state = initialState, action) => {
     case SET_TOTAL_PRICE: {
       return {
         ...state,
-        totalPrice: getTotal(state.constructorItems),
-      };
-    }
-
-    case SET_TAB: {
-      return {
-        ...state,
-        currentTab: action.value,
-      };
-    }
-
-    case SET_SCROLL_TOP: {
-      return {
-        ...state,
-        scrollTop: state.setScrollTop(action),
+        totalPrice: getTotal(state.constructorBuns, state.constructorMains),
       };
     }
 
     case MOVE_ITEM: {
       return {
         ...state,
-        constructorItems: moveItem(
-          [...state.constructorItems],
+        constructorMains: moveItem(
+          [...state.constructorMains],
           action.id,
           action.index
         ),
