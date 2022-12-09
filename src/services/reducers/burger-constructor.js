@@ -11,6 +11,7 @@ import {
   deleteItem,
   moveItem,
   isBun,
+  addBun,
 } from "../../components/utils/utils";
 
 const initialState = {
@@ -24,11 +25,7 @@ const constructorReducer = (state = initialState, action) => {
     case ADD_BUN: {
       return {
         ...state,
-        ...state.constructorBuns.push(
-          action.items.find((item) =>
-            item._id === action.id && isBun(item) ? item : null
-          )
-        ),
+        constructorBuns: addBun(action.item, [...state.constructorBuns])
       };
     }
 
@@ -36,7 +33,7 @@ const constructorReducer = (state = initialState, action) => {
       return {
         ...state,
         ...state.constructorMains.push(
-            action.items.find((item) =>
+          action.items.find((item) =>
             item._id === action.id && !isBun(item) ? item : null
           )
         ),

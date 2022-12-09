@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { itemPropTypes } from "../utils/types";
 import burgerConstructor from "./constructor-container.module.css";
 import { ConstructorItem } from "../constructor-item/constructor-item";
-import { isBun, extractBun, hasBun } from "../utils/utils";
+import { isBun, hasBun } from "../utils/utils";
 import { bunMessage } from "../utils/const";
 import {
   SET_BUN,
@@ -47,25 +47,11 @@ const ConstructorContainer = ({
         id: item._id,
         ingredientType: item.type,
       });
-      if (hasBun(bunList)) {
-        bunList.splice(
-          bunList.indexOf(extractBun(bunList)),
-          1
-        );
-        dispatch({
-          type: ADD_BUN,
-          id: item._id,
-          items: data,
-        });
-      } else {
-        dispatch({
-          type: ADD_BUN,
-          id: item._id,
-          items: data,
-        });
-      }
+      dispatch({
+        type: ADD_BUN,
+        item: item,
+      });
     }
-
     dispatch({
       type: SET_TOTAL_PRICE,
     });

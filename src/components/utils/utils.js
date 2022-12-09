@@ -148,6 +148,17 @@ function addName(type) {
   }
 }
 
+function addBun(item, buns) {
+  if (hasBun(buns)) {
+    const deletedBun = buns.find((element) => isBun(element));
+    buns.splice(buns.indexOf(deletedBun, 1));
+    buns.push(item);
+  } else {
+    buns.push(item);
+  }
+  return buns
+}
+
 export {
   extractBun,
   deleteBun,
@@ -166,4 +177,5 @@ export {
   getScrollLimits,
   setBunType,
   addName,
+  addBun,
 };
