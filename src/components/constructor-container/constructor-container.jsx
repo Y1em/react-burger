@@ -7,12 +7,14 @@ import { isBun, extractBun, hasBun } from "../utils/utils";
 import { bunMessage } from "../utils/const";
 import {
   SET_BUN,
-  SET_TOTAL_PRICE,
   INCREASE_COUNTER,
+} from "../../services/actions/burger-ingredients";
+import {
+  SET_TOTAL_PRICE,
   ADD_BUN,
   ADD_MAIN,
-} from "../../services/actions/ingredients";
-import { useDispatch } from "react-redux";
+} from "../../services/actions/burger-constructor";
+import { useDispatch, useSelector } from "react-redux";
 import { useDrop } from "react-dnd";
 
 const ConstructorContainer = ({
@@ -22,16 +24,19 @@ const ConstructorContainer = ({
   handleSetMessage,
 }) => {
   const dispatch = useDispatch();
+  const data = useSelector((store) => store.ingredientsApiReducer.items);
   const moveItem = (item) => {
     if (!isBun(item)) {
       if (hasBun(bunList)) {
         dispatch({
           type: ADD_MAIN,
           id: item._id,
+          items: data,
         });
         dispatch({
           type: INCREASE_COUNTER,
           id: item._id,
+          items: data,
         });
       } else {
         handleSetMessage(bunMessage);
@@ -50,11 +55,13 @@ const ConstructorContainer = ({
         dispatch({
           type: ADD_BUN,
           id: item._id,
+          items: data,
         });
       } else {
         dispatch({
           type: ADD_BUN,
           id: item._id,
+          items: data,
         });
       }
     }
@@ -112,10 +119,10 @@ const ConstructorContainer = ({
 };
 
 ConstructorContainer.propTypes = {
-  mainList: PropTypes.arrayOf(itemPropTypes),
-  bunList: PropTypes.arrayOf(itemPropTypes),
-  message: PropTypes.string,
-  handleSetMessage: PropTypes.func,
+  mainList: PropTypes.arrayOf(itemPropTypes).isRequired,
+  bunList: PropTypes.arrayOf(itemPropTypes).isRequired,
+  message: PropTypes.string.isRequired,
+  handleSetMessage: PropTypes.func.isRequired,
 };
 
 export { ConstructorContainer };

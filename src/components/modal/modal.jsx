@@ -7,17 +7,20 @@ import { modalRoot } from "../utils/const";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ModalOverlay } from "../modal-overlay/modal-overlay";
 import { ingredientsTitle } from "../utils/const";
-import { CLOSE_MODAL } from "../../services/actions/ingredients";
+import { CLOSE_MODAL } from "../../services/actions/modal";
 
 const Modal = ({ children, title }) => {
   const dispatch = useDispatch();
-  const order = useSelector(store => store.ingredients.order);
+  const order = useSelector(store => store.orderApiReducer.order);
 
-  function handleClose() { //UseCallback!
-    dispatch({
-      type: CLOSE_MODAL
-    });
-  }
+  const handleClose = React.useCallback(
+    () => {
+      dispatch({
+        type: CLOSE_MODAL,
+        order: order,
+      });
+    }, [dispatch, order]
+  )
 
   React.useEffect(() => {
     function closeByEscape(e) {

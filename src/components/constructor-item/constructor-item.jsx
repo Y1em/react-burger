@@ -10,14 +10,17 @@ import { isBun, setBunType, addName } from "../utils/utils";
 import {
   DELETE_ITEM,
   SET_TOTAL_PRICE,
-  DECREASE_COUNTER,
   MOVE_ITEM,
-} from "../../services/actions/ingredients";
-import { useDispatch } from "react-redux";
+} from "../../services/actions/burger-constructor";
+import {
+  DECREASE_COUNTER,
+} from "../../services/actions/burger-ingredients";
+import { useDispatch, useSelector } from "react-redux";
 import { useDrop, useDrag } from "react-dnd";
 
 const ConstructorItem = ({ ingredient, position, index }) => {
   const dispatch = useDispatch();
+  const data = useSelector((store) => store.ingredientsApiReducer.items);
   const [state, setState] = React.useState({
     name: ingredient.name,
     price: ingredient.price,
@@ -75,6 +78,7 @@ const ConstructorItem = ({ ingredient, position, index }) => {
     dispatch({
       type: DECREASE_COUNTER,
       id: ingredient._id,
+      items: data,
     });
   };
 

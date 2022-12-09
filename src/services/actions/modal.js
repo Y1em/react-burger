@@ -1,0 +1,7 @@
+const SET_CURRENT_ITEM = "SET_CURRENT_ITEM";
+const CLOSE_MODAL = "CLOSE_MODAL";
+
+export {
+    SET_CURRENT_ITEM,
+    CLOSE_MODAL,
+  };

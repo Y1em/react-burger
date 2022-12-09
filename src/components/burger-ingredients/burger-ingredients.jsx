@@ -7,13 +7,14 @@ import { IngredientContainer } from "../ingredient-container/ingredient-containe
 import { IngredientDetails } from "../ingredient-details/ingredient-details";
 import { ingredientsTitle } from "../utils/const";
 import { sortByTypes, handleScrollTop, getScrollLimits } from "../utils/utils";
-import { getItems } from "../../services/actions/ingredients.js";
+import { getItems } from "../../services/actions/ingredients-api";
+import { SET_COUNT } from "../../services/actions/burger-ingredients";
 
 const BurgerIngredients = () => {
   const dispatch = useDispatch();
-  const data = useSelector((store) => store.ingredients.items);
+  const data = useSelector((store) => store.ingredientsApiReducer.items);
   const scrollContainerRef = React.useRef(null);
-  const currentItem = useSelector((store) => store.ingredients.currentItem);
+  const currentItem = useSelector((store) => store.modalReducer.currentItem);
   const [currentTab, setCurrentTab] = React.useState("one");
   const [scrollTop, setScrollTop] = React.useState(0);
 
@@ -32,6 +33,13 @@ const BurgerIngredients = () => {
   React.useEffect(() => {
     dispatch(getItems());
   }, [dispatch]);
+
+  React.useEffect(() => {
+    dispatch({
+      type: SET_COUNT,
+      items: data,
+    });
+  }, [data]); // eslint-disable-line
 
   function handleScroll(event) {
     const limits = getScrollLimits(scrollContainerRef.current.children);

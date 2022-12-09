@@ -11,7 +11,7 @@ import {
 } from "../utils/utils";
 import {
   SET_CURRENT_ITEM,
-} from "../../services/actions/ingredients.js";
+} from "../../services/actions/modal";
 import { useDrag } from "react-dnd";
 
 const IngredientItem = ({ ingredient }) => {
@@ -19,6 +19,12 @@ const IngredientItem = ({ ingredient }) => {
     display: false,
     count: 0,
   });
+  const dispatch = useDispatch();
+  const data = useSelector((store) => store.ingredientsApiReducer.items);
+  const activeBunId = useSelector((store) => store.ingredientsReducer.activeBunId);
+  const mainsList = useSelector(
+    (store) => store.constructorReducer.constructorMains
+  );
 
   const [{ opacity }, ref] = useDrag({
     type: "items",
@@ -28,13 +34,6 @@ const IngredientItem = ({ ingredient }) => {
     }),
   });
 
-  const dispatch = useDispatch();
-
-  const activeBunId = useSelector((store) => store.ingredients.activeBunId);
-  const mainsList = useSelector(
-    (store) => store.ingredients.constructorMains
-  );
-
   React.useMemo(() => {
     if (isBun(ingredient)) {
       setState({ display: ingredient._id === activeBunId ? true : false, count: 1 });
@@ -42,12 +41,13 @@ const IngredientItem = ({ ingredient }) => {
       setState({ display: ingredient.count > 0 ? true : false, count: ingredient.count });
     }
 
-  }, [ingredient.count, mainsList, activeBunId]) // eslint-disable-line
+  }, [ingredient.count, ingredient._id, mainsList, activeBunId]) // eslint-disable-line
 
   const onItemClick = () => {
     dispatch({
       type: SET_CURRENT_ITEM,
       id: ingredient._id,
+      items: data,
     });
   };
 

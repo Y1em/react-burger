@@ -9,15 +9,15 @@ import { ConstructorContainer } from "../constructor-container/constructor-conta
 import { OrderDetails } from "../order-datails/order-datails";
 import { getIds } from "../utils/utils";
 import { initialMessage, emptyOrderMessage } from "../utils/const";
-import { getOrderData } from "../../services/actions/ingredients";
+import { getOrderData } from "../../services/actions/order-api";
 import { useDispatch, useSelector } from "react-redux";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
-  const bunList = useSelector((store) => store.ingredients.constructorBuns);
-  const mainList = useSelector((store) => store.ingredients.constructorMains);
-  const totalPrice = useSelector((store) => store.ingredients.totalPrice);
-  const order = useSelector((store) => store.ingredients.order);
+  const bunList = useSelector((store) => store.constructorReducer.constructorBuns);
+  const mainList = useSelector((store) => store.constructorReducer.constructorMains);
+  const totalPrice = useSelector((store) => store.constructorReducer.totalPrice);
+  const number = useSelector((store) => store.orderApiReducer.order.number);
   const [message, setMesaage] = React.useState(initialMessage);
 
   function onButtonClick() {
@@ -54,7 +54,7 @@ const BurgerConstructor = () => {
           Оформить заказ
         </Button>
       </div>
-      {order.number > 0 && (
+      {number > 0 && (
         <Modal title={"..."}>
           <OrderDetails />
         </Modal>

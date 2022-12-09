@@ -1,6 +1,14 @@
 import { combineReducers } from 'redux';
-import { ingredienstReducer } from './ingredients';
+import { ingredientsReducer } from './burger-ingredients';
+import { constructorReducer } from './burger-constructor';
+import { ingredientsApiReducer } from './ingredients-api';
+import { orderApiReducer } from './order-api';
+import { modalReducer } from './modal';
 
 export const rootReducer = combineReducers({
-  ingredients: ingredienstReducer,
+  ingredientsReducer,
+  constructorReducer,
+  ingredientsApiReducer,
+  orderApiReducer,
+  modalReducer
 })

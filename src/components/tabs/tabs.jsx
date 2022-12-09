@@ -38,7 +38,7 @@ const Tabs = ({ currentTab, setTab }) => {
 
 Tabs.propTypes = {
   currentTab: PropTypes.string.isRequired,
-  setTab: PropTypes.func,
+  setTab: PropTypes.func.isRequired,
 };
 
 export { Tabs }
