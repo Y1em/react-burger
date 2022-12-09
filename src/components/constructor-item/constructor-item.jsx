@@ -39,15 +39,18 @@ const ConstructorItem = ({ ingredient, position, index }) => {
     });
   }
 
-  const [, drop] = useDrop({
+  const [{ isHover }, drop] = useDrop({
     accept: "constructorItems",
     collect: (monitor) => ({
       item: monitor.getItem(),
+      isHover: monitor.isOver(),
     }),
     drop(itemId) {
       moveConstructorItem(itemId);
     },
   });
+
+  const padding = isHover ? '96px 0 0 0' : '0';
 
   const [{ opacity }, drag] = useDrag({
     type: "constructorItems",
@@ -86,7 +89,7 @@ const ConstructorItem = ({ ingredient, position, index }) => {
     <li
       className={`mb-4 mr-4 card ${burgerConstructor.item}`}
       ref={ingredient.type === "bun" ? null : ref}
-      style={{ opacity }}
+      style={{ opacity, padding }}
       id={index}
     >
       {state.type === undefined && <DragIcon />}
