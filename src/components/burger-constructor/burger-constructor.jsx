@@ -1,169 +1,66 @@
 import React from "react";
-import PropTypes from "prop-types";
 import burgerConstructor from "./burger-constructor.module.css";
 import {
-  ConstructorElement,
-  DragIcon,
   CurrencyIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { itemPropTypes } from "../utils/types";
-import {
-  isBun,
-  extractBun,
-  deleteBun,
-  getTotal,
-  getConstructorList,
-} from "../utils/utils";
+import { Modal } from "../modal/modal";
+import { ConstructorContainer } from "../constructor-container/constructor-container";
+import { OrderDetails } from "../order-datails/order-datails";
+import { getIds } from "../utils/utils";
+import { initialMessage, emptyOrderMessage } from "../utils/const";
+import { getOrderData } from "../../services/actions/order-api";
+import { useDispatch, useSelector } from "react-redux";
 
+const BurgerConstructor = () => {
+  const dispatch = useDispatch();
+  const bunList = useSelector((store) => store.constructorReducer.constructorBuns);
+  const mainList = useSelector((store) => store.constructorReducer.constructorMains);
+  const totalPrice = useSelector((store) => store.constructorReducer.totalPrice);
+  const number = useSelector((store) => store.orderApiReducer.order.number);
+  const [message, setMesaage] = React.useState(initialMessage);
 
-const Item = ({ obj, position }) => {
-  const [state, setState] = React.useState({
-    name: obj.name,
-    price: obj.price,
-    thumbnail: obj.image_mobile,
-    type: "",
-    isLocked: "",
-  });
-
-  const setBunState = () => {
-    if (position === "first") {
-      setState({ ...state, type: "top" });
-    } else if (position === "last") {
-      setState({ ...state, type: "bottom" });
+  function onButtonClick() {
+    if (bunList.length === 0) {
+      setMesaage(emptyOrderMessage);
     } else {
-      setState({ ...state, type: undefined });
+      dispatch(getOrderData(getIds(bunList.concat(mainList))));
     }
-  };
+  }
 
-  const setLocked = () => {
-    isBun(obj)
-      ? setState({ ...state, isLocked: true })
-      : setState({ ...state, isLocked: false });
-  };
-
-  React.useEffect(() => {
-    setLocked();
-  }, [state.type]);
-
-  React.useEffect(() => {
-    setBunState();
-  }, []);
-
-  function addName() {
-    if (state.type === "top") {
-      return "(верх)";
-    } else if (state.type === "bottom") {
-      return "(низ)";
-    } else {
-      return "";
-    }
+  function handleSetMessage(string) {
+    setMesaage(string);
   }
 
   return (
-    <li
-      className={`mb-4 mr-4 card ${burgerConstructor.item}`}
-    >
-      {state.type === undefined && <DragIcon />}
-      <ConstructorElement
-        type={state.type}
-        isLocked={state.isLocked}
-        text={`${state.name} ${addName()}`}
-        price={state.price}
-        thumbnail={state.thumbnail}
+    <section className={`pt-25 pl-4 ${burgerConstructor.section} `}>
+      <ConstructorContainer
+        mainList={mainList}
+        bunList={bunList}
+        message={message}
+        handleSetMessage={handleSetMessage}
       />
-    </li>
+      <div className={`mr-4 mt-10 ${burgerConstructor.bottom}`}>
+        <p className={"text text_type_digits-medium mr-2"}>{totalPrice}</p>
+        <div className={`mr-10 ${burgerConstructor.icon}`}>
+          <CurrencyIcon />
+        </div>
+        <Button
+          htmlType="button"
+          type="primary"
+          size="large"
+          onClick={onButtonClick}
+        >
+          Оформить заказ
+        </Button>
+      </div>
+      {number > 0 && (
+        <Modal title={"..."}>
+          <OrderDetails />
+        </Modal>
+      )}
+    </section>
   );
 };
 
-const ConstructorContainer = ({ arr }) => {
-
-  if (arr.length === 0) {
-    return <ul className={`${burgerConstructor.container}`}></ul>;
-  } else {
-    return (
-      <ul className={`${burgerConstructor.container}`}>
-        <Item
-          obj={extractBun(arr)}
-          position={"first"}
-          key={`${extractBun(arr)._id}-top`}
-
-        />
-        <ul className={`mb-4 ${burgerConstructor.ingredients__container}`}>
-          {deleteBun(arr).map((obj) => {
-            return (
-              <Item
-                obj={obj}
-                key={obj._id}
-
-              />
-            );
-          })}
-        </ul>
-        <Item
-          obj={extractBun(arr)}
-          position={"last"}
-          key={`${extractBun(arr)._id}-bottom`}
-
-        />
-      </ul>
-    );
-  }
-};
-
-const BurgerConstructor = ({ array, toApp }) => {
-  const [data, setData] = React.useState([]);
-
-  React.useEffect(() => {
-    setData(getConstructorList(array));
-  }, [array]);
-
-  function onButtonClick() {
-    toApp();
-  }
-
-  if (data === null) {
-    return (
-      <section className={`pt-25 pl-4 ${burgerConstructor.section}`}></section>
-    );
-  } else {
-    return (
-      <section className={`pt-25 pl-4 ${burgerConstructor.section}`}>
-        <ConstructorContainer arr={data} />
-        <div className={`mr-4 mt-10 ${burgerConstructor.bottom}`}>
-          <p className={"text text_type_digits-medium mr-2"}>
-            {getTotal(data)}
-          </p>
-          <div className={`mr-10 ${burgerConstructor.icon}`}>
-            <CurrencyIcon />
-          </div>
-          <Button
-            htmlType="button"
-            type="primary"
-            size="large"
-            onClick={onButtonClick}
-          >
-            Оформить заказ
-          </Button>
-        </div>
-      </section>
-    );
-  }
-};
-
 export default BurgerConstructor;
-
-BurgerConstructor.propTypes = {
-  toAppIng: PropTypes.func,
-  toAppOrder: PropTypes.func,
-};
-
-ConstructorContainer.propTypes = {
-  arr: PropTypes.arrayOf(itemPropTypes).isRequired,
-  toBurgerConstructor: PropTypes.func,
-};
-Item.propTypes = {
-  obj: itemPropTypes.isRequired,
-  position: PropTypes.string,
-  toConstructorContainer: PropTypes.func,
-};

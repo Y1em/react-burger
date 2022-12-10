@@ -1,144 +1,66 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { itemPropTypes } from "../utils/types";
+import { useDispatch, useSelector } from "react-redux";
 import burgerIngredients from "./burger-ingredients.module.css";
-import {
-  Tab,
-  CurrencyIcon,
-  Counter,
-} from "@ya.praktikum/react-developer-burger-ui-components";
-import {
-  isBun,
-  extractBun,
-  sortByTypes,
-  isBunInArr,
-  getTitle,
-} from "../utils/utils";
+import { Modal } from "../modal/modal";
+import { Tabs } from "../tabs/tabs";
+import { IngredientContainer } from "../ingredient-container/ingredient-container";
+import { IngredientDetails } from "../ingredient-details/ingredient-details";
+import { ingredientsTitle } from "../utils/const";
+import { sortByTypes, handleScrollTop, getScrollLimits } from "../utils/utils";
+import { getItems } from "../../services/actions/ingredients-api";
+import { SET_COUNT } from "../../services/actions/burger-ingredients";
 
-const ingredientsArr = []; // В дальнейшей этот массив будет передаваться в конструктор
+const BurgerIngredients = () => {
+  const dispatch = useDispatch();
+  const data = useSelector((store) => store.ingredientsApiReducer.items);
+  const scrollContainerRef = React.useRef(null);
+  const currentItem = useSelector((store) => store.modalReducer.currentItem);
+  const [currentTab, setCurrentTab] = React.useState("one");
+  const [scrollTop, setScrollTop] = React.useState(0);
 
-const Item = ({ obj, onCardClick, value }) => {
-  const [state, setState] = React.useState({
-    display: false,
-    count: 0,
-  });
+  function handleSetTab(event) {
+    setCurrentTab(event);
+    setScrollTop(handleScrollTop(event));
+  }
 
-  React.useEffect(() => {
-    if (isBun(obj)) {
-      setState({ display: obj._id === value.current ? true : false, count: 1 });
-    }
-  }, [value.current, state.display]);
-
-  const onItemClick = () => {
-    onCardClick(obj);
-    if (!isBun(obj)) {
-      setState({ display: true, count: state.count + 1 });
-      ingredientsArr.push(obj);
-    } else {
-      if (isBunInArr(ingredientsArr)) {
-        ingredientsArr.splice(
-          ingredientsArr.indexOf(extractBun(ingredientsArr)),
-          1
-        );
-        ingredientsArr.push(obj);
-      } else {
-        ingredientsArr.push(obj);
-      }
-    }
-  };
-
-  return (
-    <li className={burgerIngredients.item} onClick={onItemClick}>
-      <div
-        className={
-          state.display
-            ? `${burgerIngredients.counter} ${burgerIngredients.counter_active}`
-            : `${burgerIngredients.counter}`
-        }
-      >
-        <Counter count={state.count} size="default" />
-      </div>
-      <img src={obj.image} className={`ml-4 mr-4`} />
-      <div className={`mt-1 mb-1 ${burgerIngredients.price}`}>
-        <p className={`mr-1 text text_type_digits-default`}>{obj.price}</p>
-        <CurrencyIcon />
-      </div>
-      <p className={`${burgerIngredients.name}`}>{obj.name}</p>
-    </li>
-  );
-};
-
-const Subcontainer = ({ arr, toContainer }) => {
-  const [current, setCurrent] = React.useState({});
-
-  const handleListItemClick = React.useCallback(
-    (obj) => {
-      toContainer(obj)
-      setCurrent({ current: obj._id });
+  React.useEffect(
+    () => {
+      scrollContainerRef.current.scrollTop = scrollTop;
     },
-    [current]
+    [scrollTop] // eslint-disable-line
   );
 
-  return (
-    <ul className={`pl-4 pr-2 ${burgerIngredients.subcontainer}`}>
-      {arr.map((item) => (
-        <Item
-          obj={item}
-          value={current}
-          key={item._id}
-          onCardClick={handleListItemClick}
-        />
-      ))}
-    </ul>
-  );
-};
-
-const Container = ({ arr, toBurgerIngredients }) => {
-  function handleListItemClick(obj) {
-    toBurgerIngredients(obj)
-  }
-  return (
-    <>
-      {arr.map((sortedArr, index) => (
-        <div key={index} className={`pt-10 ${burgerIngredients.container}`}>
-          <h3
-            className={`text text_type_main-medium mb-6 ${burgerIngredients.container__title}`}
-          >
-            {getTitle(sortedArr)}
-          </h3>
-          <Subcontainer arr={sortedArr} toContainer={handleListItemClick} />
-        </div>
-      ))}
-    </>
-  );
-};
-
-const Tabs = () => {
-  const [current, setCurrent] = React.useState("one");
-  return (
-    <div className={burgerIngredients.tabs}>
-      <Tab value="one" active={current === "one"} onClick={setCurrent}>
-        Булки
-      </Tab>
-      <Tab value="two" active={current === "two"} onClick={setCurrent}>
-        Начинки
-      </Tab>
-      <Tab value="three" active={current === "three"} onClick={setCurrent}>
-        Соусы
-      </Tab>
-    </div>
-  );
-};
-
-const BurgerIngredients = ({ array, toApp }) => {
-  const [data, setData] = React.useState([]);
   React.useEffect(() => {
-    setData(sortByTypes(array))
-  }, [array]);
+    dispatch(getItems());
+  }, [dispatch]);
 
-  function handleListItemClick(obj) {
-    toApp(obj);
+  React.useEffect(() => {
+    dispatch({
+      type: SET_COUNT,
+      items: data,
+    });
+  }, [data]); // eslint-disable-line
+
+  function handleScroll(event) {
+    const limits = getScrollLimits(scrollContainerRef.current.children);
+    setScrollTop(event.currentTarget.scrollTop);
+    if (event.currentTarget.scrollTop <= 0) {
+      setCurrentTab("one");
+    } else if (
+      event.currentTarget.scrollTop >= limits[1] &&
+      event.currentTarget.scrollTop < limits[2]
+    ) {
+      setCurrentTab("two");
+    } else if (event.currentTarget.scrollTop >= limits[2]) {
+      setCurrentTab("three");
+    }
   }
+
+  React.useEffect(() => {
+    if (scrollContainerRef) {
+      scrollContainerRef.scrollTop = scrollTop;
+    }
+  }, [scrollTop]); // eslint-disable-line
 
   if (data === null) {
     return <section className={`mr-10 ${burgerIngredients.section}`}></section>;
@@ -151,28 +73,23 @@ const BurgerIngredients = ({ array, toApp }) => {
           >
             Соберите бургер
           </h2>
-          <Tabs />
+          <Tabs currentTab={currentTab} setTab={handleSetTab} />
         </nav>
-        <div className={`${burgerIngredients.menu}`}>
-          <Container arr={data} toBurgerIngredients={handleListItemClick} />
+        <div
+          className={`${burgerIngredients.menu}`}
+          onScroll={handleScroll}
+          ref={scrollContainerRef}
+        >
+          <IngredientContainer ingredients={sortByTypes(data)} />
         </div>
+        {currentItem && (
+          <Modal title={ingredientsTitle}>
+            <IngredientDetails obj={currentItem} />
+          </Modal>
+        )}
       </section>
     );
   }
 };
 
 export { BurgerIngredients };
-
-Container.propTypes = {
-  arr: PropTypes.arrayOf(PropTypes.array).isRequired,
-};
-
-Subcontainer.propTypes = {
-  arr: PropTypes.arrayOf(itemPropTypes).isRequired,
-};
-
-Item.propTypes = {
-  obj: itemPropTypes.isRequired,
-  onCardClick: PropTypes.func.isRequired,
-  value: PropTypes.object.isRequired,
-};

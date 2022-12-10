@@ -1,0 +1,10 @@
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: padding .4s;
+  }
+
+.item:last-of-type {
+margin-bottom: 0;
+}
