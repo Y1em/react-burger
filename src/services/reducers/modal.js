@@ -7,18 +7,18 @@ const InitialState = {
 const modalReducer = (state = InitialState, action) => {
   switch (action.type) {
     case SET_CURRENT_ITEM: {
+      localStorage.setItem('currentItem', JSON.stringify(action.items.find((item) => item._id === action.id ? item : null)));
       return {
         ...state,
-        currentItem: action.items.find((item) =>
-          item._id === action.id ? item : null
-        ),
+        currentItem: JSON.parse(localStorage.getItem('currentItem'))
       };
     }
 
     case CLOSE_MODAL: {
+      localStorage.removeItem('currentItem');
       return {
         ...state,
-        currentItem: undefined,
+        currentItem: null,
         ...(action.order.number = "..."),
       };
     }

@@ -13,18 +13,25 @@ import {
   SET_CURRENT_ITEM,
 } from "../../services/actions/modal";
 import { useDrag } from "react-dnd";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const IngredientItem = ({ ingredient }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const path = useLocation().pathname
   const [state, setState] = React.useState({
     display: false,
     count: 0,
   });
-  const dispatch = useDispatch();
   const data = useSelector((store) => store.ingredientsApiReducer.items);
   const activeBunId = useSelector((store) => store.ingredientsReducer.activeBunId);
   const mainsList = useSelector(
     (store) => store.constructorReducer.constructorMains
   );
+
+  const goToIngredient = () => {
+    navigate(`/ingredients/${ingredient._id}`, { state: path });
+  }
 
   const [{ opacity }, ref] = useDrag({
     type: "items",
@@ -49,6 +56,7 @@ const IngredientItem = ({ ingredient }) => {
       id: ingredient._id,
       items: data,
     });
+    goToIngredient();
   };
 
   return (

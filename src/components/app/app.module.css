@@ -1,19 +1,1 @@
-:root {
-  --logo-width: 290px;
-  --logo-height: 50px;
-  --offset-base-size: 4px;
-  --scroll-bar-width: 8px;
-  --bg: #131316;
-  --modal-bg: #1C1C21;
-  --secondary-text: #8585AD;
-  --primary-text: white;
-}
 
-.app {
-  text-align: center;
-}
-
-.main {
-  padding: 0 calc(100% / 6) 0 calc(100% / 6);
-  display: flex;
-}

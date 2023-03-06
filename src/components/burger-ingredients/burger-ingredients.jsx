@@ -1,11 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import burgerIngredients from "./burger-ingredients.module.css";
-import { Modal } from "../modal/modal";
 import { Tabs } from "../tabs/tabs";
 import { IngredientContainer } from "../ingredient-container/ingredient-container";
-import { IngredientDetails } from "../ingredient-details/ingredient-details";
-import { ingredientsTitle } from "../utils/const";
 import { sortByTypes, handleScrollTop, getScrollLimits } from "../utils/utils";
 import { getItems } from "../../services/actions/ingredients-api";
 import { SET_COUNT } from "../../services/actions/burger-ingredients";
@@ -14,7 +11,6 @@ const BurgerIngredients = () => {
   const dispatch = useDispatch();
   const data = useSelector((store) => store.ingredientsApiReducer.items);
   const scrollContainerRef = React.useRef(null);
-  const currentItem = useSelector((store) => store.modalReducer.currentItem);
   const [currentTab, setCurrentTab] = React.useState("one");
   const [scrollTop, setScrollTop] = React.useState(0);
 
@@ -31,8 +27,10 @@ const BurgerIngredients = () => {
   );
 
   React.useEffect(() => {
-    dispatch(getItems());
-  }, [dispatch]);
+    if (data.length === 0) {
+      dispatch(getItems());
+    }
+  }, []); // eslint-disable-line
 
   React.useEffect(() => {
     dispatch({
@@ -82,11 +80,6 @@ const BurgerIngredients = () => {
         >
           <IngredientContainer ingredients={sortByTypes(data)} />
         </div>
-        {currentItem && (
-          <Modal title={ingredientsTitle}>
-            <IngredientDetails obj={currentItem} />
-          </Modal>
-        )}
       </section>
     );
   }

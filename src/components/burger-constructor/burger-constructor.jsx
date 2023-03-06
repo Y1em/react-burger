@@ -11,6 +11,8 @@ import { getIds } from "../utils/utils";
 import { initialMessage, emptyOrderMessage } from "../utils/const";
 import { getOrderData } from "../../services/actions/order-api";
 import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from 'react-router-dom';
+import { ACTIVE } from "../../services/actions/app-header";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
@@ -18,18 +20,41 @@ const BurgerConstructor = () => {
   const mainList = useSelector((store) => store.constructorReducer.constructorMains);
   const totalPrice = useSelector((store) => store.constructorReducer.totalPrice);
   const number = useSelector((store) => store.orderApiReducer.order.number);
-  const [message, setMesaage] = React.useState(initialMessage);
+  const user = useSelector((store) => store.authReducer.name);
+  const [message, setMessage] = React.useState(initialMessage);
+  const [isRedirect, setRedirect] = React.useState(false);
 
   function onButtonClick() {
-    if (bunList.length === 0) {
-      setMesaage(emptyOrderMessage);
+    if (!user) {
+      setRedirect(true)
     } else {
-      dispatch(getOrderData(getIds(bunList.concat(mainList))));
+      setRedirect(false);
+      if (bunList.length === 0) {
+        setMessage(emptyOrderMessage);
+      } else {
+        dispatch(getOrderData(getIds(bunList.concat(mainList))));
+      };
+
     }
   }
 
   function handleSetMessage(string) {
-    setMesaage(string);
+    setMessage(string);
+  }
+
+  React.useEffect(() => {
+    dispatch({
+      type: ACTIVE,
+      active: window.location.pathname,
+    });
+  }, []); // eslint-disable-line
+
+  if (isRedirect) {
+    return (
+      <Navigate
+        to={'/login'}
+      />
+    );
   }
 
   return (
@@ -63,4 +88,4 @@ const BurgerConstructor = () => {
   );
 };
 
-export default BurgerConstructor;
+export { BurgerConstructor };

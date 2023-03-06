@@ -8,18 +8,21 @@ import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ModalOverlay } from "../modal-overlay/modal-overlay";
 import { ingredientsTitle } from "../utils/const";
 import { CLOSE_MODAL } from "../../services/actions/modal";
+import { useNavigate } from 'react-router-dom';
 
 const Modal = ({ children, title }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const order = useSelector(store => store.orderApiReducer.order);
 
   const handleClose = React.useCallback(
     () => {
+      navigate("/", { replace: true });
       dispatch({
         type: CLOSE_MODAL,
         order: order,
       });
-    }, [dispatch, order]
+    }, [dispatch, order] // eslint-disable-line
   )
 
   React.useEffect(() => {

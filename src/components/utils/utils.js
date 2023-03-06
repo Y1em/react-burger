@@ -159,6 +159,12 @@ function addBun(item, buns) {
   return buns
 }
 
+function getItem(id, items) {
+  return items.find((item) =>
+    item._id === id ? item : null
+  )
+}
+
 export {
   extractBun,
   deleteBun,
@@ -178,4 +184,5 @@ export {
   setBunType,
   addName,
   addBun,
+  getItem
 };

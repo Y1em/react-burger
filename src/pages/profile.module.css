@@ -1,0 +1,39 @@
+.container {
+  display: grid;
+  grid-template-columns: 320px 480px;
+  column-gap: calc(15*var(--offset-base-size));
+  margin-top: calc(30*var(--offset-base-size));
+  padding: 0 calc(100% / 6) 0 calc(100% / 6);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  line-height: 64px;
+  cursor: pointer;
+}
+
+.item_active {
+  color: var(--secondary-text);
+}
+
+.text {
+  color: var(--secondary-text);
+}
+
+.bottom {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.cancel {
+  margin: 0;
+  padding: 0;
+  color: var(--interface-accent);
+  cursor: pointer;
+}

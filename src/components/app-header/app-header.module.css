@@ -22,14 +22,6 @@
   color: var(--primary-text);
 }
 
-.list__item:last-of-type {
-  margin-left: auto;
-}
-
-.list__item:first-of-type {
-  margin-right: 8px;
-}
-
 .title {
   margin: 0;
 }
@@ -40,4 +32,12 @@
   position: absolute;
   top: calc((100% - var(--logo-height))/2);
   left: calc((100% - var(--logo-width))/2);
+}
+
+.link {
+  text-decoration: none;
+}
+
+.link:last-of-type {
+  margin-left: auto;
 }
