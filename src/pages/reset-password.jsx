@@ -8,14 +8,12 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, Navigate } from 'react-router-dom';
 import { getNewPassword } from "../components/utils/api";
-import { passwordRegex, codeRegex } from "../components/utils/const";
+import { passwordRegex, codeRegex, loginPath, resetPath } from "../components/utils/const";
 import { useSelector } from "react-redux";
 
 
 function ResetPasswordPage() {
-
   const passwordRequest = useSelector((store) => store.authReducer.passwordRequest);
-  const user = useSelector((store) => store.authReducer.name);
   const [isCorrect, setCorrect] = React.useState(false);
   const [isRedirect, setRedirect] = React.useState(false);
   const [passwordValue, setPasswordValue] = React.useState('');
@@ -50,18 +48,10 @@ function ResetPasswordPage() {
     }
 }, [codeValue, passwordValue]); // eslint-disable-line
 
-if (user) {
-  return (
-    <Navigate
-      to={'/'}
-    />
-  );
-}
-
 if (isRedirect) {
   return (
     <Navigate
-      to={'/login'}
+      to={loginPath}
     />
   );
 }
@@ -69,7 +59,7 @@ if (isRedirect) {
 if (!passwordRequest) {
   return (
     <Navigate
-      to={'/forgot-password'}
+      to={resetPath}
     />
   );
 }
@@ -108,7 +98,7 @@ if (!passwordRequest) {
 
         <p className={`text text_type_main-default mb-4`}>
           Уже зарегистрированы?&nbsp;
-          <Link to="/login" className={Style.text}>
+          <Link to={loginPath} className={Style.text}>
             Войти
           </Link>
         </p>

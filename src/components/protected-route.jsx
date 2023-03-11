@@ -1,10 +1,25 @@
-import { Navigate } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { Navigate, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import React from 'react';
 
+export const ProtectedRouteElement = ({ element, path, isAuthorized }) => {
+  const location = useLocation();
+  const user = useSelector((store) => store.authReducer.name);
+  function isAuth() {
+    return Boolean(localStorage.getItem('accessToken'))
+  }
 
-export const ProtectedRouteElement = ({ element, path }) => {
-  const accessToken = useSelector((store) => store.authReducer.accessToken);
-  return (
-    Boolean(accessToken) ? element : <Navigate to={path} replace />
-  )
+  React.useEffect(() => {
+    isAuth()
+  }, [user]); // eslint-disable-line
+
+  if (isAuthorized) {
+    return (
+      isAuth() ? <Navigate to={path} /> : element
+    );
+  } else {
+    return (
+      isAuth() ? element : <Navigate to={path} replace state={{from: location}}/>
+    )
+  }
 }

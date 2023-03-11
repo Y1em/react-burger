@@ -30,7 +30,7 @@ const IngredientItem = ({ ingredient }) => {
   );
 
   const goToIngredient = () => {
-    navigate(`/ingredients/${ingredient._id}`, { state: path });
+    navigate(`/ingredients/${ingredient._id}`, { replace: true, state: path });
   }
 
   const [{ opacity }, ref] = useDrag({

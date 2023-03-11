@@ -8,26 +8,24 @@ import {
   PasswordInput
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
-import { UPDATE_USER_SUCCSES, UPDATE_TOKEN_SUCCSES, userLogout } from "../services/actions/auth";
+import { UPDATE_USER_SUCCSES, userLogout } from "../services/actions/auth";
 import { updateToken, updateUser, getUser } from "../components/utils/api";
 import { emailRegex, nameRegex } from "../components/utils/const";
 import { ACTIVE } from "../services/actions/app-header";
+import { update } from "../components/utils/utils";
 
 function ProfilePage() {
 
   const dispatch = useDispatch();
   const refreshToken = localStorage.getItem('refreshToken');
-  const accessToken = useSelector((store) => store.authReducer.accessToken);
+  const accessToken = localStorage.getItem('accessToken');
   const name = useSelector(((store) => store.authReducer.name));
   const email = useSelector(((store) => store.authReducer.email));
-  const password = useSelector(((store) => store.authReducer.password));
-
   const [emailValue, setEmailValue] = React.useState('');
   const [nameValue, setNameValue] = React.useState('');
   const [passwordValue, setPasswordValue] = React.useState('');
   const [active, setActive] = React.useState('profile');
   const [isCorrect, setCorrect] = React.useState(false);
-  const [isPassword, setPassword] = React.useState(false);
 
   const onNameChange = e => {
     setNameValue(e.target.value);
@@ -51,14 +49,14 @@ function ProfilePage() {
       dispatch(userLogout(refreshToken));
       setNameValue("");
       setEmailValue("");
-      setPasswordValue("")
+      setPasswordValue("");
     }
   }
 
   function onSaveClick(e) {
     e.preventDefault();
     if (accessToken) {
-      updateUser(accessToken, {name: nameValue, email: emailValue}, updateForSaveUser)
+      updateUser(accessToken, {name: nameValue, email: emailValue}, update(updateToken, refreshToken, updateUser, setInfo, {name: nameValue, email: emailValue}))
       .then((res) => {
         if (res && res.success) {
           dispatch({
@@ -66,8 +64,7 @@ function ProfilePage() {
             name: res.user.name,
             email: res.user.email,
           });
-          setNameValue(res.user.name);
-          setEmailValue(res.user.email);
+          setInfo(res)
           setPasswordValue("");
         }
       })
@@ -77,56 +74,9 @@ function ProfilePage() {
     }
   }
 
-  function updateForSaveUser() {
-    updateToken(refreshToken)
-    .then((res) => {
-      if (res && res.success) {
-        localStorage.setItem('refreshToken', res.refreshToken);
-        dispatch({
-          type: UPDATE_TOKEN_SUCCSES,
-          accessToken: res.accessToken
-        })
-        updateUser(res.accessToken, {name: res.user.name, email: res.user.email})
-        .then((res) => {
-          if (res && res.success) {
-            setNameValue(res.user.name);
-            setEmailValue(res.user.email);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-
-  function updateForGetUser() {
-    updateToken(refreshToken)
-    .then((res) => {
-      if (res && res.success) {
-        localStorage.setItem('refreshToken', res.refreshToken);
-        dispatch({
-          type: UPDATE_TOKEN_SUCCSES,
-          accessToken: res.accessToken
-        })
-        getUser(res.accessToken)
-        .then((res) => {
-          if (res && res.success) {
-            setNameValue(res.user.name);
-            setEmailValue(res.user.email);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+  function setInfo(res) {
+    setNameValue(res.user.name);
+    setEmailValue(res.user.email);
   }
 
   function onCancelClick() {
@@ -137,11 +87,10 @@ function ProfilePage() {
 
   React.useEffect(() => {
     if (accessToken) {
-      getUser(accessToken, updateForGetUser)
+      getUser(accessToken, update(updateToken, refreshToken, getUser, setInfo))
       .then((res) => {
         if (res && res.success) {
-          setNameValue(res.user.name);
-          setEmailValue(res.user.email);
+          setInfo(res)
         }
       })
       .catch((err) => {
@@ -151,20 +100,12 @@ function ProfilePage() {
   }, []); // eslint-disable-line
 
   React.useEffect(() => {
-    if (passwordValue === password) {
-      setPassword(true)
-    } else {
-      setPassword(false);
-    }
-  }, [passwordValue, password]); // eslint-disable-line
-
-  React.useEffect(() => {
-    if (emailRegex.test(emailValue) && nameRegex.test(nameValue) && isPassword) {
+    if (emailRegex.test(emailValue) && nameRegex.test(nameValue)) {
       setCorrect(true)
     } else {
       setCorrect(false);
     }
-  }, [emailValue, nameValue, isPassword]); // eslint-disable-line
+  }, [emailValue, nameValue]); // eslint-disable-line
 
   React.useEffect(() => {
     dispatch({

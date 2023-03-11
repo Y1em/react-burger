@@ -7,9 +7,9 @@ import {
   PasswordInput,
   Button
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { userLogin } from "../services/actions/auth";
-import { emailRegex, passwordRegex } from "../components/utils/const";
+import { emailRegex, passwordRegex, registerPath, forgotPath } from "../components/utils/const";
 import { ACTIVE } from "../services/actions/app-header";
 
 function LoginPage() {
@@ -19,7 +19,8 @@ function LoginPage() {
   const [passwordValue, setPasswordValue] = React.useState('');
   const [emailValue, setEmailValue] = React.useState('');
   const [isCorrect, setCorrect] = React.useState(false);
-  const path = useLocation().pathname
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const onPasswordChange = e => {
     setPasswordValue(e.target.value)
@@ -34,6 +35,12 @@ function LoginPage() {
   }
 
   React.useEffect(() => {
+    if (user && location.state) {
+      navigate(location.state.from.pathname);
+    }
+  }, [user]); // eslint-disable-line
+
+  React.useEffect(() => {
     if (emailRegex.test(emailValue) && passwordRegex.test(passwordValue)) {
       setCorrect(true)
     } else {
@@ -44,17 +51,9 @@ function LoginPage() {
   React.useEffect(() => {
     dispatch({
       type: ACTIVE,
-      active: path,
+      active: location.pathname,
     });
   }, []); // eslint-disable-line
-
-  if (user) {
-    return (
-      <Navigate
-        to={'/'}
-      />
-    );
-  }
 
   return (
     <div>
@@ -88,13 +87,13 @@ function LoginPage() {
         </Button>
         <p className={`text text_type_main-default mb-4`}>
           Вы — новый пользователь?&nbsp;
-          <Link to="/register" className={Style.text}>
+          <Link to={registerPath} className={Style.text}>
             Зарегистрироваться
           </Link>
         </p>
         <p className={`text text_type_main-default`}>
           Забыли пароль?&nbsp;
-          <Link to="/forgot-password" className={Style.text}>
+          <Link to={forgotPath} className={Style.text}>
             Восстановить пароль
           </Link>
         </p>

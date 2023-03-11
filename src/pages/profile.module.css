@@ -15,10 +15,11 @@
 .item {
   line-height: 64px;
   cursor: pointer;
+  color: var(--secondary-text);
 }
 
 .item_active {
-  color: var(--secondary-text);
+  color: var(--primary-text);
 }
 
 .text {

@@ -8,7 +8,6 @@ import {
   LOGOUT_REQUEST,
   LOGOUT_SUCCSES,
   LOGOUT_FAILED,
-  UPDATE_TOKEN_SUCCSES,
   UPDATE_USER_SUCCSES,
   PASSWORD_REQUEST_SUCCSES,
 } from "../actions/auth";
@@ -16,8 +15,6 @@ import {
 const InitialState = {
   email: "",
   name: "",
-  password: "",
-  accessToken: "",
   loginRequest: false,
   loginFailed: false,
   registerRequest: false,
@@ -41,8 +38,6 @@ const authReducer = (state = InitialState, action) => {
         loginFailed: false,
         email: action.email,
         name: action.name,
-        password: action.password,
-        accessToken: action.accessToken,
         loginRequest: false,
       };
     }
@@ -65,8 +60,6 @@ const authReducer = (state = InitialState, action) => {
         registerFailed: false,
         email: action.email,
         name: action.name,
-        password: action.password,
-        accessToken: action.accessToken,
         registerRequest: false,
       };
     }
@@ -89,8 +82,6 @@ const authReducer = (state = InitialState, action) => {
         logoutFailed: false,
         email: "",
         name: "",
-        password: "",
-        accessToken: "",
         logoutRequest: false,
       };
     }
@@ -99,14 +90,6 @@ const authReducer = (state = InitialState, action) => {
         ...state,
         logoutFailed: true,
         logoutRequest: false
-      };
-    }
-    case UPDATE_TOKEN_SUCCSES: {
-      return {
-        ...state,
-        refreshFailed: false,
-        refreshRequest: false,
-        accessToken: action.accessToken,
       };
     }
     case UPDATE_USER_SUCCSES: {

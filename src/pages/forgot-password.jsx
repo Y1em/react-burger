@@ -7,14 +7,13 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, Navigate } from 'react-router-dom';
 import { restorePassword } from "../components/utils/api";
-import { emailRegex } from "../components/utils/const";
-import { useDispatch, useSelector } from "react-redux";
+import { emailRegex, resetPath, loginPath } from "../components/utils/const";
+import { useDispatch } from "react-redux";
 import { PASSWORD_REQUEST_SUCCSES } from "../services/actions/auth";
 
 function ForgotPasswordPage() {
 
   const dispatch = useDispatch();
-  const user = useSelector((store) => store.authReducer.name);
   const [isRedirect, setRedirect] = React.useState(false);
   const [isCorrect, setCorrect] = React.useState(false);
   const [emailValue, setEmailValue] = React.useState('');
@@ -47,18 +46,10 @@ function ForgotPasswordPage() {
     })
   }
 
-  if (user) {
-    return (
-      <Navigate
-        to={'/'}
-      />
-    );
-  }
-
   if (isRedirect) {
     return (
       <Navigate
-        to={'/reset-password'}
+        to={resetPath}
       />
     );
   }
@@ -89,7 +80,7 @@ function ForgotPasswordPage() {
         </Button>
         <p className={`text text_type_main-default mb-4`}>
           Вспомнили пароль?&nbsp;
-          <Link to="/login" className={Style.text}>
+          <Link to={loginPath} className={Style.text}>
             Войти
           </Link>
         </p>

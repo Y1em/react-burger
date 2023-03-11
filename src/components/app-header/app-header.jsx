@@ -1,10 +1,14 @@
-import React from "react";
 import {
   Logo,
   BurgerIcon,
   ListIcon,
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  homePath,
+  profilePath,
+  ordersPath
+} from "../utils/const";
 import { Link } from 'react-router-dom';
 import appHeader from "./app-header.module.css";
 import PropTypes from "prop-types";
@@ -37,22 +41,22 @@ const AppHeader = () => {
         <Link to="/" className={appHeader.link} >
           <Item
             name={"Конструктор"}
-            icon={<BurgerIcon type={activeTab === "/" ? "primary" : "secondary"} />}
-            active={activeTab === "/" ? true : false}
+            icon={<BurgerIcon type={activeTab === homePath ? "primary" : "secondary"} />}
+            active={activeTab === homePath ? true : false}
           />
         </Link>
-        <Link to="/orders" className={appHeader.link} >
+        <Link to={ordersPath} className={appHeader.link} >
         <Item
             name={"Лента заказов"}
-            icon={<ListIcon type={activeTab === "/orders" ? "primary" : "secondary"} />}
-            active={activeTab === "/orders" ? true : false}
+            icon={<ListIcon type={activeTab === ordersPath ? "primary" : "secondary"} />}
+            active={activeTab === ordersPath ? true : false}
           />
         </Link>
-        <Link to="/profile" className={appHeader.link} >
+        <Link to={profilePath} className={appHeader.link} >
           <Item
             name={"Личный кабинет"}
-            icon={<ProfileIcon type={activeTab === "/profile" ? "primary" : "secondary"} />}
-            active={activeTab === "/profile" ? true : false}
+            icon={<ProfileIcon type={activeTab === profilePath ? "primary" : "secondary"} />}
+            active={activeTab === profilePath ? true : false}
           />
         </Link>
       </ul>

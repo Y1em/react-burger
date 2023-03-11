@@ -13,7 +13,6 @@ const REGISTER_FAILED = "REGISTER_FAILED";
 const LOGOUT_REQUEST = "LOGOUT_REQUEST";
 const LOGOUT_SUCCSES = "LOGOUT_SUCCSES";
 const LOGOUT_FAILED = "LOGOUT_FAILED";
-const UPDATE_TOKEN_SUCCSES = "UPDATE_TOKEN_SUCCSES";
 const UPDATE_USER_SUCCSES = "UPDATE_USER_SUCCSES";
 const PASSWORD_REQUEST_SUCCSES = "PASSWORD_REQUEST_SUCCSES";
 
@@ -26,12 +25,12 @@ function userLogin(email, password) {
     .then((res) => {
       if (res && res.success) {
         localStorage.setItem('refreshToken', res.refreshToken);
+        localStorage.setItem('accessToken', res.accessToken);
+        localStorage.setItem('password', password);
         dispatch({
           type: LOGIN_SUCCSES,
           email: res.user.email,
           name: res.user.name,
-          password: password,
-          accessToken: res.accessToken,
         });
       }
     })
@@ -52,14 +51,14 @@ function userRegister(email, password, name) {
     register(email, password, name)
     .then((res) => {
       if (res && res.success) {
+        localStorage.setItem('refreshToken', res.refreshToken);
+        localStorage.setItem('accessToken', res.accessToken);
+        localStorage.setItem('password', password);
         dispatch({
           type: REGISTER_SUCCSES,
           name: res.user.name,
           email: res.user.email,
-          password: password,
-          accessToken: res.accessToken,
         });
-        localStorage.setItem('refreshToken', res.refreshToken);
       }
     })
     .catch((err) => {
@@ -80,12 +79,12 @@ function userLogout(token) {
     .then((res) => {
       if (res && res.success) {
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('password');
         dispatch({
           type: LOGOUT_SUCCSES,
           name: "",
           email: "",
-          password: "",
-          accessToken: "",
         });
 
       }
@@ -109,7 +108,6 @@ export {
   LOGOUT_REQUEST,
   LOGOUT_SUCCSES,
   LOGOUT_FAILED,
-  UPDATE_TOKEN_SUCCSES,
   UPDATE_USER_SUCCSES,
   PASSWORD_REQUEST_SUCCSES,
   userRegister,

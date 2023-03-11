@@ -66,27 +66,26 @@ export const updateToken = (token) => {
   }).then(checkResponse);
 };
 
-export const getUser = (token, update) => {
-  return fetch(`${config.baseUrl}/auth/user`, {
+export const getUser = async (token, update) => {
+  const res = await fetch(`${config.baseUrl}/auth/user`, {
     method: "GET",
     headers: {
       ...config.headers,
       Authorization: token,
     }
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      res.json()
+  });
+  if (res.ok) {
+    return res.json();
+  } else {
+    res.json()
       .then((data) => {
         if (data.message === 'jwt expired') {
           update();
         } else {
           Promise.reject(`Ошибка: ${res.status}`);
         }
-      })
-    }
-  });
+      });
+  }
 };
 
 export const updateUser = (token, user, update) => {

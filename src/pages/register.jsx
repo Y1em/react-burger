@@ -7,16 +7,15 @@ import {
   Input,
   Button
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link, Navigate } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
+import { useDispatch } from "react-redux";
 import { userRegister } from "../services/actions/auth";
-import { nameRegex, emailRegex, passwordRegex } from "../components/utils/const";
+import { nameRegex, emailRegex, passwordRegex, loginPath } from "../components/utils/const";
 
 function RegisterPage() {
 
   const [isCorrect, setCorrect] = React.useState(false);
   const dispatch = useDispatch();
-  const user = useSelector((store) => store.authReducer.name);
 
   const [nameValue, setNameValue] = React.useState('')
   const onNameChange = e => {
@@ -45,14 +44,6 @@ function RegisterPage() {
       setCorrect(false);
     }
   }, [emailValue, nameValue, passwordValue]); // eslint-disable-line
-
-  if (user) {
-    return (
-      <Navigate
-        to={'/'}
-      />
-    );
-  }
 
   return (
     <div>
@@ -94,7 +85,7 @@ function RegisterPage() {
 
         <p className={`text text_type_main-default mb-4`}>
           Уже зарегистрированы?&nbsp;
-          <Link to="/login" className={Style.text}>
+          <Link to={loginPath} className={Style.text}>
             Войти
           </Link>
         </p>

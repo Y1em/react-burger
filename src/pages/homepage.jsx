@@ -6,7 +6,7 @@ import { BurgerConstructor } from "../components/burger-constructor/burger-const
 import { BurgerIngredients } from "../components/burger-ingredients/burger-ingredients";
 import { Outlet } from 'react-router-dom';
 
-function Homepage() {
+function HomePage() {
   return (
     <div className={Style.app}>
       <AppHeader />
@@ -21,4 +21,4 @@ function Homepage() {
   )
 }
 
-export { Homepage };
+export { HomePage };

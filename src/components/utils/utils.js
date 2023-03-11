@@ -165,6 +165,28 @@ function getItem(id, items) {
   )
 }
 
+function update(updateToken, refreshToken, request, action, user = {name: '', email: ''}) {
+  updateToken(refreshToken)
+  .then((res) => {
+    if (res && res.success) {
+      localStorage.setItem('refreshToken', res.refreshToken);
+      localStorage.setItem('accessToken', res.accessToken);
+      request(res.accessToken, user)
+      .then((res) => {
+        if (res && res.success) {
+          action();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+}
+
 export {
   extractBun,
   deleteBun,
@@ -184,5 +206,6 @@ export {
   setBunType,
   addName,
   addBun,
-  getItem
+  getItem,
+  update
 };
