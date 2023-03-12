@@ -1,4 +1,9 @@
-import { baseOffset } from './const.js'
+import {
+  baseOffset,
+  reLoginTrigger,
+  getUserTrigger,
+  updateUserTrigger,
+} from './const.js';
 
 function isBun(obj) {
   if (obj.type === "bun") {
@@ -165,21 +170,19 @@ function getItem(id, items) {
   )
 }
 
-function update(updateToken, refreshToken, request, action, user = {name: '', email: ''}) {
-  updateToken(refreshToken)
+function update(request, refreshToken, trigger, action, user) {
+  request(refreshToken)
   .then((res) => {
     if (res && res.success) {
       localStorage.setItem('refreshToken', res.refreshToken);
       localStorage.setItem('accessToken', res.accessToken);
-      request(res.accessToken, user)
-      .then((res) => {
-        if (res && res.success) {
-          action();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      if (trigger === getUserTrigger) {
+        action(res.accessToken, res.refreshToken);
+      } else if (trigger === updateUserTrigger) {
+        action(res.accessToken, user, res.refreshToken)
+      } else if (trigger === reLoginTrigger) {
+        action(res.accessToken, res.refreshToken);
+      }
     }
   })
   .catch((err) => {

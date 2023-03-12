@@ -16,16 +16,17 @@ import {
   profilePath,
   wrongPath,
   ingredientPath,
-  ordersPath
+  ordersPath,
+  reLoginTrigger
 } from "../utils/const";
 import IngredientPage from "../../pages/ingredient";
 import { useSelector } from "react-redux";
 import { HomePage } from "../../pages/homepage";
 import { NotFoundPage } from '../../pages/notfound';
-import { update } from '../utils/utils';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../services/actions/auth';
-import { getUser, updateToken } from '../utils/api';
+import { update } from "../utils/utils";
+import { getUser } from "../utils/api";
 
 function App() {
 
@@ -40,8 +41,8 @@ function App() {
     dispatch(userLogin(res.user.email, localStorage.getItem('password')));
   }
 
-  async function reLogin() {
-    await getUser(accessToken, update(updateToken, refreshToken, getUser, login))
+  function reLogin(acToken, refToken) {
+    getUser(acToken, update, refToken, reLoginTrigger, reLogin)
     .then((res) => {
       if (res && res.success) {
         login(res)
@@ -54,7 +55,7 @@ function App() {
 
   React.useEffect(() => {
     if (accessToken) {
-      reLogin();
+      reLogin(accessToken, refreshToken);
     }
   }, []); // eslint-disable-line
 

@@ -17,6 +17,9 @@ const profilePath = '/profile';
 const ingredientPath = '/ingredients/:id';
 const wrongPath = '/*';
 const ordersPath = '/orders';
+const getUserTrigger = 'getUserTrigger';
+const updateUserTrigger = 'updateUserTrigger';
+const reLoginTrigger = 'reLoginTrigger';
 
 export {
   modalRoot,
@@ -38,4 +41,7 @@ export {
   ingredientPath,
   wrongPath,
   ordersPath,
+  getUserTrigger,
+  updateUserTrigger,
+  reLoginTrigger
 }

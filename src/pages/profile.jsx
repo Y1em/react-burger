@@ -9,8 +9,8 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
 import { UPDATE_USER_SUCCSES, userLogout } from "../services/actions/auth";
-import { updateToken, updateUser, getUser } from "../components/utils/api";
-import { emailRegex, nameRegex } from "../components/utils/const";
+import { updateUser, getUser } from "../components/utils/api";
+import { emailRegex, nameRegex, getUserTrigger, updateUserTrigger } from "../components/utils/const";
 import { ACTIVE } from "../services/actions/app-header";
 import { update } from "../components/utils/utils";
 
@@ -25,7 +25,7 @@ function ProfilePage() {
   const [nameValue, setNameValue] = React.useState('');
   const [passwordValue, setPasswordValue] = React.useState('');
   const [active, setActive] = React.useState('profile');
-  const [isCorrect, setCorrect] = React.useState(false);
+  const [disable, setDisable] = React.useState(false);
 
   const onNameChange = e => {
     setNameValue(e.target.value);
@@ -53,24 +53,31 @@ function ProfilePage() {
     }
   }
 
+  function updateUserAction(acToken, user, refToken) {
+    console.log(user)
+    updateUser(acToken, user, update, refToken, updateUserTrigger, updateUserAction)
+    .then((res) => {
+      if (res && res.success) {
+        dispatch({
+          type: UPDATE_USER_SUCCSES,
+          name: res.user.name,
+          email: res.user.email,
+        });
+        setInfo(res);
+        setPasswordValue("");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    }
+    )
+  }
+
   function onSaveClick(e) {
     e.preventDefault();
     if (accessToken) {
-      updateUser(accessToken, {name: nameValue, email: emailValue}, update(updateToken, refreshToken, updateUser, setInfo, {name: nameValue, email: emailValue}))
-      .then((res) => {
-        if (res && res.success) {
-          dispatch({
-            type: UPDATE_USER_SUCCSES,
-            name: res.user.name,
-            email: res.user.email,
-          });
-          setInfo(res)
-          setPasswordValue("");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      updateUserAction(accessToken, {email: emailValue, name: nameValue}, refreshToken);
+      setDisable(true);
     }
   }
 
@@ -85,25 +92,29 @@ function ProfilePage() {
     setPasswordValue("");
   }
 
+  function getUserAction(acToken, refToken) {
+    getUser(acToken, update, refToken, getUserTrigger, getUserAction)
+    .then((res) => {
+      if (res && res.success) {
+        setInfo(res)
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
   React.useEffect(() => {
     if (accessToken) {
-      getUser(accessToken, update(updateToken, refreshToken, getUser, setInfo))
-      .then((res) => {
-        if (res && res.success) {
-          setInfo(res)
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      getUserAction(accessToken, refreshToken)
     }
   }, []); // eslint-disable-line
 
   React.useEffect(() => {
-    if (emailRegex.test(emailValue) && nameRegex.test(nameValue)) {
-      setCorrect(true)
+    if (emailRegex.test(emailValue) && nameRegex.test(nameValue) && (name !== nameValue || email !== emailValue)) {
+      setDisable(false)
     } else {
-      setCorrect(false);
+      setDisable(true);
     }
   }, [emailValue, nameValue]); // eslint-disable-line
 
@@ -186,7 +197,7 @@ function ProfilePage() {
                 type="primary"
                 size="medium"
                 extraClass="ml-7"
-                disabled={!isCorrect}
+                disabled={disable}
                 onClick={onSaveClick}
               >
                 Сохранить
