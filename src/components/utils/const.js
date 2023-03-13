@@ -17,6 +17,7 @@ const profilePath = '/profile';
 const ingredientPath = '/ingredients/:id';
 const wrongPath = '/*';
 const ordersPath = '/orders';
+const feedPath = '/feed';
 const getUserTrigger = 'getUserTrigger';
 const updateUserTrigger = 'updateUserTrigger';
 const reLoginTrigger = 'reLoginTrigger';
@@ -41,6 +42,7 @@ export {
   ingredientPath,
   wrongPath,
   ordersPath,
+  feedPath,
   getUserTrigger,
   updateUserTrigger,
   reLoginTrigger

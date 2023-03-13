@@ -1,0 +1,78 @@
+.card {
+  width: 584px;
+  background-color: var(--modal-bg);
+  box-sizing: border-box;
+  border-radius: calc(6 * var(--offset-base-size));
+  display: flex;
+  flex-direction: column;
+}
+
+.card_wide {
+  width: 844px;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.time {
+  color: var(--secondary-text)
+}
+
+.name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.bottom {
+  display: flex;
+  height: 64px; /* убрать */
+  justify-content: space-between;
+  align-items: center;
+}
+
+.images {
+  display: flex;
+  position: relative;
+}
+
+.image {
+  height: 64px;
+  width: 64px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #801AB3;
+  margin-left: -20px;
+  background-color: var(--bg);
+  box-sizing: border-box;
+}
+
+.image:first-of-type {
+  margin-left: 0;
+}
+
+.cover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+  width: 64px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  right: 0;
+}
+
+.price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}

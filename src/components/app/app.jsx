@@ -1,4 +1,5 @@
 import React from "react";
+import variables from "./app.module.css";
 import { Routes, Route, useLocation } from 'react-router-dom';
 import LoginPage from "../../pages/login";
 import RegisterPage from "../../pages/register";
@@ -6,6 +7,7 @@ import ForgotPasswordPage from "../../pages/forgot-password";
 import ProfilePage from "../../pages/profile";
 import ResetPasswordPage from "../../pages/reset-password";
 import OrdersPage from "../../pages/orders";
+import FeedPage from "../../pages/feed";
 import { ProtectedRouteElement } from "../protected-route";
 import {
   loginPath,
@@ -17,6 +19,7 @@ import {
   wrongPath,
   ingredientPath,
   ordersPath,
+  feedPath,
   reLoginTrigger
 } from "../utils/const";
 import IngredientPage from "../../pages/ingredient";
@@ -80,6 +83,7 @@ function App() {
       <Route path={resetPath} element={<ProtectedRouteElement element={<ResetPasswordPage />} path={homePath} isAuthorized={true} />} />
       <Route path={profilePath} element={<ProtectedRouteElement element={<ProfilePage />} path={loginPath} isAuthorized={false} />} />
       <Route path={ordersPath} element={<ProtectedRouteElement element={<OrdersPage />} path={loginPath} isAuthorized={false} />} />
+      <Route path={feedPath} element={<ProtectedRouteElement element={<FeedPage />} path={loginPath} isAuthorized={false} />} />
       <Route path={wrongPath} element={<NotFoundPage />} />
     </Routes>
   );

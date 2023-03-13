@@ -190,6 +190,48 @@ function update(request, refreshToken, trigger, action, user) {
   })
 }
 
+function findItems (ids, objs) {
+  const newArr = []
+  ids.forEach((id) => {
+    newArr.push(objs.find(obj => obj._id === id))
+  })
+  return newArr
+};
+
+function getDay(number) {
+  if (number === 0) {
+    return "Сегодня"
+  } else if (number === 1) {
+    return "Вчера"
+  } else if ((number > 1) && (number < 5)) {
+    return `${number} дня назад`
+  } else if ((number > 4) && (number < 21)) {
+    return `${number} дней назад`
+  }
+}
+
+function dateFormat(string) {
+  const today = new Date();
+  const orderDay = today.getUTCDate() - string.slice(8, 10);
+  const orderMoscowTime = new Date(string).toLocaleTimeString("ru-RU", {timeZone: "Europe/Moscow"});
+  const orderTime = orderMoscowTime.slice(0, 5);
+  return `${getDay(orderDay)}, ${orderTime} i-GMT+3`
+}
+
+function totalPrice(arr) {
+  return arr.reduce((prev, item) => {
+    return prev + item.price;
+  }, 0);
+}
+
+function cutArr(arr) {
+  if (arr.length < 7) {
+    return arr
+  } else {
+    return arr.splice(0, 5)
+  }
+}
+
 export {
   extractBun,
   deleteBun,
@@ -210,5 +252,9 @@ export {
   addName,
   addBun,
   getItem,
-  update
+  update,
+  findItems,
+  dateFormat,
+  totalPrice,
+  cutArr
 };

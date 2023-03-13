@@ -7,7 +7,8 @@ import {
 import {
   homePath,
   profilePath,
-  ordersPath
+  ordersPath,
+  feedPath,
 } from "../utils/const";
 import { Link } from 'react-router-dom';
 import appHeader from "./app-header.module.css";
@@ -45,11 +46,11 @@ const AppHeader = () => {
             active={activeTab === homePath ? true : false}
           />
         </Link>
-        <Link to={ordersPath} className={appHeader.link} >
+        <Link to={feedPath} className={appHeader.link} >
         <Item
             name={"Лента заказов"}
-            icon={<ListIcon type={activeTab === ordersPath ? "primary" : "secondary"} />}
-            active={activeTab === ordersPath ? true : false}
+            icon={<ListIcon type={activeTab === feedPath ? "primary" : "secondary"} />}
+            active={activeTab === feedPath ? true : false}
           />
         </Link>
         <Link to={profilePath} className={appHeader.link} >
