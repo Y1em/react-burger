@@ -5,12 +5,15 @@ const config = {
   },
 };
 
-export const getOrder = (arr) => {
+export const getOrder = (arr, token) => {
   return fetch(`${config.baseUrl}/orders`, {
     method: "POST",
-    headers: config.headers,
+    headers: {
+      ...config.headers,
+      Authorization: token,
+    },
     body: JSON.stringify({
-      "ingredients": arr,
+      ingredients: arr,
     }),
   }).then(checkResponse);
 };

@@ -3,6 +3,7 @@ import {
   DECREASE_COUNTER,
   SET_BUN,
   SET_COUNT,
+  DELETE_ACTIVE_BUN,
 } from "../actions/burger-ingredients";
 
 const InitialState = {
@@ -42,6 +43,13 @@ const ingredientsReducer = (state = InitialState, action) => {
         ...action.items.find((item) =>
           item._id === action.id ? (item.count = item.count - 1) : null
         ),
+      };
+    }
+
+    case DELETE_ACTIVE_BUN: {
+      return {
+        ...state,
+        activeBunId: undefined,
       };
     }
 

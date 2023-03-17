@@ -1,0 +1,38 @@
+.main {
+  padding: 0 calc(100% / 6) 0 calc(100% / 6 + 20px);
+  display: flex;
+}
+
+.container {
+  height: calc(95vh - 100px - 88px);
+  width: calc(608px - var(--scroll-bar-width));
+  display: grid;
+  row-gap: calc(var(--offset-base-size)*6);
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+
+.container::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-text);
+}
+
+.container::-webkit-scrollbar {
+  width: var(--scroll-bar-width);
+  background-color: var(--modal-bg);
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  width: 580px;
+}
+
+.total {
+  text-shadow: 0 0 24px #3333FF;
+}
+

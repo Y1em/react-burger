@@ -1,15 +1,14 @@
 .container {
   display: grid;
-  grid-template-columns: 320px 480px;
-  column-gap: calc(15*var(--offset-base-size));
-  margin-top: calc(30*var(--offset-base-size));
-  padding: 0 calc(100% / 6) 0 calc(100% / 6);
+  grid-template-columns: 320px minmax(min-content, max-content);
+  padding: 0 calc(100% / 6) 0 calc(100% / 6 + 20px);
 }
 
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
+  margin-top: calc(30*var(--offset-base-size));
 }
 
 .item {
@@ -22,19 +21,11 @@
   color: var(--primary-text);
 }
 
+.link {
+  text-decoration: none;
+}
+
 .text {
   color: var(--secondary-text);
 }
 
-.bottom {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.cancel {
-  margin: 0;
-  padding: 0;
-  color: var(--interface-accent);
-  cursor: pointer;
-}

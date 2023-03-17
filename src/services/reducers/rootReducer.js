@@ -6,6 +6,7 @@ import { orderApiReducer } from './order-api';
 import { modalReducer } from './modal';
 import { authReducer } from './auth';
 import { headerReducer } from './app-header';
+import { wsReducer } from './ws-reducer'
 
 export const rootReducer = combineReducers({
   ingredientsReducer,
@@ -14,5 +15,6 @@ export const rootReducer = combineReducers({
   orderApiReducer,
   modalReducer,
   authReducer,
-  headerReducer
+  headerReducer,
+  wsReducer
 })

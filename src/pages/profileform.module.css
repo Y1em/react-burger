@@ -1,0 +1,17 @@
+.form {
+  margin-top: calc(30*var(--offset-base-size));
+}
+
+.bottom {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 480px;
+}
+
+.cancel {
+  margin: 0;
+  padding: 0;
+  color: var(--interface-accent);
+  cursor: pointer;
+}

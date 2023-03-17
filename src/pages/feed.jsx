@@ -1,76 +1,76 @@
 import React from "react";
-import Style from "./forgot-password.module.css";
+import { useDispatch } from "react-redux";
 import AppHeader from "../components/app-header/app-header";
 import { FeedItem } from "../components/feed-item/feed-item";
-import {
-  EmailInput,
-  Button
-} from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link, Navigate } from 'react-router-dom';
-import { restorePassword } from "../components/utils/api";
-import { emailRegex, resetPath, loginPath } from "../components/utils/const";
-import { useDispatch } from "react-redux";
-import { PASSWORD_REQUEST_SUCCSES } from "../services/actions/auth";
-
-
+import { BoardStatus } from "../components/board-status/board-status";
+import { useSelector } from "react-redux";
+import style from "./feed.module.css";
+import { ACTIVE } from "../services/actions/app-header";
+import { Outlet } from "react-router-dom";
+import { WS_CONNECTION_START } from "../services/actions/ws-actions";
 
 function FeedPage() {
 
-  const order1 =   {
-    "_id": "640e72cc936b17001be68bd6",
-    "ingredients": [
-        "60d3b41abdacab0026a733c6",
-        "60d3b41abdacab0026a733c6",
-        "60d3b41abdacab0026a733cd",
-        "60d3b41abdacab0026a733ce",
-        "60d3b41abdacab0026a733cc",
-        "60d3b41abdacab0026a733cf",
-        "60d3b41abdacab0026a733d4",
-        "60d3b41abdacab0026a733d2",
-        "60d3b41abdacab0026a733d3"
-    ],
-    "status": "done",
-    "name": "Краторный spicy space антарианский традиционный-галактический бургер",
-    "createdAt": "2023-03-13T00:48:12.434Z",
-    "updatedAt": "2023-03-13T00:48:12.918Z",
-    "number": 43591
-}
+  const data = useSelector(((store) => store.wsReducer.data));
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    dispatch({
+      type: ACTIVE,
+      active: window.location.pathname,
+    });
+  }, []); // eslint-disable-line
 
-const order2 =   {
-  "_id": "640e72cc936b17001be68bd6",
-  "ingredients": [
-      "60d3b41abdacab0026a733c6",
-      "60d3b41abdacab0026a733c6",
-      "60d3b41abdacab0026a733cd",
-      "60d3b41abdacab0026a733ce",
-      "60d3b41abdacab0026a733cc",
-      "60d3b41abdacab0026a733cf",
-      "60d3b41abdacab0026a733d2",
-      "60d3b41abdacab0026a733d3"
-  ],
-  "status": "done",
-  "name": "Краторный spicy space антарианский традиционный-галактический бургер",
-  "createdAt": "2023-03-13T12:48:12.434Z",
-  "updatedAt": "2023-03-13T12:48:12.918Z",
-  "number": 43595
-}
-
-
+  React.useEffect(
+    () => {
+      dispatch({
+        type: WS_CONNECTION_START,
+        request: "allOrders",
+       });
+    },
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   return (
     <div>
       <AppHeader />
-      <h1 className="text text_type_main-medium mt-10">
-        Лента заказов
-      </h1>
-      <FeedItem
-        order={order1}
-        type="feed"
-      />
-      <FeedItem
-        type="orders"
-        order={order2}
-      />
+        { data.orders ?
+          <main className={style.main}>
+          <section>
+            <h1 className="text text_type_main-medium mt-10 mb-5">
+              Лента заказов
+            </h1>
+            <div className={style.container}>
+              {
+                data.orders.map((item) => {
+                  return (
+                    <FeedItem order={item} type="feed" key={item._id} />
+                  )
+                })
+              }
+            </div>
+          </section>
+          <section className={`${style.board} mt-25 ml-15`} >
+            <div className={`${style.status}`}>
+              <BoardStatus orders={data.orders} name="done" />
+              <BoardStatus orders={data.orders} name="in process" />
+            </div>
+            <p className={`${style.text} text text_type_main-medium mt-15`} >
+              Выполнено за все время:
+            </p>
+            <p className={`${style.total} text text_type_digits-large`} >
+              {(new Intl.NumberFormat('ru-RU').format(data.total))}
+            </p>
+            <p className={`${style.text} text text_type_main-medium mt-15`}>
+              Выполнено за сегодня:
+            </p>
+            <p className={`${style.total} text text_type_digits-large`} >
+              {data.totalToday}
+            </p>
+          </section>
+        </main> :
+        ""
+        }
+      <Outlet />
     </div>
   );
 }

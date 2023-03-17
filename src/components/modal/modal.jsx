@@ -8,21 +8,41 @@ import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ModalOverlay } from "../modal-overlay/modal-overlay";
 import { ingredientsTitle } from "../utils/const";
 import { CLOSE_MODAL } from "../../services/actions/modal";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { DELETE_ITEMS } from "../../services/actions/burger-constructor";
+import { DELETE_ACTIVE_BUN, SET_COUNT } from "../../services/actions/burger-ingredients";
+import { OPEN_ORDER } from "../../services/actions/order-api";
+import { Loader } from "../loading/loading";
 
 const Modal = ({ children, title }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const order = useSelector(store => store.orderApiReducer.order);
+  const data = useSelector((store) => store.ingredientsApiReducer.items);
 
   const handleClose = React.useCallback(
     () => {
-      navigate("/", { replace: true });
+      navigate(location.state, { replace: true });
       dispatch({
         type: CLOSE_MODAL,
         order: order,
       });
-    }, [dispatch, order] // eslint-disable-line
+      dispatch({
+        type: DELETE_ITEMS,
+      });
+      dispatch({
+        type: DELETE_ACTIVE_BUN,
+      });
+      dispatch({
+        type: SET_COUNT,
+        items: data,
+      });
+      dispatch({
+        type: OPEN_ORDER,
+        open: false,
+      });
+    }, [dispatch] // eslint-disable-line
   )
 
   React.useEffect(() => {
@@ -55,12 +75,27 @@ const Modal = ({ children, title }) => {
 
   styleTitle(title);
 
+  function getTitle(string, number) {
+    if (string === ingredientsTitle) {
+      return string
+    } else {
+      if (number > 0) {
+        return number
+      } else {
+        return <Loader />
+      }
+    }
+  }
+
   return PortalReactDOM.createPortal(
     <ModalOverlay handleClose={handleClose}>
       <div className={`${containerStyle} ${modal.container}`}>
-        <div className={titleStyle}>
-          {title === ingredientsTitle ? title : order.number}
-        </div>
+        {title ?
+          <div className={titleStyle}>
+            {getTitle(title, order.number)}
+          </div> :
+          ""
+        }
         <div className={`${modal.close}`}>
           <CloseIcon onClick={handleCloseByButton} />
         </div>
@@ -75,5 +110,5 @@ export { Modal };
 
 Modal.propTypes = {
   children: PropTypes.element.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
 };

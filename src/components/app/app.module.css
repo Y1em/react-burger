@@ -8,4 +8,7 @@
   --secondary-text: #8585AD;
   --primary-text: white;
   --interface-accent: #4c4cff;
+  --interface-success: #00CCCC;
+  --offset-loading: 187;
+  --duration: 1.4s;
 }

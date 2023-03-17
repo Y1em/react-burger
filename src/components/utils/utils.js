@@ -211,8 +211,9 @@ function getDay(number) {
 }
 
 function dateFormat(string) {
-  const today = new Date();
-  const orderDay = today.getUTCDate() - string.slice(8, 10);
+  const today = new Date().toLocaleString("ru-RU", {timeZone: "Europe/Moscow"});
+  const orderMoscowDay = new Date(string).toLocaleString("ru-RU", {timeZone: "Europe/Moscow"});
+  const orderDay = today.slice(0, 2) - orderMoscowDay.slice(0, 2);
   const orderMoscowTime = new Date(string).toLocaleTimeString("ru-RU", {timeZone: "Europe/Moscow"});
   const orderTime = orderMoscowTime.slice(0, 5);
   return `${getDay(orderDay)}, ${orderTime} i-GMT+3`
@@ -224,12 +225,68 @@ function totalPrice(arr) {
   }, 0);
 }
 
-function cutArr(arr) {
-  if (arr.length < 7) {
-    return arr
-  } else {
-    return arr.splice(0, 5)
+function findUserOrders(status, orders) {
+  const arr = [];
+  orders.forEach((order) => {
+    if (status === order.status) {
+      arr.push(order.number)
+    }
+  })
+  return arr.slice(0, 10)
+}
+
+function getStatus(string) {
+  if (string === "done") {
+    return "Выполнен"
+  } else if (string === "created") {
+    return "Создан"
+  } else if (string === "pending") {
+    return "Готовится"
   }
+}
+
+function getQuantity(item, arr) {
+  let count = 0;
+  arr.forEach((element) => {
+    if (element._id === item._id) {
+      count = count + 1;
+    }
+  })
+  return count
+}
+
+function getOneBunArr(arr) {
+  let count = 0;
+  arr.forEach((item) => {
+    if (item.type === "bun") {
+      count = count + 1;
+    }
+  })
+  if (count === 2) {
+    return deleteBun(arr)
+  } else if (count === 1) {
+    return arr
+  }
+}
+
+function shortToken(string) {
+  return string.slice(7)
+}
+
+function reverseArr(arr) {
+  const newArr = JSON.parse(JSON.stringify(arr));
+  return newArr.reverse()
+}
+
+function getPath(string) {
+  const arr = string.split("/");
+  const path = arr.splice(1, 1);
+  return ("/").concat(path)
+}
+
+function getActiveTab(string) {
+  const arr = string.split("/");
+  return arr.splice(arr.length - 1, 1)[0]
 }
 
 export {
@@ -256,5 +313,12 @@ export {
   findItems,
   dateFormat,
   totalPrice,
-  cutArr
+  findUserOrders,
+  getStatus,
+  getQuantity,
+  getOneBunArr,
+  shortToken,
+  reverseArr,
+  getPath,
+  getActiveTab
 };

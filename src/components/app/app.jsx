@@ -1,14 +1,16 @@
 import React from "react";
-import variables from "./app.module.css";
+import variables from "./app.module.css"; // eslint-disable-line
 import { Routes, Route, useLocation } from 'react-router-dom';
 import LoginPage from "../../pages/login";
 import RegisterPage from "../../pages/register";
 import ForgotPasswordPage from "../../pages/forgot-password";
 import ProfilePage from "../../pages/profile";
 import ResetPasswordPage from "../../pages/reset-password";
-import OrdersPage from "../../pages/orders";
 import FeedPage from "../../pages/feed";
 import { ProtectedRouteElement } from "../protected-route";
+import { ProfileForm } from "../../pages/profileform";
+import { ProfileOrders } from "../../pages/profileorders";
+import { OrderPage } from "../../pages/orderpage";
 import {
   loginPath,
   homePath,
@@ -19,7 +21,9 @@ import {
   wrongPath,
   ingredientPath,
   ordersPath,
+  orderPath,
   feedPath,
+  orderFeedPath,
   reLoginTrigger
 } from "../utils/const";
 import IngredientPage from "../../pages/ingredient";
@@ -39,6 +43,8 @@ function App() {
   const refreshToken = localStorage.getItem('refreshToken');
   const currentItem = useSelector((store) => store.modalReducer.currentItem);
   const savedCurrentItem = JSON.parse(localStorage.getItem('currentItem'));
+  const currentOrder = useSelector((store) => store.modalReducer.currentOrder);
+  const savedCurrentOrder = JSON.parse(localStorage.getItem('currentOrder'));
 
   function login(res) {
     dispatch(userLogin(res.user.email, localStorage.getItem('password')));
@@ -73,7 +79,7 @@ function App() {
         element={
           <ProtectedRouteElement
             element={<LoginPage />}
-            path={(location.state && location.state !== homePath) ? location.state.from.pathname : homePath}
+            path={location.state?.from ? location.state.from.pathname : homePath}
             isAuthorized={true}
           />
         }
@@ -81,9 +87,20 @@ function App() {
       <Route path={registerPath} element={<ProtectedRouteElement element={<RegisterPage />} path={homePath} isAuthorized={true} />} />
       <Route path={forgotPath} element={<ProtectedRouteElement element={<ForgotPasswordPage />} path={homePath} isAuthorized={true} />} />
       <Route path={resetPath} element={<ProtectedRouteElement element={<ResetPasswordPage />} path={homePath} isAuthorized={true} />} />
-      <Route path={profilePath} element={<ProtectedRouteElement element={<ProfilePage />} path={loginPath} isAuthorized={false} />} />
-      <Route path={ordersPath} element={<ProtectedRouteElement element={<OrdersPage />} path={loginPath} isAuthorized={false} />} />
-      <Route path={feedPath} element={<ProtectedRouteElement element={<FeedPage />} path={loginPath} isAuthorized={false} />} />
+
+      <Route path={profilePath} element={<ProtectedRouteElement element={<ProfilePage />} path={loginPath} isAuthorized={false} />}>
+        <Route index element={<ProfileForm />}/>
+        <Route path={ordersPath} element={<ProfileOrders />}>
+          {currentOrder || savedCurrentOrder ? <Route path={orderPath} element={<OrderPage />}/> : ''}
+        </Route>
+      </Route>
+      <Route path={orderPath} element={<OrderPage />}/>
+
+      <Route path={feedPath} element={<FeedPage />} >
+        {currentOrder || savedCurrentOrder ? <Route path={orderFeedPath} element={<OrderPage />}/> : ''}
+      </Route>
+      <Route path={orderFeedPath} element={<OrderPage />}/>
+
       <Route path={wrongPath} element={<NotFoundPage />} />
     </Routes>
   );

@@ -1,14 +1,17 @@
 .card {
   width: 584px;
+  height: 214px;
   background-color: var(--modal-bg);
   box-sizing: border-box;
   border-radius: calc(6 * var(--offset-base-size));
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 
 .card_wide {
   width: 844px;
+  height: 246px;
 }
 
 .info {
@@ -27,6 +30,10 @@
   overflow: hidden;
 }
 
+.status_done {
+  color: var(--interface-success);
+}
+
 .bottom {
   display: flex;
   height: 64px; /* убрать */
@@ -36,7 +43,7 @@
 
 .images {
   display: flex;
-  position: relative;
+
 }
 
 .image {
@@ -44,7 +51,7 @@
   width: 64px;
   object-fit: cover;
   border-radius: 50%;
-  border: 3px solid #801AB3;
+  border: calc(var(--offset-base-size) / 2) solid #801AB3;
   margin-left: -20px;
   background-color: var(--bg);
   box-sizing: border-box;
@@ -54,16 +61,22 @@
   margin-left: 0;
 }
 
+.last {
+  position: relative;
+  margin-left: -20px;
+}
+
 .cover {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 64px;
-  width: 64px;
+  height: calc(64px - var(--offset-base-size));
+  width: calc(64px - var(--offset-base-size));
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
-  right: 0;
+  top: calc(var(--offset-base-size) / 2);
+  right: calc(var(--offset-base-size) / 2);
 }
 
 .price {

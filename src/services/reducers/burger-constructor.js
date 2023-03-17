@@ -4,6 +4,7 @@ import {
   MOVE_ITEM,
   ADD_BUN,
   ADD_MAIN,
+  DELETE_ITEMS,
 } from "../actions/burger-constructor";
 
 import {
@@ -62,6 +63,15 @@ const constructorReducer = (state = initialState, action) => {
           action.id,
           action.index
         ),
+      };
+    }
+
+    case DELETE_ITEMS: {
+      return {
+        ...state,
+        constructorBuns: [],
+        constructorMains: [],
+        totalPrice: 0,
       };
     }
 

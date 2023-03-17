@@ -16,8 +16,10 @@ const forgotPath = '/forgot-password';
 const profilePath = '/profile';
 const ingredientPath = '/ingredients/:id';
 const wrongPath = '/*';
-const ordersPath = '/orders';
+const ordersPath = '/profile/orders';
+const orderPath = '/profile/orders/:id';
 const feedPath = '/feed';
+const orderFeedPath = '/feed/:id';
 const getUserTrigger = 'getUserTrigger';
 const updateUserTrigger = 'updateUserTrigger';
 const reLoginTrigger = 'reLoginTrigger';
@@ -43,6 +45,8 @@ export {
   wrongPath,
   ordersPath,
   feedPath,
+  orderFeedPath,
+  orderPath,
   getUserTrigger,
   updateUserTrigger,
   reLoginTrigger

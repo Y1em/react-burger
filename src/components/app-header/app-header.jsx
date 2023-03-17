@@ -7,7 +7,6 @@ import {
 import {
   homePath,
   profilePath,
-  ordersPath,
   feedPath,
 } from "../utils/const";
 import { Link } from 'react-router-dom';

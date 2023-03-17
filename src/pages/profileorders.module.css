@@ -1,0 +1,16 @@
+.orders {
+  height: calc(95vh - 36px - 88px);
+  display: grid;
+  row-gap: calc(var(--offset-base-size)*4);
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+
+.orders::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-text);
+}
+
+.orders::-webkit-scrollbar {
+  width: var(--scroll-bar-width);
+  background-color: var(--modal-bg);
+}

@@ -2,6 +2,7 @@ import {
   GET_ORDER_FAILED,
   GET_ORDER_SUCCESS,
   GET_ORDER_REQUEST,
+  OPEN_ORDER,
 } from "../actions/order-api";
 
 const InitialState = {
@@ -11,6 +12,7 @@ const InitialState = {
   },
   orderRequest: false,
   orderFailed: false,
+  open: false,
 };
 
 const orderApiReducer = (state = InitialState, action) => {
@@ -31,9 +33,21 @@ const orderApiReducer = (state = InitialState, action) => {
       };
     }
     case GET_ORDER_FAILED: {
-      return { ...state, orderFailed: true, orderRequest: false };
+      return {
+        ...state,
+        orderFailed: true,
+        orderRequest: false
+      };
     }
-
+    case OPEN_ORDER: {
+      return {
+        ...state,
+        open: action.open,
+        order: {
+          number: "..."
+        },
+      };
+    }
     default: {
       return state;
     }

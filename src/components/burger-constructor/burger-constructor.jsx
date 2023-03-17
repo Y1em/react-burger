@@ -12,19 +12,24 @@ import { initialMessage, emptyOrderMessage, loginPath } from "../utils/const";
 import { getOrderData } from "../../services/actions/order-api";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from 'react-router-dom';
-import { ACTIVE } from "../../services/actions/app-header";
+import { OPEN_ORDER } from "../../services/actions/order-api";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const bunList = useSelector((store) => store.constructorReducer.constructorBuns);
   const mainList = useSelector((store) => store.constructorReducer.constructorMains);
   const totalPrice = useSelector((store) => store.constructorReducer.totalPrice);
-  const number = useSelector((store) => store.orderApiReducer.order.number);
   const user = useSelector((store) => store.authReducer.name);
   const [message, setMessage] = React.useState(initialMessage);
+  const open = useSelector((store) => store.orderApiReducer.open);
   const [isRedirect, setRedirect] = React.useState(false);
+  const accessToken = localStorage.getItem('accessToken');
 
   function onButtonClick() {
+    dispatch({
+      type: OPEN_ORDER,
+      open: true
+    });
     if (!user) {
       setRedirect(true)
     } else {
@@ -32,22 +37,15 @@ const BurgerConstructor = () => {
       if (bunList.length === 0) {
         setMessage(emptyOrderMessage);
       } else {
-        dispatch(getOrderData(getIds(bunList.concat(mainList))));
-      };
 
+        dispatch(getOrderData(getIds(bunList.concat(mainList)), accessToken));
+      };
     }
   }
 
   function handleSetMessage(string) {
     setMessage(string);
   }
-
-  React.useEffect(() => {
-    dispatch({
-      type: ACTIVE,
-      active: window.location.pathname,
-    });
-  }, []); // eslint-disable-line
 
   if (isRedirect) {
     return (
@@ -79,7 +77,7 @@ const BurgerConstructor = () => {
           Оформить заказ
         </Button>
       </div>
-      {number > 0 && (
+      {open && (
         <Modal title={"..."}>
           <OrderDetails />
         </Modal>

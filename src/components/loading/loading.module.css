@@ -1,0 +1,14 @@
+.loader {
+  border: 10px solid var(--modal-bg);
+  border-top: 10px solid var(--interface-accent);
+  border-radius: 50%;
+  width: 85px;
+  height: 85px;
+  animation: spin 1.5s linear infinite;
+  box-sizing: border-box;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

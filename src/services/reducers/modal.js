@@ -1,7 +1,12 @@
-import { SET_CURRENT_ITEM, CLOSE_MODAL } from "../actions/modal";
+import {
+  SET_CURRENT_ITEM,
+  CLOSE_MODAL,
+  SET_CURRENT_ORDER
+} from "../actions/modal";
 
 const InitialState = {
   currentItem: undefined,
+  currentOrder: undefined,
 };
 
 const modalReducer = (state = InitialState, action) => {
@@ -14,12 +19,21 @@ const modalReducer = (state = InitialState, action) => {
       };
     }
 
+    case SET_CURRENT_ORDER: {
+      localStorage.setItem('currentOrder', JSON.stringify(action.order));
+      return {
+        ...state,
+        currentOrder: JSON.parse(localStorage.getItem('currentOrder'))
+      };
+    }
+
     case CLOSE_MODAL: {
       localStorage.removeItem('currentItem');
+      localStorage.removeItem('currentOrder');
       return {
         ...state,
         currentItem: null,
-        ...(action.order.number = "..."),
+        currentOrder: null,
       };
     }
 
