@@ -20,10 +20,12 @@ function OrderPage() {
 
   React.useEffect(
     () => {
-      dispatch({
-        type: WS_CONNECTION_START,
-        request: "allOrders",
-       });
+      if (from === null) {
+        dispatch({
+          type: WS_CONNECTION_START,
+          request: "allOrders",
+         });
+      }
     },
     [] // eslint-disable-line
   );

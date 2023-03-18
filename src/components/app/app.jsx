@@ -70,7 +70,7 @@ function App() {
   }, []); // eslint-disable-line
 
   React.useEffect(() => {
-    if (location.pathname !== feedPath && location.pathname !== ordersPath) {
+    if (location.pathname.slice(0, 5) !== feedPath && location.pathname.slice(0, 15) !== ordersPath) {
       dispatch({
         type: WS_CONNECTION_CLOSE,
        });

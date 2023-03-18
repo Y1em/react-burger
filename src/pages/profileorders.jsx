@@ -8,8 +8,8 @@ import { WS_CONNECTION_START } from "../services/actions/ws-actions";
 
 function ProfileOrders() {
 
-  const dispatch = useDispatch();
   const data = useSelector(((store) => store.wsReducer.userData));
+  const dispatch = useDispatch();
 
   React.useEffect(
     () => {

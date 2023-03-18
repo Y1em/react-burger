@@ -28,20 +28,22 @@ const Modal = ({ children, title }) => {
         type: CLOSE_MODAL,
         order: order,
       });
-      dispatch({
-        type: DELETE_ITEMS,
-      });
-      dispatch({
-        type: DELETE_ACTIVE_BUN,
-      });
-      dispatch({
-        type: SET_COUNT,
-        items: data,
-      });
-      dispatch({
-        type: OPEN_ORDER,
-        open: false,
-      });
+      if (location.state === null) {
+        dispatch({
+          type: DELETE_ITEMS,
+        });
+        dispatch({
+          type: DELETE_ACTIVE_BUN,
+        });
+        dispatch({
+          type: SET_COUNT,
+          items: data,
+        });
+        dispatch({
+          type: OPEN_ORDER,
+          open: false,
+        });
+      }
     }, [dispatch] // eslint-disable-line
   )
 
