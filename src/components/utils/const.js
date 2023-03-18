@@ -23,6 +23,7 @@ const orderFeedPath = '/feed/:id';
 const getUserTrigger = 'getUserTrigger';
 const updateUserTrigger = 'updateUserTrigger';
 const reLoginTrigger = 'reLoginTrigger';
+const getOrdersTrigger = 'getOrdersTrigger';
 
 export {
   modalRoot,
@@ -49,5 +50,6 @@ export {
   orderPath,
   getUserTrigger,
   updateUserTrigger,
-  reLoginTrigger
+  reLoginTrigger,
+  getOrdersTrigger,
 }

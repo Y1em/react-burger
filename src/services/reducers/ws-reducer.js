@@ -3,7 +3,8 @@ import {
   WS_CONNECTION_ERROR,
   WS_CONNECTION_SUCCESS,
   WS_GET_ORDERS,
-  WS_GET_USER_ORDERS
+  WS_GET_USER_ORDERS,
+  WS_CONNECTION_CLOSE
 } from '../actions/ws-actions';
 
 const initialState = {
@@ -38,11 +39,18 @@ export const wsReducer = (state = initialState, action) => {
         data: action.payload
       };
 
-      case WS_GET_USER_ORDERS:
-        return {
-          ...state,
-          userData: action.payload
-        };
+    case WS_GET_USER_ORDERS:
+      return {
+        ...state,
+        userData: action.payload
+      };
+
+    case WS_CONNECTION_CLOSE:
+      return {
+        ...state,
+        data: [],
+        userData: [],
+      };
     default:
       return state;
   }

@@ -4,7 +4,6 @@ import AppHeader from "../components/app-header/app-header";
 import { useDispatch } from "react-redux";
 import { userLogout } from "../services/actions/auth";
 import { ACTIVE } from "../services/actions/app-header";
-import { WS_CONNECTION_START } from "../services/actions/ws-actions";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { ordersPath, profilePath } from "../components/utils/const";
 import { getPath, getActiveTab } from "../components/utils/utils";
@@ -17,16 +16,6 @@ function ProfilePage() {
   const activeTab = getActiveTab(location.pathname);
   const refreshToken = localStorage.getItem('refreshToken');
   const [active, setActive] = React.useState(activeTab);
-
-  React.useEffect(
-    () => {
-      dispatch({
-        type: WS_CONNECTION_START,
-        request: "allUserOrders",
-       });
-    },
-    [] // eslint-disable-line react-hooks/exhaustive-deps
-  );
 
   function onItemClick(e) {
     setActive(e.target.attributes.value.value);

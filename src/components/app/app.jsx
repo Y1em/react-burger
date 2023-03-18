@@ -34,6 +34,7 @@ import { useDispatch } from 'react-redux';
 import { userLogin } from '../../services/actions/auth';
 import { update } from "../utils/utils";
 import { getUser } from "../utils/api";
+import { WS_CONNECTION_CLOSE } from "../../services/actions/ws-actions";
 
 function App() {
 
@@ -67,6 +68,14 @@ function App() {
       reLogin(accessToken, refreshToken);
     }
   }, []); // eslint-disable-line
+
+  React.useEffect(() => {
+    if (location.pathname !== feedPath && location.pathname !== ordersPath) {
+      dispatch({
+        type: WS_CONNECTION_CLOSE,
+       });
+    }
+  }, [location.pathname]); // eslint-disable-line
 
   return (
     <Routes>

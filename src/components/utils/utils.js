@@ -3,6 +3,7 @@ import {
   reLoginTrigger,
   getUserTrigger,
   updateUserTrigger,
+  getOrdersTrigger,
 } from './const.js';
 
 function isBun(obj) {
@@ -182,6 +183,8 @@ function update(request, refreshToken, trigger, action, user) {
         action(res.accessToken, user, res.refreshToken)
       } else if (trigger === reLoginTrigger) {
         action(res.accessToken, res.refreshToken);
+      } else if (trigger === getOrdersTrigger) {
+        action()
       }
     }
   })
@@ -264,7 +267,7 @@ function getOneBunArr(arr) {
   })
   if (count === 2) {
     return deleteBun(arr)
-  } else if (count === 1) {
+  } else {
     return arr
   }
 }

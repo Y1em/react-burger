@@ -80,7 +80,7 @@ const IngredientItem = ({ ingredient }) => {
         <p className={`mr-1 text text_type_digits-default`}>{ingredient.price}</p>
         <CurrencyIcon />
       </div>
-      <p className={`${burgerIngredients.name}`}>{ingredient.name}</p>
+      <p className={`${burgerIngredients.name} text text_type_main-small`}>{ingredient.name}</p>
     </li>
   );
 };

@@ -27,7 +27,7 @@ function FeedPage() {
         request: "allOrders",
        });
     },
-    [] // eslint-disable-line react-hooks/exhaustive-deps
+    [] // eslint-disable-line
   );
 
   return (
@@ -51,8 +51,8 @@ function FeedPage() {
           </section>
           <section className={`${style.board} mt-25 ml-15`} >
             <div className={`${style.status}`}>
-              <BoardStatus orders={data.orders} name="done" />
-              <BoardStatus orders={data.orders} name="in process" />
+              <BoardStatus orders={data.orders} status="done" />
+              <BoardStatus orders={data.orders} status="pending" />
             </div>
             <p className={`${style.text} text text_type_main-medium mt-15`} >
               Выполнено за все время:
