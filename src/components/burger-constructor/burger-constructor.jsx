@@ -26,10 +26,6 @@ const BurgerConstructor = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   function onButtonClick() {
-    dispatch({
-      type: OPEN_ORDER,
-      open: true
-    });
     if (!user) {
       setRedirect(true)
     } else {
@@ -37,7 +33,10 @@ const BurgerConstructor = () => {
       if (bunList.length === 0) {
         setMessage(emptyOrderMessage);
       } else {
-
+        dispatch({
+          type: OPEN_ORDER,
+          open: true
+        });
         dispatch(getOrderData(getIds(bunList.concat(mainList)), accessToken));
       };
     }
