@@ -1,6 +1,8 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { itemPropTypes } from "../utils/types";
+import React, { FunctionComponent } from "react";
+import {
+  useDispatch,
+  useSelector
+} from "react-redux";
 import burgerIngredients from "./ingredient-item.module.css";
 import {
   CurrencyIcon,
@@ -15,14 +17,41 @@ import {
 import { useDrag } from "react-dnd";
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const IngredientItem = ({ ingredient }) => {
+type TItemProps = {
+  ingredient: {
+    _id: string,
+    name: string,
+    type: string,
+    proteins: number,
+    fat: number,
+    carbohydrates: number,
+    calories: number,
+    price: number,
+    image: string,
+    image_mobile: string,
+    image_large: string,
+    __v: number,
+    count: number,
+  };
+}
+
+type TState = {
+  display: boolean,
+  count: number,
+}
+
+const IngredientItem: FunctionComponent<TItemProps> = ({ ingredient }) => {
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const path = useLocation().pathname
-  const [state, setState] = React.useState({
+  const [state, setState] = React.useState<TState>({
     display: false,
     count: 0,
   });
+
+// типизация хранилища
+
   const data = useSelector((store) => store.ingredientsApiReducer.items);
   const activeBunId = useSelector((store) => store.ingredientsReducer.activeBunId);
   const mainsList = useSelector(
@@ -78,15 +107,11 @@ const IngredientItem = ({ ingredient }) => {
       <img src={ingredient.image} className={`ml-4 mr-4`} alt={ingredient.name} />
       <div className={`mt-1 mb-1 ${burgerIngredients.price}`}>
         <p className={`mr-1 text text_type_digits-default`}>{ingredient.price}</p>
-        <CurrencyIcon />
+        <CurrencyIcon type={"primary"} />
       </div>
       <p className={`${burgerIngredients.name} text text_type_main-small`}>{ingredient.name}</p>
     </li>
   );
-};
-
-IngredientItem.propTypes = {
-  ingredient: itemPropTypes.isRequired,
 };
 
 export { IngredientItem }
