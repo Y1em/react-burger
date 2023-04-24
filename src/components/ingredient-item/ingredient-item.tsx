@@ -1,66 +1,38 @@
 import React, { FunctionComponent } from "react";
-import {
-  useDispatch,
-  useSelector
-} from "react-redux";
+import { useAppSelector, useAppDispatch } from "../../services/hooks/hooks";
 import burgerIngredients from "./ingredient-item.module.css";
 import {
   CurrencyIcon,
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import {
-  isBun,
-} from "../utils/utils";
-import {
-  SET_CURRENT_ITEM,
-} from "../../services/actions/modal";
+import { isBun } from "../utils/utils";
+import { SET_CURRENT_ITEM } from "../../services/actions/modal";
 import { useDrag } from "react-dnd";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
+import { TIngredientProps, TIngredientItemState } from "../utils/types";
 
-type TItemProps = {
-  ingredient: {
-    _id: string,
-    name: string,
-    type: string,
-    proteins: number,
-    fat: number,
-    carbohydrates: number,
-    calories: number,
-    price: number,
-    image: string,
-    image_mobile: string,
-    image_large: string,
-    __v: number,
-    count: number,
-  };
-}
-
-type TState = {
-  display: boolean,
-  count: number,
-}
-
-const IngredientItem: FunctionComponent<TItemProps> = ({ ingredient }) => {
-
-  const dispatch = useDispatch();
+const IngredientItem: FunctionComponent<TIngredientProps> = ({
+  ingredient,
+}) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const path = useLocation().pathname
-  const [state, setState] = React.useState<TState>({
+  const path = useLocation().pathname;
+  const initState = {
     display: false,
     count: 0,
-  });
-
-// типизация хранилища
-
-  const data = useSelector((store) => store.ingredientsApiReducer.items);
-  const activeBunId = useSelector((store) => store.ingredientsReducer.activeBunId);
-  const mainsList = useSelector(
+  };
+  const [state, setState] = React.useState<TIngredientItemState>(initState);
+  const data = useAppSelector((store) => store.ingredientsApiReducer.items);
+  const activeBunId = useAppSelector(
+    (store) => store.ingredientsReducer.activeBunId
+  );
+  const mainsList = useAppSelector(
     (store) => store.constructorReducer.constructorMains
   );
 
   const goToIngredient = () => {
     navigate(`/ingredients/${ingredient._id}`, { replace: true, state: path });
-  }
+  };
 
   const [{ opacity }, ref] = useDrag({
     type: "items",
@@ -70,14 +42,21 @@ const IngredientItem: FunctionComponent<TItemProps> = ({ ingredient }) => {
     }),
   });
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     if (isBun(ingredient)) {
-      setState({ display: ingredient._id === activeBunId ? true : false, count: 1 });
+      setState({
+        ...state,
+        display: ingredient._id === activeBunId ? true : false,
+        count: 1,
+      });
     } else {
-      setState({ display: ingredient.count > 0 ? true : false, count: ingredient.count });
+      setState({
+        ...state,
+        display: ingredient.count > 0 ? true : false,
+        count: ingredient.count,
+      });
     }
-
-  }, [ingredient.count, ingredient._id, mainsList, activeBunId]) // eslint-disable-line
+  }, [data, ingredient.count, mainsList.length, activeBunId]); // eslint-disable-line
 
   const onItemClick = () => {
     dispatch({
@@ -104,14 +83,22 @@ const IngredientItem: FunctionComponent<TItemProps> = ({ ingredient }) => {
       >
         <Counter count={state.count} size="default" />
       </div>
-      <img src={ingredient.image} className={`ml-4 mr-4`} alt={ingredient.name} />
+      <img
+        src={ingredient.image}
+        className={`ml-4 mr-4`}
+        alt={ingredient.name}
+      />
       <div className={`mt-1 mb-1 ${burgerIngredients.price}`}>
-        <p className={`mr-1 text text_type_digits-default`}>{ingredient.price}</p>
+        <p className={`mr-1 text text_type_digits-default`}>
+          {ingredient.price}
+        </p>
         <CurrencyIcon type={"primary"} />
       </div>
-      <p className={`${burgerIngredients.name} text text_type_main-small`}>{ingredient.name}</p>
+      <p className={`${burgerIngredients.name} text text_type_main-small`}>
+        {ingredient.name}
+      </p>
     </li>
   );
 };
 
-export { IngredientItem }
+export { IngredientItem };
