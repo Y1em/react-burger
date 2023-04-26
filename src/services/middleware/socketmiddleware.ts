@@ -2,18 +2,21 @@ import { shortToken, update } from "../../components/utils/utils";
 import { updateToken } from "../../components/utils/api";
 import { getOrdersTrigger } from "../../components/utils/const";
 import { TWsMiddlewareActions } from "../../components/utils/types";
+import { MiddlewareAPI } from "redux";
+
 
 export const socketMiddleware = (
   wsUrl: string,
   wsActions: TWsMiddlewareActions
 ) => {
-  return (store: any) => {
+  return (store: MiddlewareAPI<any, any>) => { // с типизацией (store: MiddlewareAPI<AppDispatch, RootState>) возникают ошибки
     let socket: any = null;
 
-    return (next: any) => (action: any) => {
+    return (next: any) => (action: any): any => {
       const refreshToken = localStorage.getItem("refreshToken");
+      const accessToken = localStorage.getItem("accessToken");
       const { dispatch, getState } = store; // eslint-disable-line
-      const { type, request, payload } = action; // eslint-disable-line
+      const { type, payload } = action; // eslint-disable-line
       const {
         wsInit,
         onOpen,
@@ -23,23 +26,17 @@ export const socketMiddleware = (
         onUserOrders,
         wsClose,
       } = wsActions; // eslint-disable-line
+      const userOrdersRequest = accessToken ? `?token=${shortToken(accessToken.toString())}` : "";
 
       function getUserOrders() {
         dispatch({
           type: wsInit,
-          request: "allUserOrders",
+          payload: userOrdersRequest,
         });
       }
 
-      if (request === "allOrders") {
-        socket = new WebSocket(`${wsUrl}/all`);
-      } else if (request === "allUserOrders") {
-        const accessToken = localStorage.getItem("accessToken");
-        if (accessToken) {
-          socket = new WebSocket(
-            `${wsUrl}?token=${shortToken(accessToken.toString())}`
-          );
-        }
+      if (type === wsInit) {
+        socket = new WebSocket(`${wsUrl}${payload}`);
       }
 
       if (type === wsClose) {
@@ -55,15 +52,14 @@ export const socketMiddleware = (
           dispatch({ type: onError, payload: event });
         };
 
-        if (request === "allOrders") {
+        if (payload === "/all") {
           socket.onmessage = (event: MessageEvent) => {
             const { data } = event;
             const parsedData = JSON.parse(data);
             const { success, ...restParsedData } = parsedData;
-
-            dispatch({ type: onOrders, payload: restParsedData });
+            dispatch({ type: onOrders, payload: restParsedData});
           };
-        } else if (request === "allUserOrders") {
+        } else if (payload === userOrdersRequest) {
           socket.onmessage = (event: MessageEvent) => {
             const { data } = event;
             const parsedData = JSON.parse(data);
@@ -76,7 +72,9 @@ export const socketMiddleware = (
                 getUserOrders
               );
             }
-            dispatch({ type: onUserOrders, payload: restParsedData });
+            if (accessToken) {
+              dispatch({ type: onUserOrders, payload: restParsedData });
+            }
           };
         }
 

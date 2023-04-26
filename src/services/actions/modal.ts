@@ -2,6 +2,7 @@ import { TIngredientArr, TOrder } from "../../components/utils/types";
 
 export const SET_CURRENT_ITEM: "SET_CURRENT_ITEM" = "SET_CURRENT_ITEM";
 export const SET_CURRENT_ORDER: "SET_CURRENT_ORDER" = "SET_CURRENT_ORDER";
+export const OPEN_MODAL: "OPEN_MODAL" = "OPEN_MODAL";
 export const CLOSE_MODAL: "CLOSE_MODAL" = "CLOSE_MODAL";
 
 export type TSetCurrentItemAction = {
@@ -19,7 +20,12 @@ export type TCloseModalAction = {
   readonly type: typeof CLOSE_MODAL;
 };
 
+export type TOpenModalAction = {
+  readonly type: typeof OPEN_MODAL;
+}
+
 export type TModalActions =
   | TSetCurrentItemAction
   | TSetCurrentOrderAction
-  | TCloseModalAction;
+  | TCloseModalAction
+  | TOpenModalAction;

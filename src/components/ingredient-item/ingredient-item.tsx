@@ -6,7 +6,7 @@ import {
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { isBun } from "../utils/utils";
-import { SET_CURRENT_ITEM } from "../../services/actions/modal";
+import { OPEN_MODAL, SET_CURRENT_ITEM } from "../../services/actions/modal";
 import { useDrag } from "react-dnd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { TIngredientProps, TIngredientItemState } from "../utils/types";
@@ -63,6 +63,10 @@ const IngredientItem: FunctionComponent<TIngredientProps> = ({
       type: SET_CURRENT_ITEM,
       id: ingredient._id,
       items: data,
+    });
+    dispatch({
+      type: OPEN_MODAL,
+      isOpen: true,
     });
     goToIngredient();
   };

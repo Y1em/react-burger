@@ -22,7 +22,7 @@ const FeedPage: FunctionComponent = () => {
     () => {
       dispatch({
         type: WS_CONNECTION_START,
-        request: "allOrders",
+        payload: "/all",
       });
     },
     [] // eslint-disable-line

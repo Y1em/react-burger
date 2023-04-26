@@ -13,6 +13,9 @@ import { getOrderData } from "../../services/actions/order-api";
 import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
 import { Navigate } from "react-router-dom";
 import { OPEN_ORDER } from "../../services/actions/order-api";
+import { DELETE_ITEMS } from "../../services/actions/burger-constructor";
+import { OPEN_MODAL } from "../../services/actions/modal";
+import { RESET_COUNTER, DELETE_ACTIVE_BUN } from "../../services/actions/burger-ingredients";
 
 const BurgerConstructor: FunctionComponent = () => {
   const dispatch = useAppDispatch();
@@ -29,6 +32,20 @@ const BurgerConstructor: FunctionComponent = () => {
   const open = useAppSelector((store) => store.orderApiReducer.open);
   const [isRedirect, setRedirect] = React.useState<boolean>(false);
   const accessToken = localStorage.getItem("accessToken");
+  const modalIsOpen = useAppSelector((store) => store.modalReducer.isOpen);
+  const data = useAppSelector((store) => store.ingredientsApiReducer.items);
+
+  React.useEffect(
+    () => {
+      if (!modalIsOpen) {
+        dispatch({
+          type: OPEN_ORDER,
+          open: false,
+        });
+      }
+    },
+    [modalIsOpen] // eslint-disable-line
+  );
 
   function onButtonClick() {
     if (!accessToken) {
@@ -41,6 +58,20 @@ const BurgerConstructor: FunctionComponent = () => {
         dispatch({
           type: OPEN_ORDER,
           open: true,
+        });
+        dispatch({
+          type: OPEN_MODAL,
+          isOpen: true,
+        });
+        dispatch({
+          type: DELETE_ITEMS,
+        });
+        dispatch({
+          type: RESET_COUNTER,
+          items: data,
+        });
+        dispatch({
+          type: DELETE_ACTIVE_BUN,
         });
         dispatch(getOrderData(getIds(bunList.concat(mainList)), accessToken));
       }
@@ -78,7 +109,7 @@ const BurgerConstructor: FunctionComponent = () => {
         </Button>
       </div>
       {open && (
-        <Modal title={"..."}>
+        <Modal>
           <OrderDetails />
         </Modal>
       )}

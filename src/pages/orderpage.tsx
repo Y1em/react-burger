@@ -26,7 +26,7 @@ const OrderPage: FunctionComponent = () => {
       if (from === null) {
         dispatch({
           type: WS_CONNECTION_START,
-          request: "allOrders",
+          payload: "/all",
         });
       }
     },

@@ -88,7 +88,6 @@ export type TConstructorItem = {
 
 export type TModalProps = {
   children: JSX.Element;
-  title?: string;
 };
 
 export type TModalOverlayProps = {

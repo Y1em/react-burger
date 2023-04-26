@@ -1,5 +1,4 @@
 import {
-  setCounter,
   increaseCounter,
   decreaseCounter,
   resetCounter,

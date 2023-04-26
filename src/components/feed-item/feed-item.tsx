@@ -10,7 +10,7 @@ import {
   getStatus,
   getOneBunArr,
 } from "../utils/utils";
-import { SET_CURRENT_ORDER } from "../../services/actions/modal";
+import { SET_CURRENT_ORDER, OPEN_MODAL } from "../../services/actions/modal";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getObj } from "../utils/utils";
 import { TFeedItemProps } from "../utils/types";
@@ -35,6 +35,10 @@ const FeedItem: FunctionComponent<TFeedItemProps> = ({ order, type }) => {
     dispatch({
       type: SET_CURRENT_ORDER,
       order: order,
+    });
+    dispatch({
+      type: OPEN_MODAL,
+      isOpen: true,
     });
     goToOrder();
   }
@@ -68,8 +72,7 @@ const FeedItem: FunctionComponent<TFeedItemProps> = ({ order, type }) => {
       )}
       <div className={`${style.bottom} mt-6`}>
         <div className={style.images}>
-          {oneBunBurgerArr.map((item, index) => {
-            // eslint-disable-line
+          {oneBunBurgerArr.map((item, index) => { // eslint-disable-line
             if (index < 5) {
               return (
                 <img

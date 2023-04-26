@@ -12,6 +12,7 @@ export const WS_CONNECTION_CLOSE: "WS_CONNECTION_CLOSE" = "WS_CONNECTION_CLOSE";
 
 export type TWsConnectionStartAction = {
   readonly type: typeof WS_CONNECTION_START;
+  readonly payload: string;
 };
 
 export type TWsConnectionSuccessAction = {

@@ -2,6 +2,7 @@ import {
   SET_CURRENT_ITEM,
   CLOSE_MODAL,
   SET_CURRENT_ORDER,
+  OPEN_MODAL,
 } from "../actions/modal";
 import { TModalActions } from "../actions/modal";
 import { TIngredient, TOrder } from "../../components/utils/types";
@@ -10,11 +11,13 @@ import { getObj } from "../../components/utils/utils";
 type TModalState = {
   currentItem: TIngredient | null;
   currentOrder: TOrder | null;
+  isOpen: boolean;
 };
 
 export const InitialState = {
   currentItem: null,
   currentOrder: null,
+  isOpen: false,
 };
 
 export const modalReducer = (
@@ -50,6 +53,14 @@ export const modalReducer = (
         ...state,
         currentItem: null,
         currentOrder: null,
+        isOpen: false,
+      };
+    }
+
+    case OPEN_MODAL: {
+      return {
+        ...state,
+        isOpen: true,
       };
     }
 

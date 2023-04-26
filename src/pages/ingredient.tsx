@@ -6,7 +6,6 @@ import { getIngredient } from "../components/utils/utils";
 import { getData } from "../components/utils/api";
 import { Modal } from "../components/modal/modal";
 import { useParams, useLocation } from "react-router-dom";
-import { ingredientsTitle } from "../components/utils/const";
 import { getObj } from "../components/utils/utils";
 import { TIngredient } from "../components/utils/types";
 
@@ -41,7 +40,7 @@ const IngredientPage: FunctionComponent = () => {
   } else {
     return (
       (currentItem || savedCurrentItem) && (
-        <Modal title={ingredientsTitle}>
+        <Modal>
           <IngredientDetails
             obj={currentItem ? currentItem : savedCurrentItem}
           />

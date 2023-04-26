@@ -6,16 +6,20 @@ import { reverseArr } from "../components/utils/utils";
 import { Outlet } from "react-router-dom";
 import { WS_CONNECTION_START } from "../services/actions/ws-actions";
 import { TOrder } from "../components/utils/types";
+import { shortToken } from "../components/utils/utils";
 
 const ProfileOrders: FunctionComponent = () => {
   const data = useAppSelector((store) => store.wsReducer.userData);
   const dispatch = useAppDispatch();
+  const accessToken = localStorage.getItem("accessToken");
+  const userOrdersRequest = accessToken ? `?token=${shortToken(accessToken.toString())}` : "";
+
 
   React.useEffect(
     () => {
       dispatch({
         type: WS_CONNECTION_START,
-        request: "allUserOrders",
+        payload: userOrdersRequest,
       });
     },
     [] // eslint-disable-line react-hooks/exhaustive-deps

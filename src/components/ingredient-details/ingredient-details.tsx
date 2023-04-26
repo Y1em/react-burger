@@ -1,12 +1,14 @@
 import { FunctionComponent } from "react";
 import modal from "./ingredient-details.module.css";
 import { TIngredientModalProps } from "../utils/types";
+import { ingredientsTitle } from "../utils/const";
 
 const IngredientDetails: FunctionComponent<TIngredientModalProps> = ({
   obj,
 }) => {
   return (
     <div className={`${modal.container}`}>
+      <h1 className={`text text_type_main-large ${modal.title}`}>{ingredientsTitle}</h1>
       <img
         src={obj.image_large}
         alt={obj.name}
