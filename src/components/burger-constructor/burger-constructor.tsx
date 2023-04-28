@@ -7,8 +7,8 @@ import {
 import { Modal } from "../modal/modal";
 import { ConstructorContainer } from "../constructor-container/constructor-container";
 import { OrderDetails } from "../order-datails/order-datails";
-import { getIds } from "../utils/utils";
-import { initialMessage, emptyOrderMessage, loginPath } from "../utils/const";
+import { getIds } from "../../utils/utils";
+import { initialMessage, emptyOrderMessage, loginPath } from "../../utils/const";
 import { getOrderData } from "../../services/actions/order-api";
 import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
 import { Navigate } from "react-router-dom";

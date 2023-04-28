@@ -1,13 +1,11 @@
 import React, { UIEvent, FunctionComponent } from "react";
-import { useAppSelector, useAppDispatch } from "../../services/hooks/hooks";
+import { useAppSelector } from "../../services/hooks/hooks";
 import burgerIngredients from "./burger-ingredients.module.css";
 import { Tabs } from "../tabs/tabs";
 import { IngredientContainer } from "../ingredient-container/ingredient-container";
-import { sortByTypes, handleScrollTop, getScrollLimits } from "../utils/utils";
-import { getItems } from "../../services/actions/ingredients-api";
+import { sortByTypes, handleScrollTop, getScrollLimits } from "../../utils/utils";
 
 const BurgerIngredients: FunctionComponent = () => {
-  const dispatch = useAppDispatch();
   const data = useAppSelector((store) => store.ingredientsApiReducer.items);
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const [currentTab, setCurrentTab] = React.useState<"one" | "two" | "three">(
@@ -28,12 +26,6 @@ const BurgerIngredients: FunctionComponent = () => {
     },
     [scrollTop] // eslint-disable-line
   );
-
-  React.useEffect(() => {
-    if (data.length === 0) {
-      dispatch(getItems());
-    }
-  }, []); // eslint-disable-line
 
   function handleScroll(event: UIEvent<HTMLDivElement>) {
     let limits: number[] = [];

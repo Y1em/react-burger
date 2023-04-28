@@ -1,4 +1,4 @@
-import { TIngredientArr } from "../../components/utils/types";
+import { TIngredientArr } from "../../utils/types";
 
 export const SET_BUN: "SET_BUN" = "SET_BUN";
 export const INCREASE_COUNTER: "INCREASE_COUNTER" = "INCREASE_COUNTER";

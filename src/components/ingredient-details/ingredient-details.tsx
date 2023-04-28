@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import modal from "./ingredient-details.module.css";
-import { TIngredientModalProps } from "../utils/types";
-import { ingredientsTitle } from "../utils/const";
+import { TIngredientModalProps } from "../../utils/types";
+import { ingredientsTitle } from "../../utils/const";
 
 const IngredientDetails: FunctionComponent<TIngredientModalProps> = ({
   obj,

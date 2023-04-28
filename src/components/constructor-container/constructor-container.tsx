@@ -1,9 +1,9 @@
 import { FunctionComponent } from "react";
-import { TIngredient, TConstructuonContainer } from "../utils/types";
+import { TIngredient, TConstructuonContainer } from "../../utils/types";
 import burgerConstructor from "./constructor-container.module.css";
 import { ConstructorItem } from "../constructor-item/constructor-item";
-import { isBun, hasBun } from "../utils/utils";
-import { bunMessage } from "../utils/const";
+import { isBun, hasBun } from "../../utils/utils";
+import { bunMessage } from "../../utils/const";
 import {
   SET_BUN,
   INCREASE_COUNTER,
@@ -32,11 +32,6 @@ const ConstructorContainer: FunctionComponent<TConstructuonContainer> = ({
           id: item._id,
           items: data,
         });
-        dispatch({
-          type: INCREASE_COUNTER,
-          id: item._id,
-          items: data,
-        });
       } else {
         handleSetMessage(bunMessage);
       }
@@ -51,6 +46,11 @@ const ConstructorContainer: FunctionComponent<TConstructuonContainer> = ({
         item: item,
       });
     }
+    dispatch({
+      type: INCREASE_COUNTER,
+      id: item._id,
+      items: data,
+    });
     dispatch({
       type: SET_TOTAL_PRICE,
     });

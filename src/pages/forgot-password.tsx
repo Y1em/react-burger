@@ -1,13 +1,12 @@
 import React, { SyntheticEvent, FunctionComponent } from "react";
 import Style from "./forgot-password.module.css";
-import AppHeader from "../components/app-header/app-header";
 import {
   EmailInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, Navigate } from "react-router-dom";
-import { restorePassword } from "../components/utils/api";
-import { emailRegex, resetPath, loginPath } from "../components/utils/const";
+import { restorePassword } from "../utils/api";
+import { emailRegex, resetPath, loginPath } from "../utils/const";
 import { useAppDispatch } from "../services/hooks/hooks";
 import { PASSWORD_REQUEST_SUCCESS } from "../services/actions/auth";
 
@@ -50,39 +49,36 @@ const ForgotPasswordPage: FunctionComponent = () => {
   }
 
   return (
-    <div>
-      <AppHeader />
-      <form className={Style.form}>
-        <h1 className={`${Style.heading} mb-6 text text_type_main-medium`}>
-          Восстановление пароля
-        </h1>
-        <EmailInput
-          onChange={onEmailChange}
-          value={emailValue}
-          name={"email"}
-          placeholder="E-mail"
-          isIcon={false}
-          inputMode={"email"}
-          extraClass="mb-6"
-        />
-        <Button
-          htmlType="submit"
-          type="primary"
-          size="medium"
-          onClick={onButtonClick}
-          disabled={!isCorrect}
-          extraClass="mb-20"
-        >
-          Восстановить
-        </Button>
-        <p className={`text text_type_main-default mb-4`}>
-          Вспомнили пароль?&nbsp;
-          <Link to={loginPath} className={Style.text}>
-            Войти
-          </Link>
-        </p>
-      </form>
-    </div>
+    <form className={Style.form}>
+      <h1 className={`${Style.heading} mb-6 text text_type_main-medium`}>
+        Восстановление пароля
+      </h1>
+      <EmailInput
+        onChange={onEmailChange}
+        value={emailValue}
+        name={"email"}
+        placeholder="E-mail"
+        isIcon={false}
+        inputMode={"email"}
+        extraClass="mb-6"
+      />
+      <Button
+        htmlType="button"
+        type="primary"
+        size="medium"
+        onClick={onButtonClick}
+        disabled={!isCorrect}
+        extraClass="mb-20"
+      >
+        Восстановить
+      </Button>
+      <p className={`text text_type_main-default mb-4`}>
+        Вспомнили пароль?&nbsp;
+        <Link to={loginPath} className={Style.text}>
+          Войти
+        </Link>
+      </p>
+    </form>
   );
 };
 

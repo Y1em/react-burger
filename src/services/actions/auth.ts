@@ -1,5 +1,5 @@
-import { login, register, logout } from "../../components/utils/api";
-import { AppDispatch, AppThunk } from "../../components/utils/types";
+import { login, register, logout } from "../../utils/api";
+import { AppThunk } from "../../utils/types";
 
 export const LOGIN_REQUEST: "LOGIN_REQUEST" = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS: "LOGIN_SUCCESS" = "LOGIN_SUCCESS";
@@ -131,7 +131,7 @@ export const getLogoutFailedAction = (): TLogoutFailedAction => ({
 });
 
 export function userLogin(email: string, password: string): AppThunk {
-  return async (dispatch: AppDispatch) => {
+  return async (dispatch) => {
     dispatch(getLoginRequestAction());
     login(email, password)
       .then((res) => {
@@ -154,7 +154,7 @@ export function userRegister(
   password: string,
   name: string
 ): AppThunk {
-  return async (dispatch: AppDispatch) => {
+  return async (dispatch) => {
     dispatch(getRegisterRequestAction());
     register(email, password, name)
       .then((res) => {
@@ -173,14 +173,12 @@ export function userRegister(
 }
 
 export function userLogout(token: string): AppThunk {
-  return async (dispatch: AppDispatch) => {
+  return async (dispatch) => {
     dispatch(getLogoutRequestAction());
     logout(token)
       .then((res) => {
         if (res && res.success) {
-          localStorage.removeItem("refreshToken");
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("password");
+          localStorage.clear();
           dispatch(getLogoutSuccessAction("", ""));
         }
       })

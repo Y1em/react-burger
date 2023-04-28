@@ -1,31 +1,37 @@
 import React, { FunctionComponent } from "react";
 import style from "./orderpage.module.css";
 import { useAppDispatch, useAppSelector } from "../services/hooks/hooks";
-import AppHeader from "../components/app-header/app-header";
-import { getOrder } from "../components/utils/utils";
-import { Modal } from "../components/modal/modal";
-import { useParams, useLocation } from "react-router-dom";
+import { getOrder, shortToken } from "../utils/utils";
+import { useLocation } from "react-router-dom";
 import { Order } from "../components/order/order";
-import { WS_CONNECTION_START } from "../services/actions/ws-actions";
-import { getObj } from "../components/utils/utils";
-import { TOrder } from "../components/utils/types";
+import { WS_FEED_START } from "../services/actions/ws-feed";
+import { TOrderPageProps } from "../utils/types";
+import { feedPath } from "../utils/const";
+import { WS_PROFILE_START } from "../services/actions/ws-profile";
 
-const OrderPage: FunctionComponent = () => {
+const OrderPage: FunctionComponent<TOrderPageProps> = ({ id }) => {
   const dispatch = useAppDispatch();
-  const currentOrder = useAppSelector(
-    (store) => store.modalReducer.currentOrder
-  );
-  const savedCurrentOrder = getObj("currentOrder");
-  const { id } = useParams();
-  const orders = useAppSelector((store) => store.wsReducer.data?.orders);
-  const [item, setItem] = React.useState<TOrder | undefined>(undefined);
-  const from = useLocation().state;
+  const location = useLocation();
+  const allOrders = useAppSelector((store) => store.wsFeedReducer.data?.orders);
+  const userOrders = useAppSelector((store) => store.wsProfileReducer.userData?.orders);
+  let item = undefined;
+  const accessToken = localStorage.getItem("accessToken");
+  const userOrdersRequest = accessToken ? `?token=${shortToken(accessToken.toString())}` : "";
+  const from = location.state;
+  const isFeed = location.pathname.slice(0, 5) === feedPath;
+
+  if (allOrders) {
+    item = getOrder(id, allOrders)
+  } else if (userOrders) {
+    item = getOrder(id, userOrders)
+  }
 
   React.useEffect(
     () => {
-      if (from === null) {
+      if (isFeed) {
+        console.log("from null")
         dispatch({
-          type: WS_CONNECTION_START,
+          type: WS_FEED_START,
           payload: "/all",
         });
       }
@@ -33,30 +39,31 @@ const OrderPage: FunctionComponent = () => {
     [] // eslint-disable-line
   );
 
-  React.useEffect(() => {
-    if (from === null && orders) {
-      setItem(getOrder(id, orders));
-    }
-  }, [orders]); // eslint-disable-line
+  React.useEffect(
+    () => {
+      if (!isFeed) {
+        dispatch({
+          type: WS_PROFILE_START,
+          payload: userOrdersRequest,
+        });
+      }
+    },
 
-  if (from === null && item) {
+    [] // eslint-disable-line
+  );
+
+  if (item) {
     return (
-      <div>
-        <AppHeader />
-        <div className={`${style.container} mt-30`}>
-          <Order obj={item} />
-        </div>
+      <div className={style.container}>
+        {from === null && <div className={"mb-30"} />}
+        <Order obj={item} />
       </div>
     );
   } else {
-    return (
-      (currentOrder || savedCurrentOrder) && (
-        <Modal>
-          <Order obj={currentOrder ? currentOrder : savedCurrentOrder} />
-        </Modal>
-      )
-    );
+    return <></>
   }
+
+
 };
 
 export { OrderPage };

@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAppSelector } from "../services/hooks/hooks";
 import React, { FunctionComponent } from "react";
-import { TProtectedRoutesProps } from "./utils/types";
+import { TProtectedRoutesProps } from "../utils/types";
 
 export const ProtectedRouteElement: FunctionComponent<
   TProtectedRoutesProps

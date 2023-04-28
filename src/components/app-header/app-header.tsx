@@ -5,7 +5,7 @@ import {
   ListIcon,
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { homePath, profilePath, feedPath } from "../utils/const";
+import { homePath, profilePath, feedPath } from "../../utils/const";
 import { Link } from "react-router-dom";
 import appHeader from "./app-header.module.css";
 import { Item } from "../app-header-item/app-header-item";
@@ -20,7 +20,7 @@ const AppHeader: FunctionComponent = () => {
         <Logo />
       </div>
       <ul className={appHeader.container}>
-        <Link to="/" className={appHeader.link}>
+        <Link to={homePath} className={appHeader.link}>
           <Item
             name={"Конструктор"}
             icon={

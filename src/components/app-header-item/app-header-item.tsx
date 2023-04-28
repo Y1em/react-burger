@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import appHeader from "./app-header-item.module.css";
-import { THeaderItemProps } from "../utils/types";
+import { THeaderItemProps } from "../../utils/types";
 
 const Item: FunctionComponent<THeaderItemProps> = ({ name, icon, active }) => {
   return (

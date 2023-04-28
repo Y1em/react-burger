@@ -1,5 +1,5 @@
-import { TIngredientArr } from "../../components/utils/types";
-import { setCounter } from "../../components/utils/utils";
+import { TIngredientArr } from "../../utils/types";
+import { setCounter } from "../../utils/utils";
 import {
   GET_ITEMS_FAILED,
   GET_ITEMS_SUCCESS,

@@ -1,22 +1,19 @@
 import React, { FunctionComponent } from "react";
-import { useAppSelector, useAppDispatch } from "../../services/hooks/hooks";
+import { useAppSelector } from "../../services/hooks/hooks";
 import burgerIngredients from "./ingredient-item.module.css";
 import {
   CurrencyIcon,
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { isBun } from "../utils/utils";
-import { OPEN_MODAL, SET_CURRENT_ITEM } from "../../services/actions/modal";
+import { isBun } from "../../utils/utils";
 import { useDrag } from "react-dnd";
-import { useNavigate, useLocation } from "react-router-dom";
-import { TIngredientProps, TIngredientItemState } from "../utils/types";
+import { useLocation, Link } from "react-router-dom";
+import { TIngredientProps, TIngredientItemState } from "../../utils/types";
 
 const IngredientItem: FunctionComponent<TIngredientProps> = ({
   ingredient,
 }) => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const path = useLocation().pathname;
+  const location = useLocation();
   const initState = {
     display: false,
     count: 0,
@@ -29,10 +26,6 @@ const IngredientItem: FunctionComponent<TIngredientProps> = ({
   const mainsList = useAppSelector(
     (store) => store.constructorReducer.constructorMains
   );
-
-  const goToIngredient = () => {
-    navigate(`/ingredients/${ingredient._id}`, { replace: true, state: path });
-  };
 
   const [{ opacity }, ref] = useDrag({
     type: "items",
@@ -58,23 +51,11 @@ const IngredientItem: FunctionComponent<TIngredientProps> = ({
     }
   }, [data, ingredient.count, mainsList.length, activeBunId]); // eslint-disable-line
 
-  const onItemClick = () => {
-    dispatch({
-      type: SET_CURRENT_ITEM,
-      id: ingredient._id,
-      items: data,
-    });
-    dispatch({
-      type: OPEN_MODAL,
-      isOpen: true,
-    });
-    goToIngredient();
-  };
-
   return (
-    <li
+    <Link
       className={burgerIngredients.item}
-      onClick={onItemClick}
+      to={{pathname: `/ingredients/${ingredient._id}`}}
+      state={{ background: location }}
       ref={ref}
       style={{ opacity }}
     >
@@ -101,7 +82,7 @@ const IngredientItem: FunctionComponent<TIngredientProps> = ({
       <p className={`${burgerIngredients.name} text text_type_main-small`}>
         {ingredient.name}
       </p>
-    </li>
+    </Link>
   );
 };
 

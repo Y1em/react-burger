@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import burgerIngredients from "./tabs.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import { TTabProps } from "../utils/types";
+import { TTabProps } from "../../utils/types";
 
 const Tabs: FunctionComponent<TTabProps> = ({ currentTab, setTab }) => {
   function handleClickTab(event: string) {

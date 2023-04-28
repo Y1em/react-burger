@@ -1,49 +1,34 @@
-import { shortToken, update } from "../../components/utils/utils";
-import { updateToken } from "../../components/utils/api";
-import { getOrdersTrigger } from "../../components/utils/const";
-import { TWsMiddlewareActions } from "../../components/utils/types";
-import { MiddlewareAPI } from "redux";
-
+import { TWsMiddlewareActions } from "../../utils/types";
+import { Middleware, MiddlewareAPI } from "redux";
 
 export const socketMiddleware = (
-  wsUrl: string,
   wsActions: TWsMiddlewareActions
-) => {
-  return (store: MiddlewareAPI<any, any>) => { // с типизацией (store: MiddlewareAPI<AppDispatch, RootState>) возникают ошибки
-    let socket: any = null;
+): Middleware => {
+  return (store: MiddlewareAPI<any, any>) => {
+    let socket: WebSocket | null = null
 
-    return (next: any) => (action: any): any => {
-      const refreshToken = localStorage.getItem("refreshToken");
-      const accessToken = localStorage.getItem("accessToken");
-      const { dispatch, getState } = store; // eslint-disable-line
+    return (next) => (action) => {
+      const wsUrl = "wss://norma.nomoreparties.space/orders";
+      const { dispatch } = store; // eslint-disable-line
       const { type, payload } = action; // eslint-disable-line
       const {
         wsInit,
         onOpen,
-        onClose,
+        onMessage,
         onError,
-        onOrders,
-        onUserOrders,
+        onClose,
+        onReconnect,
         wsClose,
       } = wsActions; // eslint-disable-line
-      const userOrdersRequest = accessToken ? `?token=${shortToken(accessToken.toString())}` : "";
-
-      function getUserOrders() {
-        dispatch({
-          type: wsInit,
-          payload: userOrdersRequest,
-        });
-      }
 
       if (type === wsInit) {
-        socket = new WebSocket(`${wsUrl}${payload}`);
-      }
 
-      if (type === wsClose) {
-        socket?.close();
+        socket = new WebSocket(`${wsUrl}${payload}`);
+
       }
 
       if (socket) {
+
         socket.onopen = (event: Event) => {
           dispatch({ type: onOpen, payload: event });
         };
@@ -52,36 +37,29 @@ export const socketMiddleware = (
           dispatch({ type: onError, payload: event });
         };
 
-        if (payload === "/all") {
-          socket.onmessage = (event: MessageEvent) => {
-            const { data } = event;
-            const parsedData = JSON.parse(data);
-            const { success, ...restParsedData } = parsedData;
-            dispatch({ type: onOrders, payload: restParsedData});
-          };
-        } else if (payload === userOrdersRequest) {
-          socket.onmessage = (event: MessageEvent) => {
-            const { data } = event;
-            const parsedData = JSON.parse(data);
-            const { success, ...restParsedData } = parsedData;
-            if (!success && refreshToken) {
-              update(
-                updateToken,
-                refreshToken,
-                getOrdersTrigger,
-                getUserOrders
-              );
-            }
-            if (accessToken) {
-              dispatch({ type: onUserOrders, payload: restParsedData });
-            }
-          };
-        }
+        socket.onmessage = (event: MessageEvent) => {
+          const { data } = event;
+          const parsedData = JSON.parse(data);
+          const { success, message, ...restParsedData } = parsedData;
+          dispatch({ type: onMessage, payload: restParsedData});
+
+          if (socket && message === "Invalid or missing token") {
+            socket.onclose = (event: any) => {
+              dispatch({ type: onReconnect, payload: !event.wasClean });
+            };
+          }
+        };
 
         socket.onclose = (event: Event) => {
           dispatch({ type: onClose, payload: event });
         };
+
       }
+
+      if (type === wsClose) {
+        socket?.close();
+      }
+
       next(action);
     };
   };

@@ -1,53 +1,27 @@
-import React, { FunctionComponent } from "react";
-import { useAppSelector } from "../services/hooks/hooks";
-import AppHeader from "../components/app-header/app-header";
+import { FunctionComponent } from "react";
 import { IngredientDetails } from "../components/ingredient-details/ingredient-details";
-import { getIngredient } from "../components/utils/utils";
-import { getData } from "../components/utils/api";
-import { Modal } from "../components/modal/modal";
-import { useParams, useLocation } from "react-router-dom";
-import { getObj } from "../components/utils/utils";
-import { TIngredient } from "../components/utils/types";
+import { getIngredient, getObj } from "../utils/utils"
+import { TIngredientPageProps } from "../utils/types";
+import { useLocation } from "react-router-dom";
 
-const IngredientPage: FunctionComponent = () => {
-  const currentItem = useAppSelector((store) => store.modalReducer.currentItem);
-  const savedCurrentItem = getObj("currentItem");
-  const { id } = useParams();
-  const [item, setItem] = React.useState<TIngredient | undefined>(undefined);
-  const from = useLocation().state;
+const IngredientPage: FunctionComponent<TIngredientPageProps> = ({ id }) => {
 
-  React.useEffect(() => {
-    if (from === null)
-      getData()
-        .then((res) => {
-          if (res && res.success) {
-            setItem(getIngredient(id, res.data));
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-  }, []); // eslint-disable-line
+  const data = getObj("ingredients");
+  const item = getIngredient(id, data);
+  const location = useLocation();
+  const from = location.state;
 
-  if (from === null && item) {
+  if (item) {
     return (
-      <div>
-        <AppHeader />
-        <div className="mb-30" />
+      <>
+        {from === null && <div className={"mb-30"} />}
         <IngredientDetails obj={item} />
-      </div>
+      </>
     );
   } else {
-    return (
-      (currentItem || savedCurrentItem) && (
-        <Modal>
-          <IngredientDetails
-            obj={currentItem ? currentItem : savedCurrentItem}
-          />
-        </Modal>
-      )
-    );
+    return <></>
   }
+
 };
 
 export default IngredientPage;

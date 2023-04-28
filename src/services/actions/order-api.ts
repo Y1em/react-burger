@@ -1,5 +1,5 @@
-import { getOrder } from "../../components/utils/api";
-import { AppDispatch, AppThunk } from "../../components/utils/types";
+import { getOrder } from "../../utils/api";
+import { AppThunk } from "../../utils/types";
 
 export const GET_ORDER_REQUEST: "GET_ORDER_REQUEST" = "GET_ORDER_REQUEST";
 export const GET_ORDER_SUCCESS: "GET_ORDER_SUCCESS" = "GET_ORDER_SUCCESS";
@@ -49,7 +49,7 @@ export const getOrderFailedAction = (): TGetOrderFailedAction => ({
 });
 
 export function getOrderData(ids: string[], token: string): AppThunk {
-  return async (dispatch: AppDispatch) => {
+  return async (dispatch) => {
     dispatch(getOrderRequestAction());
     getOrder(ids, token)
       .then((res) => {

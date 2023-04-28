@@ -7,14 +7,15 @@ import {
   findItems,
   totalPrice,
   getQuantity,
-  getOneBunArr,
-} from "../utils/utils";
-import { TorderModalProps } from "../utils/types";
-import { getObj } from "../utils/utils";
+  getUniqStringArr,
+} from "../../utils/utils";
+import { TorderModalProps } from "../../utils/types";
+import { getObj } from "../../utils/utils";
 
 const Order: FunctionComponent<TorderModalProps> = ({ obj }) => {
   const ingredients = getObj("ingredients");
   const burgerArr = findItems(obj.ingredients, ingredients);
+  const burgerUniqArr = findItems(getUniqStringArr(obj.ingredients), ingredients);
 
   return (
     <section className={`${style.container}`}>
@@ -35,7 +36,7 @@ const Order: FunctionComponent<TorderModalProps> = ({ obj }) => {
       </p>
       <p className={`text text_type_main-medium mb-6`}>Состав:</p>
       <ul className={`${style.ingredients}`}>
-        {getOneBunArr(burgerArr).map((item, index) => {
+        {burgerUniqArr.map((item, index) => {
           return (
             <li className={`${style.ingredient} mb-4`} key={index}>
               <img

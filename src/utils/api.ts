@@ -162,7 +162,7 @@ export const getNewPassword = async (password: string, code: string) => {
   return checkResponse(res);
 };
 
-function checkResponse(res: any) {
+function checkResponse(res: Response) {
   if (res.ok) {
     return res.json();
   } else {

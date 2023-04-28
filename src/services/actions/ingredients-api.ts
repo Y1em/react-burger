@@ -1,51 +1,51 @@
-import { getData } from "../../components/utils/api";
-import { TIngredientArr } from "../../components/utils/types.js";
-import { AppDispatch, AppThunk } from "../../components/utils/types";
+import { getData } from "../../utils/api";
+import { TIngredientArr } from "../../utils/types.js";
+import { AppThunk } from "../../utils/types";
 
 export const GET_ITEMS_REQUEST: "GET_ITEMS_REQUEST" = "GET_ITEMS_REQUEST";
 export const GET_ITEMS_SUCCESS: "GET_ITEMS_SUCCESS" = "GET_ITEMS_SUCCESS";
 export const GET_ITEMS_FAILED: "GET_ITEMS_FAILED" = "GET_ITEMS_FAILED";
 
-export type TGetItiemsAction = {
+export type TGetItemsAction = {
   readonly type: typeof GET_ITEMS_REQUEST;
 };
 
-export type TGetItiemsFailedAction = {
+export type TGetItemsFailedAction = {
   readonly type: typeof GET_ITEMS_FAILED;
 };
 
-export type TGetItiemsSuccessAction = {
+export type TGetItemsSuccessAction = {
   readonly type: typeof GET_ITEMS_SUCCESS;
   readonly items: TIngredientArr;
 };
 
 export type TItemsActions =
-  | TGetItiemsAction
-  | TGetItiemsFailedAction
-  | TGetItiemsSuccessAction;
+  | TGetItemsAction
+  | TGetItemsFailedAction
+  | TGetItemsSuccessAction;
 
-export const getItemsAction = (): TGetItiemsAction => ({
+export const getItemsAction = (): TGetItemsAction => ({
   type: GET_ITEMS_REQUEST,
 });
 
-export const getItemsFailedAction = (): TGetItiemsFailedAction => ({
+export const getItemsFailedAction = (): TGetItemsFailedAction => ({
   type: GET_ITEMS_FAILED,
 });
 
-export const getItiemsSuccessAction = (
+export const getItemsSuccessAction = (
   items: TIngredientArr
-): TGetItiemsSuccessAction => ({
+): TGetItemsSuccessAction => ({
   type: GET_ITEMS_SUCCESS,
   items,
 });
 
 export function getItems(): AppThunk {
-  return async (dispatch: AppDispatch) => {
+  return async (dispatch) => {
     dispatch(getItemsAction());
     getData()
       .then((res) => {
         if (res && res.success) {
-          dispatch(getItiemsSuccessAction(res.data));
+          dispatch(getItemsSuccessAction(res.data));
           localStorage.setItem("ingredients", JSON.stringify(res.data));
         } else {
           dispatch(getItemsFailedAction());

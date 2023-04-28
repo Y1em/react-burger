@@ -4,7 +4,7 @@ import {
   ConstructorElement,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { isBun, setBunType, addName } from "../utils/utils";
+import { isBun, setBunType, addName } from "../../utils/utils";
 import {
   DELETE_ITEM,
   SET_TOTAL_PRICE,
@@ -17,7 +17,7 @@ import {
   TIngredient,
   TConstructorItemState,
   TConstructorItem,
-} from "../utils/types";
+} from "../../utils/types";
 
 const ConstructorItem: FunctionComponent<TConstructorItem> = ({
   ingredient,

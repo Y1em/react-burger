@@ -1,12 +1,13 @@
-import { initStore } from "../../services/store";
-import { TItemsActions } from "../../services/actions/ingredients-api";
-import { TAuthActions } from "../../services/actions/auth";
-import { TWsActions } from "../../services/actions/ws-actions";
-import { TModalActions } from "../../services/actions/modal";
-import { TOrderActions } from "../../services/actions/order-api";
-import { TAppHeaderActions } from "../../services/actions/app-header";
-import { TBurgerConstructorActions } from "../../services/actions/burger-constructor";
-import { TBurgerIngredientsActions } from "../../services/actions/burger-ingredients";
+import { initStore } from "../services/store";
+import { TItemsActions } from "../services/actions/ingredients-api";
+import { TAuthActions } from "../services/actions/auth";
+import { TWsFeedActions } from "../services/actions/ws-feed";
+import { TWsProfileActions } from "../services/actions/ws-profile";
+import { TModalActions } from "../services/actions/modal";
+import { TOrderActions } from "../services/actions/order-api";
+import { TAppHeaderActions } from "../services/actions/app-header";
+import { TBurgerConstructorActions } from "../services/actions/burger-constructor";
+import { TBurgerIngredientsActions } from "../services/actions/burger-ingredients";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 
 // общие
@@ -130,6 +131,14 @@ export type TProtectedRoutesProps = {
   isAuthorized: boolean;
 };
 
+export type TIngredientPageProps = {
+  id: string
+}
+
+export type TOrderPageProps = {
+  id: string
+}
+
 // Стейты компонентов
 
 export type TIngredientItemState = {
@@ -148,13 +157,13 @@ export type TConstructorItemState = {
 // redux & thunk
 
 export type TWsMiddlewareActions = {
-  wsInit: "WS_CONNECTION_START";
-  onOpen: "WS_CONNECTION_SUCCESS";
-  onClose: "WS_CONNECTION_CLOSED";
-  onError: "WS_CONNECTION_ERROR";
-  onOrders: "WS_GET_ORDERS";
-  onUserOrders: "WS_GET_USER_ORDERS";
-  wsClose: "WS_CONNECTION_CLOSE";
+  wsInit: "WS_FEED_START" | "WS_PROFILE_START";
+  onOpen: "WS_FEED_SUCCESS" | "WS_PROFILE_SUCCESS";
+  onClose: "WS_FEED_CLOSED" | "WS_PROFILE_CLOSED";
+  onError: "WS_FEED_ERROR" | "WS_PROFILE_ERROR";
+  onMessage: "WS_GET_ORDERS" | "WS_GET_USER_ORDERS";
+  wsClose: "WS_FEED_CLOSE" | "WS_PROFILE_CLOSE";
+  onReconnect?: "WS_PROFILE_RECONNECT";
 };
 
 export type AppDispatch = ThunkDispatch<RootState, unknown, TAppActions>;
@@ -168,7 +177,8 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 >;
 
 type TAppActions =
-  | TWsActions
+  | TWsFeedActions
+  | TWsProfileActions
   | TAuthActions
   | TItemsActions
   | TModalActions

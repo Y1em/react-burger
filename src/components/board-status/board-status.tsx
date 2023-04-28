@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import style from "./board-status.module.css";
-import { findUserOrders } from "../utils/utils";
-import { TBoardStatusProps } from "../utils/types";
+import { findUserOrders } from "../../utils/utils";
+import { TBoardStatusProps } from "../../utils/types";
 
 const BoardStatus: FunctionComponent<TBoardStatusProps> = ({
   status,

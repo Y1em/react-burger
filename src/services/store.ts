@@ -5,24 +5,42 @@ import thunk from "redux-thunk";
 import thunkMiddleware from "redux-thunk";
 
 import {
-  WS_CONNECTION_CLOSED,
-  WS_CONNECTION_ERROR,
-  WS_CONNECTION_START,
-  WS_CONNECTION_SUCCESS,
-  WS_CONNECTION_CLOSE,
+  WS_FEED_CLOSED,
+  WS_FEED_ERROR,
+  WS_FEED_START,
+  WS_FEED_SUCCESS,
+  WS_FEED_CLOSE,
   WS_GET_ORDERS,
-  WS_GET_USER_ORDERS,
-} from "./actions/ws-actions";
+} from "./actions/ws-feed";
 
-const wsActions = {
-  wsInit: WS_CONNECTION_START,
-  onOpen: WS_CONNECTION_SUCCESS,
-  onClose: WS_CONNECTION_CLOSED,
-  onError: WS_CONNECTION_ERROR,
-  onOrders: WS_GET_ORDERS,
-  onUserOrders: WS_GET_USER_ORDERS,
-  wsClose: WS_CONNECTION_CLOSE,
+import {
+  WS_PROFILE_CLOSED,
+  WS_PROFILE_ERROR,
+  WS_PROFILE_START,
+  WS_PROFILE_SUCCESS,
+  WS_PROFILE_CLOSE,
+  WS_GET_USER_ORDERS,
+  WS_PROFILE_RECONNECT,
+} from "./actions/ws-profile";
+
+const wsFeedActions = {
+  wsInit: WS_FEED_START,
+  onOpen: WS_FEED_SUCCESS,
+  onClose: WS_FEED_CLOSED,
+  onError: WS_FEED_ERROR,
+  onMessage: WS_GET_ORDERS,
+  wsClose: WS_FEED_CLOSE,
 };
+
+const wsProfileActions = {
+  wsInit: WS_PROFILE_START,
+  onOpen: WS_PROFILE_SUCCESS,
+  onClose: WS_PROFILE_CLOSED,
+  onError: WS_PROFILE_ERROR,
+  onMessage: WS_GET_USER_ORDERS,
+  onReconnect: WS_PROFILE_RECONNECT,
+  wsClose: WS_PROFILE_CLOSE,
+}
 
 declare global {
   interface Window {
@@ -30,12 +48,15 @@ declare global {
   }
 }
 
-const wsUrl = "wss://norma.nomoreparties.space/orders";
-
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const enhancer = composeEnhancers(
-  applyMiddleware(thunk, thunkMiddleware, socketMiddleware(wsUrl, wsActions))
+  applyMiddleware(
+    thunk,
+    thunkMiddleware,
+    socketMiddleware(wsFeedActions),
+    socketMiddleware(wsProfileActions)
+  )
 );
 
 export const initStore = createStore(rootReducer, enhancer);

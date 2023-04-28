@@ -12,9 +12,9 @@ import {
   moveItem,
   addMain,
   addBun,
-} from "../../components/utils/utils";
+} from "../../utils/utils";
 import { TBurgerConstructorActions } from "../actions/burger-constructor";
-import { TIngredientArr } from "../../components/utils/types";
+import { TIngredientArr } from "../../utils/types";
 
 type TBurgerConstructorState = {
   constructorBuns: TIngredientArr;

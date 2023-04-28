@@ -23,17 +23,19 @@ import {
   orderPath,
   feedPath,
   orderFeedPath,
-  reLoginTrigger,
-} from "../utils/const";
+  reLoginTrigger
+} from "../../utils/const";
 import IngredientPage from "../../pages/ingredient";
 import { useAppSelector, useAppDispatch } from "../../services/hooks/hooks";
 import { HomePage } from "../../pages/homepage";
 import { NotFoundPage } from "../../pages/notfound";
 import { userLogin } from "../../services/actions/auth";
-import { update, getObj, getString } from "../utils/utils";
-import { getUser } from "../utils/api";
-import { WS_CONNECTION_CLOSE } from "../../services/actions/ws-actions";
-import { TResponse } from "../utils/types";
+import { update, getString, getId } from "../../utils/utils";
+import { getUser } from "../../utils/api";
+import { TResponse } from "../../utils/types";
+import { Modal } from "../modal/modal";
+import { getItems } from "../../services/actions/ingredients-api";
+import AppHeader from "../app-header/app-header";
 
 const App: FunctionComponent = () => {
   const dispatch = useAppDispatch();
@@ -41,12 +43,10 @@ const App: FunctionComponent = () => {
   const accessToken = getString("accessToken");
   const refreshToken = getString("refreshToken");
   const password = getString("password");
-  const currentItem = useAppSelector((store) => store.modalReducer.currentItem);
-  const savedCurrentItem = getObj("currentItem");
-  const currentOrder = useAppSelector(
-    (store) => store.modalReducer.currentOrder
-  );
-  const savedCurrentOrder = getObj("currentOrder");
+  const savedData = getString("ingredients");
+  const isWsError = useAppSelector((store) => store.wsProfileReducer.wsTokenError);
+  const background = location.state?.background;
+  const id = getId(location.pathname);
 
   function login(res: TResponse) {
     if (password) {
@@ -67,107 +67,102 @@ const App: FunctionComponent = () => {
   }
 
   React.useEffect(() => {
+      dispatch(getItems());
+  }, [savedData]); // eslint-disable-line
+
+  React.useEffect(() => {
     if (accessToken && refreshToken) {
       reLogin(accessToken, refreshToken);
     }
-  }, []); // eslint-disable-line
-
-  React.useEffect(() => {
-    if (
-      location.pathname.slice(0, 5) !== feedPath &&
-      location.pathname.slice(0, 15) !== ordersPath
-    ) {
-      dispatch({
-        type: WS_CONNECTION_CLOSE,
-      });
-    }
-  }, [location.pathname]); // eslint-disable-line
+  }, [isWsError, accessToken, refreshToken]); // eslint-disable-line
 
   return (
-    <Routes>
-      <Route path={homePath} element={<HomePage />}>
-        {currentItem || savedCurrentItem ? (
-          <Route path={ingredientPath} element={<IngredientPage />} />
-        ) : (
-          ""
-        )}
-      </Route>
-      <Route path={ingredientPath} element={<IngredientPage />} />
-      <Route
-        path={loginPath}
-        element={
-          <ProtectedRouteElement
-            element={<LoginPage />}
-            path={
-              location.state?.from ? location.state.from.pathname : homePath
-            }
-            isAuthorized={true}
-          />
-        }
-      />
-      <Route
-        path={registerPath}
-        element={
-          <ProtectedRouteElement
-            element={<RegisterPage />}
-            path={homePath}
-            isAuthorized={true}
-          />
-        }
-      />
-      <Route
-        path={forgotPath}
-        element={
-          <ProtectedRouteElement
-            element={<ForgotPasswordPage />}
-            path={homePath}
-            isAuthorized={true}
-          />
-        }
-      />
-      <Route
-        path={resetPath}
-        element={
-          <ProtectedRouteElement
-            element={<ResetPasswordPage />}
-            path={homePath}
-            isAuthorized={true}
-          />
-        }
-      />
+    <>
+      <AppHeader />
+      <Routes location={background || location}>
+        <Route path={homePath} element={<HomePage />} />
+        <Route path={ingredientPath} element={<IngredientPage id={id} />} />
+        <Route
+          path={loginPath}
+          element={
+            <ProtectedRouteElement
+              element={<LoginPage />}
+              path={
+                location.state?.from ? location.state.from.pathname : homePath
+              }
+              isAuthorized={true}
+            />
+          }
+        />
+        <Route
+          path={registerPath}
+          element={
+            <ProtectedRouteElement
+              element={<RegisterPage />}
+              path={homePath}
+              isAuthorized={true}
+            />
+          }
+        />
+        <Route
+          path={forgotPath}
+          element={
+            <ProtectedRouteElement
+              element={<ForgotPasswordPage />}
+              path={homePath}
+              isAuthorized={true}
+            />
+          }
+        />
+        <Route
+          path={resetPath}
+          element={
+            <ProtectedRouteElement
+              element={<ResetPasswordPage />}
+              path={homePath}
+              isAuthorized={true}
+            />
+          }
+        />
 
-      <Route
-        path={profilePath}
-        element={
-          <ProtectedRouteElement
-            element={<ProfilePage />}
-            path={loginPath}
-            isAuthorized={false}
-          />
-        }
-      >
-        <Route index element={<ProfileForm />} />
-        <Route path={ordersPath} element={<ProfileOrders />}>
-          {currentOrder || savedCurrentOrder ? (
-            <Route path={orderPath} element={<OrderPage />} />
-          ) : (
-            ""
-          )}
+        <Route
+          path={profilePath}
+          element={
+            <ProtectedRouteElement
+              element={<ProfilePage />}
+              path={loginPath}
+              isAuthorized={false}
+            />
+          }
+        >
+          <Route index element={<ProfileForm />} />
+          <Route path={ordersPath} element={<ProfileOrders />} />
         </Route>
-      </Route>
-      <Route path={orderPath} element={<OrderPage />} />
+        <Route path={orderPath} element={<OrderPage id={id} />} />
+        <Route path={feedPath} element={<FeedPage />} />
+        <Route path={orderFeedPath} element={<OrderPage id={id} />} />
+        <Route path={wrongPath} element={<NotFoundPage />} />
+      </Routes>
 
-      <Route path={feedPath} element={<FeedPage />}>
-        {currentOrder || savedCurrentOrder ? (
-          <Route path={orderFeedPath} element={<OrderPage />} />
-        ) : (
-          ""
-        )}
-      </Route>
-      <Route path={orderFeedPath} element={<OrderPage />} />
+      {background?.pathname === homePath && (
+        <Modal>
+          <IngredientPage id={id} />
+        </Modal>
+      )}
 
-      <Route path={wrongPath} element={<NotFoundPage />} />
-    </Routes>
+      {background?.pathname === feedPath && (
+        <Modal>
+          <OrderPage id={id} />
+        </Modal>
+      )}
+
+      {background?.pathname === ordersPath && (
+        <Modal>
+          <OrderPage id={id} />
+        </Modal>
+      )}
+      </>
+
   );
 };
 export default App;

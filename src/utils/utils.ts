@@ -352,7 +352,7 @@ function shortToken(string: string) {
   return string.slice(7);
 }
 
-function reverseArr(arr: TOrderArr) {
+function reverseArr(arr: TOrderArr): TOrderArr {
   const newArr = JSON.parse(JSON.stringify(arr));
   return newArr.reverse();
 }
@@ -384,6 +384,21 @@ function getString(string: string) {
   } else {
     return null;
   }
+}
+
+function getUniqStringArr(arr: TIngredient["_id"][]) {
+  const newArr: TIngredient["_id"][] = JSON.parse(JSON.stringify(arr));
+  const resArr: TIngredient["_id"][] = [];
+  newArr.sort().forEach((item, index, array) => {
+    if (item !== array[index + 1]) {
+      resArr.push(item)
+    }
+  })
+  return resArr
+}
+
+function getId(path: string) {
+  return path.slice(path.lastIndexOf("/") + 1)
 }
 
 export {
@@ -426,4 +441,6 @@ export {
   getActiveTab,
   getObj,
   getString,
+  getUniqStringArr,
+  getId,
 };

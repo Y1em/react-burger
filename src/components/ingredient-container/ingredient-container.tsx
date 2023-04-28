@@ -1,8 +1,8 @@
 import { FunctionComponent } from "react";
 import burgerIngredients from "./ingredient-container.module.css";
 import { IngredientSubcontainer } from "../ingredient-subcontainer/ingredient-subcontainer";
-import { getTitle } from "../utils/utils";
-import { TIngredintsContainerProps } from "../utils/types";
+import { getTitle } from "../../utils/utils";
+import { TIngredintsContainerProps } from "../../utils/types";
 
 const IngredientContainer: FunctionComponent<TIngredintsContainerProps> = ({
   ingredients,

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import modalOverlay from "./modal-overlay.module.css";
-import { TModalOverlayProps } from "../utils/types";
+import { TModalOverlayProps } from "../../utils/types";
 
 const ModalOverlay: FunctionComponent<TModalOverlayProps> = ({
   children,

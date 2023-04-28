@@ -1,56 +1,33 @@
 import { FunctionComponent } from "react";
-import { useAppDispatch } from "../../services/hooks/hooks";
 import style from "./feed-item.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { feedPath, ordersPath } from "../utils/const";
 import {
   findItems,
   dateFormat,
   totalPrice,
   getStatus,
   getOneBunArr,
-} from "../utils/utils";
-import { SET_CURRENT_ORDER, OPEN_MODAL } from "../../services/actions/modal";
-import { useNavigate, useLocation } from "react-router-dom";
-import { getObj } from "../utils/utils";
-import { TFeedItemProps } from "../utils/types";
+} from "../../utils/utils";
+import { useLocation, Link } from "react-router-dom";
+import { getObj } from "../../utils/utils";
+import { TFeedItemProps } from "../../utils/types";
 
 const FeedItem: FunctionComponent<TFeedItemProps> = ({ order, type }) => {
   const ingredients = getObj("ingredients");
   const burgerArr = findItems(order.ingredients, ingredients);
   const oneBunBurgerArr = getOneBunArr(burgerArr);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const location = useLocation();
   const path = useLocation().pathname;
 
-  const goToOrder = () => {
-    if (path === feedPath) {
-      navigate(`/feed/${order._id}`, { replace: true, state: path });
-    } else if (path === ordersPath) {
-      navigate(`/profile/orders/${order._id}`, { replace: true, state: path });
-    }
-  };
-
-  function onItemClick() {
-    dispatch({
-      type: SET_CURRENT_ORDER,
-      order: order,
-    });
-    dispatch({
-      type: OPEN_MODAL,
-      isOpen: true,
-    });
-    goToOrder();
-  }
-
   return (
-    <div
+    <Link
       className={
         type === "orders"
           ? `${style.card} ${style.card_wide} p-6`
           : `${style.card} p-6`
       }
-      onClick={onItemClick}
+      to={{pathname: `${path}/${order._id}`}}
+      state={{ background: location }}
     >
       <div className={`${style.info} mb-6`}>
         <p className="text text_type_digits-default">{`#${order.number}`}</p>
@@ -112,7 +89,7 @@ const FeedItem: FunctionComponent<TFeedItemProps> = ({ order, type }) => {
           <CurrencyIcon type="primary" />
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

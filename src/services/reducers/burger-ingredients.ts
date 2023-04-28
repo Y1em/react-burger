@@ -2,7 +2,7 @@ import {
   increaseCounter,
   decreaseCounter,
   resetCounter,
-} from "../../components/utils/utils";
+} from "../../utils/utils";
 import {
   INCREASE_COUNTER,
   DECREASE_COUNTER,

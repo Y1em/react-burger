@@ -1,7 +1,6 @@
 import React, { FunctionComponent, SyntheticEvent } from "react";
 import Style from "./login.module.css";
 import { useAppDispatch, useAppSelector } from "../services/hooks/hooks";
-import AppHeader from "../components/app-header/app-header";
 import {
   EmailInput,
   PasswordInput,
@@ -14,7 +13,7 @@ import {
   passwordRegex,
   registerPath,
   forgotPath,
-} from "../components/utils/const";
+} from "../utils/const";
 import { ACTIVE } from "../services/actions/app-header";
 
 const LoginPage: FunctionComponent = () => {
@@ -60,51 +59,48 @@ const LoginPage: FunctionComponent = () => {
   }, []); // eslint-disable-line
 
   return (
-    <div>
-      <AppHeader />
-      <form className={Style.form}>
-        <h1 className={`${Style.heading} mb-6 text text_type_main-medium`}>
-          Вход
-        </h1>
-        <EmailInput
-          onChange={onEmailChange}
-          value={emailValue}
-          name={"email"}
-          placeholder="E-mail"
-          isIcon={false}
-          extraClass="mb-6"
-        />
-        <PasswordInput
-          onChange={onPasswordChange}
-          value={passwordValue}
-          name={"password"}
-          placeholder="Пароль"
-          extraClass="mb-6"
-        />
-        <Button
-          htmlType="submit"
-          type="primary"
-          size="medium"
-          onClick={onLoginClick}
-          disabled={!isCorrect}
-          extraClass="mb-20"
-        >
-          Войти
-        </Button>
-        <p className={`text text_type_main-default mb-4`}>
-          Вы — новый пользователь?&nbsp;
-          <Link to={registerPath} className={Style.text}>
-            Зарегистрироваться
-          </Link>
-        </p>
-        <p className={`text text_type_main-default`}>
-          Забыли пароль?&nbsp;
-          <Link to={forgotPath} className={Style.text}>
-            Восстановить пароль
-          </Link>
-        </p>
-      </form>
-    </div>
+    <form className={Style.form}>
+      <h1 className={`${Style.heading} mb-6 text text_type_main-medium`}>
+        Вход
+      </h1>
+      <EmailInput
+        onChange={onEmailChange}
+        value={emailValue}
+        name={"email"}
+        placeholder="E-mail"
+        isIcon={false}
+        extraClass="mb-6"
+      />
+      <PasswordInput
+        onChange={onPasswordChange}
+        value={passwordValue}
+        name={"password"}
+        placeholder="Пароль"
+        extraClass="mb-6"
+      />
+      <Button
+        htmlType="button"
+        type="primary"
+        size="medium"
+        onClick={onLoginClick}
+        disabled={!isCorrect}
+        extraClass="mb-20"
+      >
+        Войти
+      </Button>
+      <p className={`text text_type_main-default mb-4`}>
+        Вы — новый пользователь?&nbsp;
+        <Link to={registerPath} className={Style.text}>
+          Зарегистрироваться
+        </Link>
+      </p>
+      <p className={`text text_type_main-default`}>
+        Забыли пароль?&nbsp;
+        <Link to={forgotPath} className={Style.text}>
+          Восстановить пароль
+        </Link>
+      </p>
+    </form>
   );
 };
 

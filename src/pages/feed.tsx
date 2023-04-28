@@ -1,15 +1,18 @@
 import React, { FunctionComponent } from "react";
 import { useAppDispatch, useAppSelector } from "../services/hooks/hooks";
-import AppHeader from "../components/app-header/app-header";
 import { FeedItem } from "../components/feed-item/feed-item";
 import { BoardStatus } from "../components/board-status/board-status";
 import style from "./feed.module.css";
 import { ACTIVE } from "../services/actions/app-header";
 import { Outlet } from "react-router-dom";
-import { WS_CONNECTION_START } from "../services/actions/ws-actions";
+import { WS_FEED_CLOSE, WS_FEED_START } from "../services/actions/ws-feed";
+import { getObj } from "../utils/utils";
 
 const FeedPage: FunctionComponent = () => {
-  const data = useAppSelector((store) => store.wsReducer.data);
+  const data = useAppSelector((store) => store.wsFeedReducer.data);
+  const ingredients = useAppSelector((store) => store.ingredientsApiReducer.items);
+  const savedData = getObj("ingredients");
+
   const dispatch = useAppDispatch();
   React.useEffect(() => {
     dispatch({
@@ -21,16 +24,27 @@ const FeedPage: FunctionComponent = () => {
   React.useEffect(
     () => {
       dispatch({
-        type: WS_CONNECTION_START,
+        type: WS_FEED_START,
         payload: "/all",
       });
+
+      return () => {
+        dispatch({
+          type: WS_FEED_CLOSE
+        })
+      }
     },
     [] // eslint-disable-line
   );
 
+  React.useEffect(() => {
+    if (!savedData) {
+      localStorage.setItem("ingredients", JSON.stringify(ingredients));
+    }
+  }, [savedData]); // eslint-disable-line
+
   return (
     <div>
-      <AppHeader />
       {data?.orders ? (
         <main className={style.main}>
           <section>

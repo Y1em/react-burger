@@ -1,5 +1,5 @@
-import { TIngredient } from "../../components/utils/types";
-import { TIngredientArr } from "../../components/utils/types";
+import { TIngredient } from "../../utils/types";
+import { TIngredientArr } from "../../utils/types";
 
 export const DELETE_ITEM: "DELETE_ITEM" = "DELETE_ITEM";
 export const SET_TOTAL_PRICE: "SET_TOTAL_PRICE" = "SET_TOTAL_PRICE";

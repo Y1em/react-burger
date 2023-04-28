@@ -8,15 +8,15 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useAppDispatch, useAppSelector } from "../services/hooks/hooks";
 import { UPDATE_USER_SUCCESS } from "../services/actions/auth";
-import { updateUser, getUser } from "../components/utils/api";
+import { updateUser, getUser } from "../utils/api";
 import {
   emailRegex,
   nameRegex,
   getUserTrigger,
   updateUserTrigger,
-} from "../components/utils/const";
-import { update } from "../components/utils/utils";
-import { TUser, TResponse } from "../components/utils/types";
+} from "../utils/const";
+import { update } from "../utils/utils";
+import { TUser, TResponse } from "../utils/types";
 
 const ProfileForm: FunctionComponent = () => {
   const dispatch = useAppDispatch();
@@ -153,7 +153,7 @@ const ProfileForm: FunctionComponent = () => {
           Отмена
         </p>
         <Button
-          htmlType="submit"
+          htmlType="button"
           type="primary"
           size="medium"
           extraClass="ml-7"
