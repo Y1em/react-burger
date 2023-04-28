@@ -37,10 +37,10 @@ const ConstructorItem: FunctionComponent<TConstructorItem> = ({
   const ref = React.useRef<HTMLLIElement>(null);
 
   function moveConstructorItem(item: TIngredient) {
-    if (index) {
+    if (index && item.uuid) {
       dispatch({
         type: MOVE_ITEM,
-        id: item._id,
+        id: item.uuid,
         index: index,
       });
     }

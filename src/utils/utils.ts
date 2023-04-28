@@ -15,6 +15,8 @@ import {
   TOrder,
 } from "./types.js";
 
+import { v4 as uuidv4 } from 'uuid';
+
 function isBun(obj: TIngredient) {
   if (obj.type === "bun") {
     return true;
@@ -126,10 +128,10 @@ function deleteItem(arr: TIngredientArr, actionId: TIngredient["_id"]) {
 
 function moveItem(
   arr: TIngredientArr,
-  actionId: TIngredient["_id"],
+  actionId: TIngredient["uuid"],
   targetIndex: number
 ) {
-  const deletedItem = arr.find((item) => item._id === actionId);
+  const deletedItem = arr.find((item) => item.uuid === actionId);
   if (deletedItem) {
     arr.splice(arr.indexOf(deletedItem), 1);
     arr.splice(targetIndex, 0, deletedItem);
@@ -196,7 +198,9 @@ function addMain(arr: TIngredientArr, items: TIngredientArr, id: string) {
   if (main) {
     arr.push(main);
   }
-  return arr;
+  const newArr: TIngredientArr = JSON.parse(JSON.stringify(arr));
+  newArr.forEach((item) => (item.uuid = uuidv4()));
+  return newArr;
 }
 
 function setCounter(arr: TIngredientArr) {

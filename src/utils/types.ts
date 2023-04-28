@@ -26,6 +26,7 @@ export type TIngredient = {
   image_large: string;
   __v: number;
   count: number;
+  uuid?: string;
 };
 
 export type TIngredientArr = TIngredient[];

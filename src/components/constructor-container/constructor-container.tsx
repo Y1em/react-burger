@@ -24,13 +24,15 @@ const ConstructorContainer: FunctionComponent<TConstructuonContainer> = ({
 }) => {
   const dispatch = useAppDispatch();
   const data = useAppSelector((store) => store.ingredientsApiReducer.items);
+
   const moveItem = (item: TIngredient) => {
+
     if (!isBun(item)) {
       if (hasBun(bunList)) {
         dispatch({
           type: ADD_MAIN,
           id: item._id,
-          items: data,
+          items: data
         });
       } else {
         handleSetMessage(bunMessage);
@@ -88,7 +90,7 @@ const ConstructorContainer: FunctionComponent<TConstructuonContainer> = ({
           return (
             <ConstructorItem
               ingredient={obj}
-              key={`${obj._id}-${index}`}
+              key={obj.uuid}
               index={index}
             />
           );
