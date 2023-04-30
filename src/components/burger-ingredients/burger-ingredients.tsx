@@ -4,6 +4,7 @@ import burgerIngredients from "./burger-ingredients.module.css";
 import { Tabs } from "../tabs/tabs";
 import { IngredientContainer } from "../ingredient-container/ingredient-container";
 import { sortByTypes, handleScrollTop, getScrollLimits } from "../../utils/utils";
+import { Loader } from "../loading/loading";
 
 const BurgerIngredients: FunctionComponent = () => {
   const data = useAppSelector((store) => store.ingredientsApiReducer.items);
@@ -52,7 +53,11 @@ const BurgerIngredients: FunctionComponent = () => {
   }, [scrollTop]); // eslint-disable-line
 
   if (data.length === 0) {
-    return <section className={`mr-10 ${burgerIngredients.section}`}></section>;
+    return (
+      <section className={`mr-10 ${burgerIngredients.section} ${burgerIngredients.loader}`}>
+        <Loader />
+      </section>
+    );
   } else {
     return (
       <section className={`mr-10 ${burgerIngredients.section}`}>

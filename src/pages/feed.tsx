@@ -4,15 +4,13 @@ import { FeedItem } from "../components/feed-item/feed-item";
 import { BoardStatus } from "../components/board-status/board-status";
 import style from "./feed.module.css";
 import { ACTIVE } from "../services/actions/app-header";
-import { Outlet } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { WS_FEED_CLOSE, WS_FEED_START } from "../services/actions/ws-feed";
-import { getObj } from "../utils/utils";
+import { Loader } from "../components/loading/loading";
 
 const FeedPage: FunctionComponent = () => {
   const data = useAppSelector((store) => store.wsFeedReducer.data);
-  const ingredients = useAppSelector((store) => store.ingredientsApiReducer.items);
-  const savedData = getObj("ingredients");
-
+  const location = useLocation();
   const dispatch = useAppDispatch();
   React.useEffect(() => {
     dispatch({
@@ -23,25 +21,21 @@ const FeedPage: FunctionComponent = () => {
 
   React.useEffect(
     () => {
-      dispatch({
-        type: WS_FEED_START,
-        payload: "/all",
-      });
-
-      return () => {
+      if (location) {
         dispatch({
-          type: WS_FEED_CLOSE
-        })
+          type: WS_FEED_START,
+          payload: "/all",
+        });
+
+        return () => {
+          dispatch({
+            type: WS_FEED_CLOSE
+          })
+        }
       }
     },
     [] // eslint-disable-line
   );
-
-  React.useEffect(() => {
-    if (!savedData) {
-      localStorage.setItem("ingredients", JSON.stringify(ingredients));
-    }
-  }, [savedData]); // eslint-disable-line
 
   return (
     <div>
@@ -77,9 +71,10 @@ const FeedPage: FunctionComponent = () => {
           </section>
         </main>
       ) : (
-        ""
+        <div className={style.loader}>
+          <Loader />
+        </div>
       )}
-      <Outlet />
     </div>
   );
 };

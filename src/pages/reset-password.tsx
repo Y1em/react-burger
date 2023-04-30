@@ -32,7 +32,7 @@ const ResetPasswordPage: FunctionComponent = () => {
     setPasswordValue(e.target.value);
   };
 
-  function onButtonClick(e: SyntheticEvent) {
+  function onFormSubmit(e: SyntheticEvent) {
     e.preventDefault();
     getNewPassword(passwordValue, codeValue)
       .then((res) => {
@@ -62,7 +62,10 @@ const ResetPasswordPage: FunctionComponent = () => {
   }
 
   return (
-    <form className={Style.form}>
+    <form
+      className={Style.form}
+      onSubmit={onFormSubmit}
+    >
       <h1 className={`${Style.heading} mb-6 text text_type_main-medium`}>
         Восстановление пароля
       </h1>
@@ -82,10 +85,9 @@ const ResetPasswordPage: FunctionComponent = () => {
         extraClass="mb-6"
       />
       <Button
-        htmlType="button"
+        htmlType="submit"
         type="primary"
         size="medium"
-        onClick={onButtonClick}
         disabled={!isCorrect}
         extraClass="mb-20"
       >

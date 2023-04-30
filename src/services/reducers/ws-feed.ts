@@ -1,5 +1,4 @@
 import {
-  WS_FEED_CLOSED,
   WS_FEED_ERROR,
   WS_FEED_SUCCESS,
   WS_GET_ORDERS,
@@ -35,12 +34,6 @@ export const wsFeedReducer = (
         wsConnected: false,
       };
 
-    case WS_FEED_CLOSED:
-      return {
-        ...state,
-        wsConnected: false,
-      };
-
     case WS_GET_ORDERS:
       return {
         ...state,
@@ -51,6 +44,7 @@ export const wsFeedReducer = (
       return {
         ...state,
         data: undefined,
+        wsConnected: false,
       };
     default:
       return state;

@@ -46,7 +46,6 @@ export function getItems(): AppThunk {
       .then((res) => {
         if (res && res.success) {
           dispatch(getItemsSuccessAction(res.data));
-          localStorage.setItem("ingredients", JSON.stringify(res.data));
         } else {
           dispatch(getItemsFailedAction());
         }

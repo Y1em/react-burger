@@ -67,7 +67,7 @@ const ProfileForm: FunctionComponent = () => {
       });
   }
 
-  function onSaveClick(e: SyntheticEvent) {
+  function onFormSubmit(e: SyntheticEvent) {
     e.preventDefault();
     if (accessToken && refreshToken) {
       updateUserAction(
@@ -124,7 +124,10 @@ const ProfileForm: FunctionComponent = () => {
   }, [emailValue, nameValue, name, email]); // eslint-disable-line
 
   return (
-    <form className={`${Style.form} ml-15`}>
+    <form
+      className={`${Style.form} ml-15`}
+      onSubmit={onFormSubmit}
+      >
       <Input
         onChange={onNameChange}
         value={nameValue}
@@ -153,12 +156,11 @@ const ProfileForm: FunctionComponent = () => {
           Отмена
         </p>
         <Button
-          htmlType="button"
+          htmlType="submit"
           type="primary"
           size="medium"
           extraClass="ml-7"
           disabled={isCorrect && !isChanged}
-          onClick={onSaveClick}
         >
           Сохранить
         </Button>

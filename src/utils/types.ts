@@ -160,10 +160,9 @@ export type TConstructorItemState = {
 export type TWsMiddlewareActions = {
   wsInit: "WS_FEED_START" | "WS_PROFILE_START";
   onOpen: "WS_FEED_SUCCESS" | "WS_PROFILE_SUCCESS";
-  onClose: "WS_FEED_CLOSED" | "WS_PROFILE_CLOSED";
+  onClose: "WS_FEED_CLOSE" | "WS_PROFILE_CLOSE";
   onError: "WS_FEED_ERROR" | "WS_PROFILE_ERROR";
   onMessage: "WS_GET_ORDERS" | "WS_GET_USER_ORDERS";
-  wsClose: "WS_FEED_CLOSE" | "WS_PROFILE_CLOSE";
   onReconnect?: "WS_PROFILE_RECONNECT";
 };
 

@@ -9,11 +9,11 @@ import {
   getOneBunArr,
 } from "../../utils/utils";
 import { useLocation, Link } from "react-router-dom";
-import { getObj } from "../../utils/utils";
 import { TFeedItemProps } from "../../utils/types";
+import { useAppSelector } from "../../services/hooks/hooks";
 
 const FeedItem: FunctionComponent<TFeedItemProps> = ({ order, type }) => {
-  const ingredients = getObj("ingredients");
+  const ingredients = useAppSelector((store) => store.ingredientsApiReducer.items);
   const burgerArr = findItems(order.ingredients, ingredients);
   const oneBunBurgerArr = getOneBunArr(burgerArr);
   const location = useLocation();

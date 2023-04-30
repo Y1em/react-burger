@@ -35,7 +35,7 @@ const RegisterPage: FunctionComponent = () => {
     setEmailValue(e.target.value);
   };
 
-  function onRegisterClick(e: SyntheticEvent) {
+  function onFormSubmit(e: SyntheticEvent) {
     e.preventDefault();
     dispatch(userRegister(emailValue, passwordValue, nameValue));
   }
@@ -53,7 +53,10 @@ const RegisterPage: FunctionComponent = () => {
   }, [emailValue, nameValue, passwordValue]); // eslint-disable-line
 
   return (
-    <form className={Style.form}>
+    <form
+      className={Style.form}
+      onSubmit={onFormSubmit}
+      >
       <h1 className={`${Style.heading} mb-6 text text_type_main-medium`}>
         Регистрация
       </h1>
@@ -80,8 +83,7 @@ const RegisterPage: FunctionComponent = () => {
         extraClass="mb-6"
       />
       <Button
-        onClick={onRegisterClick}
-        htmlType="button"
+        htmlType="submit"
         type="primary"
         size="medium"
         disabled={!isCorrect}

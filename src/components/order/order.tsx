@@ -10,10 +10,10 @@ import {
   getUniqStringArr,
 } from "../../utils/utils";
 import { TorderModalProps } from "../../utils/types";
-import { getObj } from "../../utils/utils";
+import { useAppSelector } from "../../services/hooks/hooks";
 
 const Order: FunctionComponent<TorderModalProps> = ({ obj }) => {
-  const ingredients = getObj("ingredients");
+  const ingredients = useAppSelector((store) => store.ingredientsApiReducer.items);
   const burgerArr = findItems(obj.ingredients, ingredients);
   const burgerUniqArr = findItems(getUniqStringArr(obj.ingredients), ingredients);
 

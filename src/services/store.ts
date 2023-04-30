@@ -5,7 +5,6 @@ import thunk from "redux-thunk";
 import thunkMiddleware from "redux-thunk";
 
 import {
-  WS_FEED_CLOSED,
   WS_FEED_ERROR,
   WS_FEED_START,
   WS_FEED_SUCCESS,
@@ -14,7 +13,6 @@ import {
 } from "./actions/ws-feed";
 
 import {
-  WS_PROFILE_CLOSED,
   WS_PROFILE_ERROR,
   WS_PROFILE_START,
   WS_PROFILE_SUCCESS,
@@ -26,20 +24,18 @@ import {
 const wsFeedActions = {
   wsInit: WS_FEED_START,
   onOpen: WS_FEED_SUCCESS,
-  onClose: WS_FEED_CLOSED,
+  onClose: WS_FEED_CLOSE,
   onError: WS_FEED_ERROR,
   onMessage: WS_GET_ORDERS,
-  wsClose: WS_FEED_CLOSE,
 };
 
 const wsProfileActions = {
   wsInit: WS_PROFILE_START,
   onOpen: WS_PROFILE_SUCCESS,
-  onClose: WS_PROFILE_CLOSED,
+  onClose: WS_PROFILE_CLOSE,
   onError: WS_PROFILE_ERROR,
   onMessage: WS_GET_USER_ORDERS,
   onReconnect: WS_PROFILE_RECONNECT,
-  wsClose: WS_PROFILE_CLOSE,
 }
 
 declare global {

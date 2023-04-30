@@ -14,8 +14,6 @@ const Modal: FunctionComponent<TModalProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log(location.state?.background)
-
   const handleClose = React.useCallback<() => void>(
     () => {
       navigate(location.state ? location.state.background.pathname : location.pathname, { replace: true });

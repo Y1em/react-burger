@@ -1,5 +1,4 @@
 import {
-  WS_PROFILE_CLOSED,
   WS_PROFILE_ERROR,
   WS_PROFILE_SUCCESS,
   WS_GET_USER_ORDERS,
@@ -12,13 +11,13 @@ import { TwsResponse } from "../../utils/types";
 type TWsState = {
   wsConnected: boolean;
   userData: TwsResponse | undefined;
-  wsTokenError: string | undefined
+  wsTokenError: boolean
 };
 
 export const initialState = {
   wsConnected: false,
   userData: undefined,
-  wsTokenError: undefined
+  wsTokenError: false
 };
 
 export const wsProfileReducer = (
@@ -30,15 +29,10 @@ export const wsProfileReducer = (
       return {
         ...state,
         wsConnected: true,
+        wsTokenError: false
       };
 
     case WS_PROFILE_ERROR:
-      return {
-        ...state,
-        wsConnected: false,
-      };
-
-    case WS_PROFILE_CLOSED:
       return {
         ...state,
         wsConnected: false,
@@ -53,13 +47,14 @@ export const wsProfileReducer = (
     case WS_PROFILE_CLOSE:
       return {
         ...state,
+        wsConnected: false,
         userData: undefined,
       };
 
       case WS_PROFILE_RECONNECT:
         return {
           ...state,
-          wsTokenError: action.payload
+          wsTokenError: true
         }
     default:
       return state;

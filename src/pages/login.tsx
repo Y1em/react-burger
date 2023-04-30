@@ -32,7 +32,7 @@ const LoginPage: FunctionComponent = () => {
     setEmailValue(e.target.value);
   };
 
-  function onLoginClick(e: SyntheticEvent) {
+  function onFormSubmit(e: SyntheticEvent) {
     e.preventDefault();
     dispatch(userLogin(emailValue, passwordValue));
   }
@@ -59,7 +59,10 @@ const LoginPage: FunctionComponent = () => {
   }, []); // eslint-disable-line
 
   return (
-    <form className={Style.form}>
+    <form
+      className={Style.form}
+      onSubmit={onFormSubmit}
+      >
       <h1 className={`${Style.heading} mb-6 text text_type_main-medium`}>
         Вход
       </h1>
@@ -79,10 +82,9 @@ const LoginPage: FunctionComponent = () => {
         extraClass="mb-6"
       />
       <Button
-        htmlType="button"
+        htmlType="submit"
         type="primary"
         size="medium"
-        onClick={onLoginClick}
         disabled={!isCorrect}
         extraClass="mb-20"
       >

@@ -4,10 +4,11 @@ import { useAppDispatch, useAppSelector } from "../services/hooks/hooks";
 import { getOrder, shortToken } from "../utils/utils";
 import { useLocation } from "react-router-dom";
 import { Order } from "../components/order/order";
-import { WS_FEED_START } from "../services/actions/ws-feed";
+import { WS_FEED_CLOSE, WS_FEED_START } from "../services/actions/ws-feed";
 import { TOrderPageProps } from "../utils/types";
 import { feedPath } from "../utils/const";
-import { WS_PROFILE_START } from "../services/actions/ws-profile";
+import { WS_PROFILE_CLOSE, WS_PROFILE_START } from "../services/actions/ws-profile";
+import { Loader } from "../components/loading/loading";
 
 const OrderPage: FunctionComponent<TOrderPageProps> = ({ id }) => {
   const dispatch = useAppDispatch();
@@ -28,12 +29,17 @@ const OrderPage: FunctionComponent<TOrderPageProps> = ({ id }) => {
 
   React.useEffect(
     () => {
-      if (isFeed) {
-        console.log("from null")
+      if (isFeed && !allOrders) {
         dispatch({
           type: WS_FEED_START,
           payload: "/all",
         });
+
+        return () => {
+          dispatch({
+            type: WS_FEED_CLOSE
+          })
+        }
       }
     },
     [] // eslint-disable-line
@@ -41,14 +47,19 @@ const OrderPage: FunctionComponent<TOrderPageProps> = ({ id }) => {
 
   React.useEffect(
     () => {
-      if (!isFeed) {
+      if (!isFeed && !userOrders) {
         dispatch({
           type: WS_PROFILE_START,
           payload: userOrdersRequest,
         });
+
+        return () => {
+          dispatch({
+            type: WS_PROFILE_CLOSE
+          })
+        }
       }
     },
-
     [] // eslint-disable-line
   );
 
@@ -60,10 +71,14 @@ const OrderPage: FunctionComponent<TOrderPageProps> = ({ id }) => {
       </div>
     );
   } else {
-    return <></>
+    return (
+      <div className={style.container}>
+        <div className="mb-30"/>
+        <Loader />
+      </div>
+    )
+
   }
-
-
 };
 
 export { OrderPage };

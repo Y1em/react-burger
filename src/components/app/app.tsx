@@ -43,7 +43,6 @@ const App: FunctionComponent = () => {
   const accessToken = getString("accessToken");
   const refreshToken = getString("refreshToken");
   const password = getString("password");
-  const savedData = getString("ingredients");
   const isWsError = useAppSelector((store) => store.wsProfileReducer.wsTokenError);
   const background = location.state?.background;
   const id = getId(location.pathname);
@@ -68,7 +67,7 @@ const App: FunctionComponent = () => {
 
   React.useEffect(() => {
       dispatch(getItems());
-  }, [savedData]); // eslint-disable-line
+  }, []); // eslint-disable-line
 
   React.useEffect(() => {
     if (accessToken && refreshToken) {

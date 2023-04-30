@@ -18,7 +18,6 @@ export const socketMiddleware = (
         onError,
         onClose,
         onReconnect,
-        wsClose,
       } = wsActions; // eslint-disable-line
 
       if (type === wsInit) {
@@ -44,21 +43,18 @@ export const socketMiddleware = (
           dispatch({ type: onMessage, payload: restParsedData});
 
           if (socket && message === "Invalid or missing token") {
-            socket.onclose = (event: any) => {
-              dispatch({ type: onReconnect, payload: !event.wasClean });
+            socket.onclose = () => {
+              dispatch({ type: onReconnect });
             };
           }
         };
 
-        socket.onclose = (event: Event) => {
+        socket.onclose = (event: CloseEvent) => {
           dispatch({ type: onClose, payload: event });
         };
 
       }
 
-      if (type === wsClose) {
-        socket?.close();
-      }
 
       next(action);
     };

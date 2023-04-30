@@ -14,3 +14,10 @@
   width: var(--scroll-bar-width);
   background-color: var(--modal-bg);
 }
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 844px;
+}
