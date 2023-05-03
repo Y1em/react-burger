@@ -1,0 +1,14 @@
+.item {
+  display: flex;
+  align-items: center;
+  color: var(--secondary-text);
+  text-decoration: none;
+}
+
+.item_active {
+  color: var(--primary-text);
+}
+
+.title {
+  margin: 0;
+}

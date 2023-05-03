@@ -36,3 +36,12 @@
   text-shadow: 0 0 24px #3333FF;
 }
 
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  width: 100%;
+}
+
+

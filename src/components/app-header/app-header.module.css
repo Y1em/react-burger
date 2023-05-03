@@ -11,21 +11,6 @@
   padding: 0 calc(100% / 6) 0 calc(100% / 6);
 }
 
-.item {
-  display: flex;
-  align-items: center;
-  color: var(--secondary-text);
-  text-decoration: none;
-}
-
-.item_active {
-  color: var(--primary-text);
-}
-
-.title {
-  margin: 0;
-}
-
 .logo {
   width: var(--logo-width);
   height: var(--logo-height);
